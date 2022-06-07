@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.myOverflow ::-webkit-scrollbar {
+       display: none;
+     
+       padding: 3px 3px;
+     }
+     
+     .myOverflow {
+       -ms-overflow-style: none;
+       scrollbar-width: none;
+     
+       padding: 3px 3px;
+     }
