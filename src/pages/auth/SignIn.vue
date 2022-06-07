@@ -13,7 +13,6 @@ const route = useRoute();
 const router = useRouter();
 // initialize store
 const store = useAuthStore();
-console.log("mounted login page jare");
 </script>
 
 <template>
