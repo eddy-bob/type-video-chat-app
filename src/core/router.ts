@@ -8,6 +8,7 @@ const SignUp = () => import("../pages/auth/SignUp.vue");
 const ChangePassword = () => import("../pages/auth/ChangePassword.vue");
 const ForgotPasswordInit = () => import("../pages/auth/ForgotPasswordInit.vue");
 const ForgotPasswordComplete = () => import("../pages/auth/ForgotPasswordComplete.vue");
+const VerifyEmail = () => import("../pages/VerifyEmail.vue");
 const NotFoundPage = () => import("../pages/NotFound.vue");
 
 // import store
@@ -41,7 +42,12 @@ const routes = [
     component: ForgotPasswordComplete,
   },
   {
-    path: "/auth/checkin/sign-up",
+    path: "/verify-email/:token",
+    name: "page.verify.email",
+    component: VerifyEmail,
+  },
+  {
+    path: "/auth/sign-up",
     name: "page.auth.signup",
     component: SignUp,
   },

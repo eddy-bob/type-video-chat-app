@@ -13,3 +13,8 @@
      
        padding: 3px 3px;
      }
+     .logo {
+      font-family:monospace;
+      font-weight: bolder;
+      font-size: 27px;
+    }

@@ -1,10 +1,13 @@
-import { http } from "../utils/http";
+import { http, base_url } from "../utils/http";
+console.log(http, base_url)
 import authHeader from "../utils/auth.header.js";
 import { Axios } from 'axios';
 import { Register, Login, ForgotPasswordInit, ForgotPasswordComplete, ChangePassword } from "../../interfaces/auth.interface"
 class AuthService {
 
-  constructor(private readonly request: Axios) { }
+  constructor(private readonly request: Axios) {
+    console.log(request)
+  }
 
   /**
    * Post -- Register
@@ -12,6 +15,8 @@ class AuthService {
    * @param {*} data
    */
   async register(data: Register): Promise<any> {
+
+
     const response = await this.request.post("user/auth/register", data, {
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +55,7 @@ class AuthService {
    */
   async changePassword(data: ChangePassword): Promise<any> {
     const response = await this.request.put(
-      "user/auth//update-password",
+      "user/auth/update-password",
       { ...data }
     );
 

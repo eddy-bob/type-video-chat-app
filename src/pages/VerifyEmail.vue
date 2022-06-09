@@ -2,7 +2,7 @@
 import { reactive, ref, watch, computed, onMounted, watchEffect } from "vue";
 import { notify } from "@kyvg/vue3-notification";
 import { useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "../../core/store/index";
+import { useAuthStore } from "../core/store/index";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers, minLength } from "@vuelidate/validators";
 // instantiate router
@@ -13,6 +13,7 @@ const route = useRoute();
 const router = useRouter();
 // initialize store
 const store = useAuthStore();
+
 </script>
 
 <template>
@@ -23,38 +24,15 @@ const store = useAuthStore();
         <form
           class="lg:min-w-[400px] rounded-lg shadow-lg space-y-3 sm:px-10 mt-6 px-6 py-10 sm:w-auto w-full text-white bg-slate-600"
         >
-          <div class="space-y-1">
+          <div class="space-y-2">
             <h1 class="text-center logo text-[#000000]">ECHAT</h1>
-            <p class="">Type in your email to get reset password link.</p>
+
+            <p class="text-center">
+              Email verified successfully. redirecting.......
+            </p>
           </div>
-          <!--  -->
-          <div class="space-y-3">
-            <div class="space-y-3">
-              <!--  -->
-              <div class="space-y-2">
-                <p class="">Email</p>
-                <input
-                  type="email"
-                  value="eddy@echat.com"
-                  class="border rounded-md text-sm w-full py-2 px-2 text-black"
-                />
-              </div>
-              <!-- button -->
-              <div class="w-full pb-2">
-                <button
-                  class="w-full font-extrabold text-sm py-2 rounded-sm bg-blue-800"
-                >
-                  Retrieve password
-                </button>
-              </div>
-            </div>
-            <!--  -->
-            <div class="space-y-4">
-              <p class="">
-                Don’t Have An Account?
-                <router-link to="/auth/sign-up" class="">Sign Up</router-link>
-              </p>
-            </div>
+          <div class="w-full flex justify-center">
+            <img src="/images/svg/check.svg" alt="verified" class="w-[46%]"/>
           </div>
         </form>
       </div>

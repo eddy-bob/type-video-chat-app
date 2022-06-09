@@ -1,7 +1,7 @@
 import Axios from "axios";
 // create an new axios http instance
 const http = Axios.create({
-  baseURL: <string>import.meta.env.VITE_BASEURL,
+  baseURL: "http://localhost:5000/api/v1/",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
@@ -21,7 +21,7 @@ http.interceptors.response.use(
   },
   (error) => {
     if (error.status === 401 && error.message === "Token has Expired") {
-      sessionStorage.removeItem(<string>import.meta.env.VITE_AUTHTOKEN);
+      sessionStorage.removeItem(import.meta.env.VITE_AUTHTOKEN);
       return ((window.location as unknown as string) = "/");
     }
     return error;

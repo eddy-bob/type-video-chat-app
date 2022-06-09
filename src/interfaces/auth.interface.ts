@@ -1,12 +1,13 @@
 export interface Register {
        email: string;
-       role: string;
+       role?: string;
        firstName: string;
        lastName: string;
-       phone: string;
-       zipCode: string;
-       country: string
-       password: string
+       mobile: string;
+       zipCode?: string;
+       country?: string
+       password: string,
+       region?: string
 };
 export interface Login {
        email: string;
