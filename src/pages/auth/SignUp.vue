@@ -104,6 +104,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules as any, userInfo);
 //define register method
 const submitForm = async (): Promise<void> => {
+  console.log(import.meta.env.VITE_BASEURL);
   // check if form is formattted correctly
   const isFormCorrect = await v$.value.$validate();
   if (isFormCorrect == true) {
