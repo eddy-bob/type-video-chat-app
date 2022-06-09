@@ -141,7 +141,7 @@ const submitForm = async (): Promise<void> => {
         setTimeout(() => {
           isLoading.value = !isLoading.value;
         }, 1000);
-       
+
         if (err.data && err.data.Error) {
           notify({
             type: "error",
@@ -215,7 +215,7 @@ const submitForm = async (): Promise<void> => {
                       v-model="userInfo.country"
                       :country="userInfo.country"
                       topCountry="NG"
-                      class="text-black py-2 text-sm rounded-md bg-white"
+                      class="text-black py-2 w-full text-sm rounded-md bg-white"
                     />
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const submitForm = async (): Promise<void> => {
                 <vue-tel-input
                   :value="userInfo.phone"
                   @input="onInput"
-                  class="text-black text-sm rounded-md"
+                  class="text-black text-sm rounded-md w-full"
                 ></vue-tel-input>
                 <div v-if="v$.phone.$error" class="text-red-600 text-xs">
                   {{ "* " + v$.phone.$errors[0].$message }}
