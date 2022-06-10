@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 
 // layout
 
-
+import authenticate from "../helpers/authenticate"
 const SignIn = () => import("../pages/auth/SignIn.vue");
 const SignUp = () => import("../pages/auth/SignUp.vue");
 const ChangePassword = () => import("../pages/auth/ChangePassword.vue");
@@ -10,17 +10,20 @@ const ForgotPasswordInit = () => import("../pages/auth/ForgotPasswordInit.vue");
 const ForgotPasswordComplete = () => import("../pages/auth/ForgotPasswordComplete.vue");
 const VerifyEmail = () => import("../pages/VerifyEmail.vue");
 const NotFoundPage = () => import("../pages/NotFound.vue");
+const Home = () => import("../pages/Home.vue");
+
+
 
 // import store
 // import store from "./store/index.js";
 
 const routes = [
-
   {
     path: "/",
-    name: "page.login",
+    name: "page.home",
     component: SignIn,
   },
+
   {
     path: "/auth/login",
     name: "page.auth.login",
@@ -42,7 +45,7 @@ const routes = [
     component: ForgotPasswordComplete,
   },
   {
-    path: "/verify-email/:token",
+    path: "/auth/verify-email/:token",
     name: "page.verify.email",
     component: VerifyEmail,
   },
@@ -51,6 +54,13 @@ const routes = [
     name: "page.auth.signup",
     component: SignUp,
   },
+  {
+    path: "/chat-home",
+    name: "page.chat.home",
+    component: Home,
+    meta: { requireAuth: true }
+  },
+
 
   //add sellers routes below-------
   {
@@ -75,4 +85,14 @@ const router = createRouter({
   },
 });
 
+router.beforeEach((route) => {
+  if (route.meta && route.meta.requireAuth == true) {
+    const isAuth = authenticate()
+    if (isAuth == true) { return }
+    else { return route.path = "/auth/login" }
+
+  } else {
+    return
+  }
+})
 export default router;
