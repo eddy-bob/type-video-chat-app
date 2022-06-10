@@ -8,7 +8,9 @@ const useGroupChat = defineStore('group-chat', {
 
                             const response = await GroupChatService.getGroupChat(groupId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -19,7 +21,9 @@ const useGroupChat = defineStore('group-chat', {
 
                             const response = await GroupChatService.deleteChat(data);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }

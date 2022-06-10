@@ -7,7 +7,9 @@ const usePrivateChat = defineStore('private-chat', {
 
                             const response = await privateChatService.getChat(friendId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -18,7 +20,9 @@ const usePrivateChat = defineStore('private-chat', {
 
                             const response = await privateChatService.deleteChat(chatId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }

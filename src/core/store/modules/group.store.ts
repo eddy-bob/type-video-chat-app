@@ -9,7 +9,9 @@ const useGroupStore = defineStore('group', {
 
                             const response = await GroupService.getGroup(groupId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -19,7 +21,9 @@ const useGroupStore = defineStore('group', {
 
                             const response = await GroupService.getGroups();
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -29,7 +33,9 @@ const useGroupStore = defineStore('group', {
 
                             const response = await GroupService.updateGroup(data)
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -39,7 +45,9 @@ const useGroupStore = defineStore('group', {
 
                             const response = await GroupService.createGroup(data);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -50,7 +58,9 @@ const useGroupStore = defineStore('group', {
 
                             const response = await GroupService.deleteGroup(groupId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }

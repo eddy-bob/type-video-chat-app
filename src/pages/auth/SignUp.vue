@@ -20,7 +20,7 @@ const router = useRouter();
 // initialize store
 const store = useAuthStore();
 // define user info
-const showOption = ref(false);
+
 const userInfo = reactive({
   firstName: "",
   lastName: "",
@@ -47,6 +47,7 @@ const validateFirstName = () => {
 const validatePhone = () => {
   return userInfo.valid;
 };
+
 const validateLastName = () => {
   return /^[a-zA-Z]+$/.test(userInfo.lastName);
 };
@@ -87,6 +88,12 @@ const rules = computed(() => {
         minLength(8)
       ),
     },
+    zipCode: {
+      min: helpers.withMessage(
+        "zipcode cannot be less than 5 characters",
+        minLength(5)
+      ),
+    },
     confirmPassword: {
       required: helpers.withMessage("Confirm Password is required", required),
       sameAs: helpers.withMessage(
@@ -104,7 +111,6 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules as any, userInfo);
 //define register method
 const submitForm = async (): Promise<void> => {
-
   // check if form is formattted correctly
   const isFormCorrect = await v$.value.$validate();
   if (isFormCorrect == true) {
@@ -133,10 +139,10 @@ const submitForm = async (): Promise<void> => {
           text: "SignUp successful. Redirecting...",
         });
 
-        // //   redirect to the signin page
-        // setTimeout(() => {
-        //   window.location.href = "/auth/login";
-        // }, 3000);
+        //   redirect to the signin page
+        setTimeout(() => {
+          window.location.href = "/auth/login";
+        }, 3000);
       })
       .catch((err: any) => {
         setTimeout(() => {
@@ -231,18 +237,30 @@ const submitForm = async (): Promise<void> => {
                 </div>
               </div>
               <!--  -->
-              <div class="space-y-2 w-full">
-                <p class="">phone</p>
-                <vue-tel-input
-                  :value="userInfo.phone"
-                  @input="onInput"
-                  class="text-black text-sm rounded-md w-full"
-                ></vue-tel-input>
-                <div v-if="v$.phone.$error" class="text-red-600 text-xs">
-                  {{ "* " + v$.phone.$errors[0].$message }}
+              <div class="sm:flex sm:space-x-3">
+                <div class="space-y-2 w-full">
+                  <p class="">phone</p>
+                  <vue-tel-input
+                    :value="userInfo.phone"
+                    @input="onInput"
+                    class="text-black text-sm rounded-md w-full"
+                  ></vue-tel-input>
+                  <div v-if="v$.phone.$error" class="text-red-600 text-xs">
+                    {{ "* " + v$.phone.$errors[0].$message }}
+                  </div>
+                </div>
+                <div class="space-y-2 w-full">
+                  <p class="">zipcode</p>
+                  <input
+                    type="text"
+                    v-model.number="userInfo.zipCode"
+                    class="border rounded-md text-sm w-full py-1 px-2 text-black"
+                  />
+                  <div v-if="v$.zipCode.$error" class="text-red-600 text-xs">
+                    {{ "* " + v$.zipCode.$errors[0].$message }}
+                  </div>
                 </div>
               </div>
-
               <!--  -->
               <div class="space-y-2">
                 <p class="">Email</p>

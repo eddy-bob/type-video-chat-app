@@ -13,6 +13,64 @@ const route = useRoute();
 const router = useRouter();
 // initialize store
 const store = useAuthStore();
+const userInfo = reactive({
+  email: "",
+});
+const isLoading = ref(false);
+const rules = computed(() => {
+  return {
+    email: {
+      required: helpers.withMessage("Email address is required", required),
+      email: helpers.withMessage("Must be a valid email", email),
+    },
+  };
+});
+
+const v$ = useVuelidate(rules as any, userInfo);
+const submitForm = async (): Promise<void> => {
+  // check if form is formattted correctly
+  const isFormCorrect = await v$.value.$validate();
+  if (isFormCorrect == true) {
+    isLoading.value = !isLoading.value;
+
+    store
+      .userForgotPasswordInit({
+        email: <string>v$.value.email.$model,
+      })
+      .then((res: Response | any) => {
+        // set the loading notice to false
+        setTimeout(() => {
+          isLoading.value = !isLoading.value;
+        }, 1000);
+        //   send out notification to tell that the signin was successful
+        notify({
+          type: "success",
+          title: "Success",
+          text: "Password reset link sent to email",
+        });
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+        setTimeout(() => {
+          isLoading.value = !isLoading.value;
+        }, 1000);
+
+        if (err.data && err.data.Error) {
+          notify({
+            type: "error",
+            title: "Error",
+            text: err.data.Error,
+          });
+        } else {
+          notify({
+            type: "error",
+            title: "Error",
+            text: "opps ... Something went wrong.,please try again later",
+          });
+        }
+      });
+  }
+};
 </script>
 
 <template>
@@ -21,6 +79,7 @@ const store = useAuthStore();
       <div class="w-full sm:px-0 px-8 sm:w-auto">
         <!--form  -->
         <form
+          @submit.prevent="submitForm"
           class="lg:min-w-[400px] rounded-lg shadow-lg space-y-3 sm:px-10 mt-6 px-6 py-10 sm:w-auto w-full text-white bg-slate-600"
         >
           <div class="space-y-1">
@@ -35,16 +94,21 @@ const store = useAuthStore();
                 <p class="">Email</p>
                 <input
                   type="email"
-                  value="eddy@echat.com"
+                  v-model="userInfo.email"
                   class="border rounded-md text-sm w-full py-2 px-2 text-black"
                 />
+                <div v-if="v$.email.$error" class="text-red-600 text-xs">
+                  {{ "* " + v$.email.$errors[0].$message }}
+                </div>
               </div>
               <!-- button -->
               <div class="w-full pb-2">
                 <button
                   class="w-full font-extrabold text-sm py-2 rounded-sm bg-blue-800"
                 >
-                  Retrieve password
+                  {{
+                    isLoading == true ? ". . . Sending" : "Retrieve Password"
+                  }}
                 </button>
               </div>
             </div>

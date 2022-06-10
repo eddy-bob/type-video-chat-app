@@ -8,7 +8,9 @@ const useFriendRequestStore = defineStore('friend-request', {
 
                             const response = await friendRequestService.sendFriendRequest(id);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -18,7 +20,9 @@ const useFriendRequestStore = defineStore('friend-request', {
 
                             const response = await friendRequestService.acceptFriendRequest(requestId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -28,7 +32,9 @@ const useFriendRequestStore = defineStore('friend-request', {
 
                             const response = await friendRequestService.rejectFriendRequest(requestId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -38,7 +44,9 @@ const useFriendRequestStore = defineStore('friend-request', {
 
                             const response = await friendRequestService.deleteFriendRequest(requestId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }

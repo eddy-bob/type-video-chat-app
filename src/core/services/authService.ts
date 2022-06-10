@@ -1,5 +1,4 @@
-import { http, base_url } from "../utils/http";
-console.log(http, base_url)
+import { http } from "../utils/http";
 import authHeader from "../utils/auth.header.js";
 import { Axios } from 'axios';
 import { Register, Login, ForgotPasswordInit, ForgotPasswordComplete, ChangePassword } from "../../interfaces/auth.interface"
@@ -56,7 +55,9 @@ class AuthService {
   async changePassword(data: ChangePassword): Promise<any> {
     const response = await this.request.put(
       "user/auth/update-password",
-      { ...data }
+      { ...data },
+      { headers: authHeader() }
+
     );
 
     return response;

@@ -7,7 +7,8 @@ const useFriend = defineStore('friend', {
 
                             const response = await friendService.blockFriend(friendId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -18,7 +19,9 @@ const useFriend = defineStore('friend', {
 
                             const response = await friendService.unblockFriend(friendId);
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }
@@ -28,7 +31,9 @@ const useFriend = defineStore('friend', {
 
                             const response = await friendService.fetchFriends();
                             if (response.data) { return await Promise.resolve(response) }
-                            else { return await Promise.reject(response.response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
                      } catch (error: any) {
                             return await Promise.reject(error);
                      }

@@ -28,11 +28,14 @@ const authStore = defineStore('auth', {
     async userLogin(data: Login): Promise<any> {
       try {
         const response = await authService.login(data);
-        console.log(response.data.token)
-        if (response && response.data.token && response.data) {
+
+
+        if (response && response.data && response.data.access_token) {
+          console.log(response.data.data)
           storeItem(import.meta.env.VITE_ACCESSTK, {
-            rsa: response.data.token,
+            rsa: response.data.access_token,
           });
+
           // store user details to cookies with an expiration 
           const data = JSON.stringify({
             customerReg: {
@@ -50,9 +53,15 @@ const authStore = defineStore('auth', {
           this.isAuthenticated = true;
 
           return await Promise.resolve(response);
-        } else {
 
-          return await Promise.reject(response.response);
+        }
+        else if (response.response) {
+          console.log("na second stage o")
+          return await Promise.reject(response.response)
+        }
+        else {
+          console.log("na third stage o")
+          return await Promise.reject(response.message)
         }
 
       } catch (error: any) {
@@ -65,7 +74,9 @@ const authStore = defineStore('auth', {
 
         const response = await authService.register(data);
         if (response.data) { return await Promise.resolve(response) }
-        else { return await Promise.reject(response.response) }
+        else if (response.response) { return await Promise.reject(response.response) }
+        else { return await Promise.reject(response.message) }
+
       } catch (error: any) {
         return await Promise.reject(error);
       }
@@ -73,18 +84,31 @@ const authStore = defineStore('auth', {
     async userForgotPasswordInit(data: ForgotPasswordInit): Promise<any> {
       try {
         const response = await authService.forgotPasswordInit(data);
-        if (response.data) { return await Promise.resolve(response) }
-        else { return await Promise.reject(response.response) }
-      } catch (error: any) {
 
+        if (response.data) {
+          return await Promise.resolve(response)
+        }
+        else if (response.response) {
+          return await Promise.reject(response.response)
+        }
+        else { return await Promise.reject(response.message) }
+
+      } catch (error: any) {
+        console.log("error:", error)
         return await Promise.reject(error);
       }
     },
     async forgotPasswordComplete(data: ForgotPasswordComplete): Promise<any> {
       try {
         const response = await authService.forgotPasswordComplete(data);
-        if (response.data) { return await Promise.resolve(response) }
-        else { return await Promise.reject(response.response) }
+        if (response.data) {
+          return await Promise.resolve(response)
+        }
+        else if (response.response) {
+          return await Promise.reject(response.response)
+        }
+        else { return await Promise.reject(response.message) }
+
       } catch (error) {
         return await Promise.reject(error);
       }
@@ -92,9 +116,20 @@ const authStore = defineStore('auth', {
     async changePassword(data: ChangePassword): Promise<any> {
       try {
         const response = await authService.changePassword(data);
-        if (response.data) { return await Promise.resolve(response) }
-        else { return await Promise.reject(response.response) }
+        if (response.data) {
+          return await Promise.resolve(response)
+        }
+        else if (response.response) {
+
+          return await Promise.reject(response.response)
+        }
+        else {
+
+          return await Promise.reject(response.message)
+        }
+
       } catch (error: any) {
+
         return await Promise.reject(error);
       }
     },
@@ -102,7 +137,9 @@ const authStore = defineStore('auth', {
       try {
         const response = await authService.getAuthUser();
         if (response.data) { return await Promise.resolve(response) }
-        else { return await Promise.reject(response.response) }
+        else if (response.response) { return await Promise.reject(response.response) }
+        else { return await Promise.reject(response.message) }
+
       } catch (error: any) {
         return await Promise.reject(error);
       }
