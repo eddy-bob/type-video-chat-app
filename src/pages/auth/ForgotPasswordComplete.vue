@@ -96,7 +96,7 @@ const submitForm = async (): Promise<void> => {
           notify({
             type: "error",
             title: "Error",
-            text: "Ooops something went wrong.Please try again later",
+            text: err,
           });
         }
       });

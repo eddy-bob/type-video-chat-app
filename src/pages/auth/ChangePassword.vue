@@ -72,7 +72,7 @@ const submitForm = async (): Promise<void> => {
         setTimeout(() => {
           isLoading.value = !isLoading.value;
         }, 1000);
-     
+
         if (err.data && err.data.Error) {
           notify({
             type: "error",
@@ -83,7 +83,7 @@ const submitForm = async (): Promise<void> => {
           notify({
             type: "error",
             title: "Error",
-            text: "Oops something went wrong.try again later",
+            text: err,
           });
         }
       });
