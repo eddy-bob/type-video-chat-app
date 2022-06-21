@@ -1,9 +1,14 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="space-y-4 text-gray-300">
+  <div class="space-y-4 text-gray-300 bg-slate-800 border-r border-r-slate-600">
     <div class="px-6 space-y-6">
-      <p class="font-extrabold text-[22px] pt-5">Recent chats</p>
+      <div class="flex justify-between pt-5">
+        <p class="font-extrabold text-[22px]">Recent Chats</p>
+        <i
+          class="fas fa-plus border border-gray-300 p-2 rounded-md cursor-pointer"
+        ></i>
+      </div>
       <!--  -->
       <div class="flex border py-1 px-2 rounded-md">
         <input
@@ -16,7 +21,7 @@
       </div>
     </div>
     <!-- chat heads -->
-    <div class="">
+    <div class="overflow-y-scroll myOverflow max-h-44">
       <!--  -->
       <div class="flex space-x-3 chathead">
         <div class="relative">
@@ -66,7 +71,7 @@
       <p class="font-extrabold text-[22px] pt-5">Recent group chats</p>
 
       <!-- group chat heads -->
-      <div class="space-y-4">
+      <div class="space-y-4 overflow-y-scroll myOverflow max-h-44">
         <!--  -->
         <div class="flex space-x-3">
           <div class="relative">

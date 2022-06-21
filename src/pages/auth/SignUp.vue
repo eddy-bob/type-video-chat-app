@@ -188,7 +188,7 @@ const submitForm = async (): Promise<void> => {
               <!--  -->
               <div class="sm:flex sm:space-x-3">
                 <div class="space-y-2 w-full">
-                  <p class="">First Name</p>
+                  <p class="">First Name*</p>
                   <input
                     type="text"
                     v-model="userInfo.firstName"
@@ -200,7 +200,7 @@ const submitForm = async (): Promise<void> => {
                   </div>
                 </div>
                 <div class="space-y-2 w-full">
-                  <p class="">Last Name</p>
+                  <p class="">Last Name*</p>
                   <input
                     type="text"
                     v-model="userInfo.lastName"
@@ -239,7 +239,7 @@ const submitForm = async (): Promise<void> => {
               <!--  -->
               <div class="sm:flex sm:space-x-3">
                 <div class="space-y-2 w-full">
-                  <p class="">phone</p>
+                  <p class="">phone*</p>
                   <vue-tel-input
                     :value="userInfo.phone"
                     @input="onInput"
@@ -263,7 +263,7 @@ const submitForm = async (): Promise<void> => {
               </div>
               <!--  -->
               <div class="space-y-2">
-                <p class="">Email</p>
+                <p class="">Email*</p>
                 <input
                   type="email"
                   v-model="userInfo.email"
@@ -275,7 +275,7 @@ const submitForm = async (): Promise<void> => {
               </div>
               <!--  -->
               <div class="space-y-2">
-                <p class="">Password</p>
+                <p class="">Password*</p>
                 <input
                   type="password"
                   v-model="userInfo.password"
@@ -287,7 +287,7 @@ const submitForm = async (): Promise<void> => {
               </div>
               <!--  -->
               <div class="space-y-2">
-                <p class="">Confirm Password</p>
+                <p class="">Confirm Password*</p>
                 <input
                   type="password"
                   v-model="userInfo.confirmPassword"

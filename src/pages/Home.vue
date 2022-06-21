@@ -1,11 +1,40 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, provide } from "vue";
 import sideNav from "../components/sideNav.vue";
+import appLogout from "../modals/logout.vue";
+import createGroup from "../modals/create-group.vue";
+import overlay from "../modals/overlay.vue";
+
+const isShowCreateGroup = ref(false);
+const isLogout = ref(false);
+
+provide("showCreateGroup", isShowCreateGroup);
+
+provide("showLogout", isLogout);
 </script>
 <template>
-  <div class="flex">
+  <div class="flex relative">
+    <!-- logout -->
+    <div v-if="isLogout == true">
+      <component :is="overlay" />
+      <component
+        :is="appLogout"
+        class="absolute top-[30%] left-[50%] z-50 w-auto p-5"
+        @close-logout="isLogout = false"
+      />
+    </div>
+
+    <!-- group create modal -->
+    <div v-if="isShowCreateGroup == true">
+      <component :is="overlay" />
+      <component
+        :is="createGroup"
+        class="absolute top-[5%] left-[40%] z-50 w-auto p-5"
+      />
+    </div>
+
     <!-- side nav -->
-    <component :is="sideNav" class="w-[35%] bg-slate-700" />
+    <component :is="sideNav" class="w-[30rem]" />
 
     <!-- chat -->
     <div class="w-full bg-slate-800">
@@ -42,7 +71,7 @@ import sideNav from "../components/sideNav.vue";
       <div class="px-10 py-10 space-y-5 mt-20">
         <!--  -->
         <div class="flex justify-end space-x-1 text-gray-300 relative w-full">
-          <p class="cursor-pointer">:</p>
+          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" />
           <!--chat options -->
           <div
             class="bg-slate-700 p-3 space-y-5 absolute right-[25%] top-[70%] text-sm rounded-lg hidden"
@@ -117,7 +146,7 @@ import sideNav from "../components/sideNav.vue";
               </div>
             </div>
           </div>
-          <p class="cursor-pointer">:</p>
+          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" />
           <!--chat options -->
           <div
             class="bg-slate-700 p-3 space-y-5 absolute left-[47%] top-[35%] text-sm rounded-lg hidden"
@@ -143,7 +172,7 @@ import sideNav from "../components/sideNav.vue";
       <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
         <div class="flex space-x-3">
           <div class="flex space-x-5">
-            <p>...</p>
+            <img src="/images/svg/option.svg" alt="" class="w-2" />
             <img
               src="/images/svg/smileyl.svg"
               alt="emoji"
@@ -159,11 +188,7 @@ import sideNav from "../components/sideNav.vue";
           />
           <!--  -->
           <div class="bg-slate-700 p-2 rounded-full">
-            <img
-              src="/public/images/svg/send.svg"
-              alt="send"
-              class="w-[30px]"
-            />
+            <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
           </div>
         </div>
       </div>

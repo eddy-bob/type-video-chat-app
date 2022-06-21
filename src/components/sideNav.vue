@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { ref, reactive, shallowRef } from "vue";
+import { ref, reactive, shallowRef, inject } from "vue";
+import profile from "../components/profile.vue";
 import friends from "../components/friends.vue";
+import call from "../components/calls.vue";
 import groups from "../components/groups.vue";
 import friendRequests from "../components/friend-requests.vue";
 import peopleYouMayKnow from "../components/people-you-may-know.vue";
 import recentChats from "../components/recent-chats.vue";
+
 const active = shallowRef(recentChats);
+
+const showLogout = inject<any>("showLogout");
+
 const Show = (id: string) => {
   const ele = (document.getElementById(id)!.style.display = "block");
 };
+
 const Hide = (id: string) => {
   document.getElementById(id)!.style.display = "none";
 };
@@ -16,20 +23,20 @@ const Hide = (id: string) => {
 <template>
   <div class="flex">
     <div
-      class="px-6 pt-20 bg-slate-600 min-h-screen h-auto space-y-12 text-white"
+      class="px-3 pt-20 bg-slate-700 min-h-screen h-auto space-y-12 text-white"
     >
       <!--  -->
       <div class="relative flex cursor-pointer">
         <i
           @click="active = recentChats"
-          class="fas fa-comment fa-xl"
+          class="fas fa-comment fa-md"
           @mouseenter="Show('recentChats')"
           @mouseleave="Hide('recentChats')"
         ></i>
 
         <p
           id="recentChats"
-          class="absolute ]z-50 left-5 hidden bg-gray-800 py-2 px-3"
+          class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3"
         >
           chats
         </p>
@@ -37,7 +44,7 @@ const Hide = (id: string) => {
       <!--  -->
       <div class="relative flex cursor-pointer">
         <i
-          class="fas fa-user-friends fa-xl"
+          class="fas fa-user-friends fa-md"
           @click="active = friends"
           @mouseenter="Show('friends')"
           @mouseleave="Hide('friends')"
@@ -54,7 +61,7 @@ const Hide = (id: string) => {
       <div class="relative flex cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="w-[35px]"
+          class="w-[25px]"
           @click="active = groups"
           @mouseenter="Show('groups')"
           @mouseleave="Hide('groups')"
@@ -77,10 +84,11 @@ const Hide = (id: string) => {
           channels
         </p>
       </div>
+
       <!--  -->
       <div class="relative flex cursor-pointer">
         <i
-          class="fas fa-bell fa-xl"
+          class="fas fa-bell fa-lg"
           @click="active = friendRequests"
           @mouseenter="Show('friendRequests')"
           @mouseleave="Hide('friendRequests')"
@@ -95,18 +103,64 @@ const Hide = (id: string) => {
       </div>
       <!--  -->
       <div class="relative flex cursor-pointer">
-        <i
-          class="fas fa-search-location fa-xl"
+        <img
+          src="/images/svg/location.svg"
+          alt="location"
+          class="location w-[22px]"
           @click="active = peopleYouMayKnow"
           @mouseenter="Show('peopleYouMayKnow')"
           @mouseleave="Hide('peopleYouMayKnow')"
-        ></i>
+        />
 
         <p
           id="peopleYouMayKnow"
           class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3"
         >
           nearbys
+        </p>
+      </div>
+      <!--  -->
+
+      <div class="relative flex cursor-pointer">
+        <i
+          class="fas fa-user fa-lg"
+          @click="active = profile"
+          @mouseenter="Show('profile')"
+          @mouseleave="Hide('profile')"
+        ></i>
+
+        <p
+          id="profile"
+          class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3"
+        >
+          Profile
+        </p>
+      </div>
+      <div class="relative flex cursor-pointer">
+        <i
+          class="fas fa-phone fa-lg"
+          @click="active = call"
+          @mouseenter="Show('call')"
+          @mouseleave="Hide('call')"
+        ></i>
+
+        <p id="call" class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3">
+          calls
+        </p>
+      </div>
+      <div class="relative flex cursor-pointer">
+        <i
+          @click="showLogout = !showLogout"
+          class="fas fa-sign-out-alt fa-2xl fa-red logout"
+          @mouseenter="Show('logout')"
+          @mouseleave="Hide('logout')"
+        ></i>
+
+        <p
+          id="logout"
+          class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3"
+        >
+          logout
         </p>
       </div>
     </div>
@@ -120,5 +174,11 @@ p {
   font-family: "Times New Roman", Times, serif;
   font-style: normal;
   font-weight: 400;
+}
+.logout {
+  color: rgb(160, 16, 16);
+}
+.location {
+  color: white;
 }
 </style>
