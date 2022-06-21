@@ -5,9 +5,9 @@ const emit = defineEmits<{ (e: "close-logout"): void }>();
 
 <template>
   <div
-    class="space-y-3 bg-slate-600 text-gray-300 rounded-md shadow shadow-gray-300"
+    class="space-y-3 bg-slate-800 text-gray-300 rounded-md shadow shadow-gray-300"
   >
-    <p class="font-extrabold">Are you sue you want to signout?</p>
+    <p class="font-extrabold">Are you sure you want to signout?</p>
     <div class="flex text-sm font-extrabold justify-between text-gray-300">
       <button
         class="px-3 py-2 confirm rounded-md"
