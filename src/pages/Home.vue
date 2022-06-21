@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted, provide } from "vue";
+import { ref, reactive, onMounted, provide, onBeforeUnmount } from "vue";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "../modals/logout.vue";
 import createGroup from "../modals/create-group.vue";
 import overlay from "../modals/overlay.vue";
-
+import SocketioService from "../core/utils/socket-connection";
+// setup socket connection
+SocketioService.setupSocketConnection();
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
-
+onBeforeUnmount(() => {
+  SocketioService.disconnect();
+});
 provide("showCreateGroup", isShowCreateGroup);
 
 provide("showLogout", isLogout);

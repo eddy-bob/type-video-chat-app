@@ -6,7 +6,7 @@ const showModal: any = inject("showCreateGroup");
 </script>
 
 <template>
-  <div class="bg-slate-700 shadow shadow-gray-300 text-gray-300 rounded-md">
+  <div class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md">
     <div class="flex justify-between border-b pb-4">
       <p class="font-extrabold text-[19px]">create channel</p>
       <p
@@ -50,7 +50,7 @@ const showModal: any = inject("showCreateGroup");
             <div class="px-6">
               <!--  -->
               <div
-                class="flex border py-1 px-2 rounded-md fixed w-[31%] top-[35%] z-50 bg-gray-500"
+                class="flex border py-1 px-2 rounded-md fixed w-[31%] top-[37%] z-50 bg-gray-500"
               >
                 <input
                   type="text"

@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_ACCESSTK: string
   readonly VITE_USERDETAILS: string
   readonly VITE_COOKIE_EXPIRE: string
+  readonly VITE_SOCKET_URL: string
   // more env variables...
 }
 
