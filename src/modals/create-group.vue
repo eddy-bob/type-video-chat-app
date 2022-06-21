@@ -50,7 +50,7 @@ const showModal: any = inject("showCreateGroup");
             <div class="px-6">
               <!--  -->
               <div
-                class="flex border py-1 px-2 rounded-md fixed w-[31%] top-[37%] z-50 bg-gray-500"
+                class="flex border py-1 px-2 rounded-md fixed w-[31%] top-[35%] z-50 bg-gray-500"
               >
                 <input
                   type="text"
