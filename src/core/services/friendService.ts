@@ -12,7 +12,7 @@ class FriendService {
        async blockFriend(friendId: string): Promise<any> {
               const response = await this.request
                      .put(`user/friend/${friendId}/block`, undefined, { headers: authHeader() })
-              return response.data
+              return response;
        }
        /**
        *put-- unblock friend
@@ -22,7 +22,7 @@ class FriendService {
               const response = await this.request
                      .put(`user/friend/${friendId}/unblock`, undefined,
                             { headers: authHeader() })
-              return response.data
+              return response;
        }
        /**
        *get-- fetch all friends
@@ -31,7 +31,7 @@ class FriendService {
        async fetchFriends(): Promise<any> {
               const response = await this.request
                      .get(`user/friend`, { headers: authHeader() })
-              return response.data
+              return response;
        }
 }
 

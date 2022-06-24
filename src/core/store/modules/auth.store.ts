@@ -10,6 +10,7 @@ const authStore = defineStore('auth', {
   state: () => {
     return {
       isAuthenticated: isIdentity,
+      active: false,
       customerReg: {
         firstName: "",
         lastName: "",
@@ -120,16 +121,16 @@ const authStore = defineStore('auth', {
           return await Promise.resolve(response)
         }
         else if (response.response) {
-        
+
           return await Promise.reject(response.response)
         }
         else {
-         
+
           return await Promise.reject(response.message)
         }
 
       } catch (error: any) {
-        
+
         return await Promise.reject(error);
       }
     },

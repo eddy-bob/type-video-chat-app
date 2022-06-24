@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, computed, defineExpose } from "vue";
+import { reactive, ref, computed } from "vue";
 import preview from "../../modals/preview-image.vue";
 import overlay from "../../modals/overlay.vue";
 
@@ -40,7 +40,7 @@ const setCoverPhoto = () => {
   userInfo.coverPhoto = selectedImg.value as ArrayBuffer;
 };
 const selectImg = async (type: string) => {
-  const dat = (await chooseImage(event, type, notify)) as FileType;
+  const dat = (await chooseImage(event, type, notify)) as FileType;  
   showPreview.value = dat.showpreview as boolean;
   selectedImg.value = dat.selectedimg;
   imageType.value = dat.imagetype;

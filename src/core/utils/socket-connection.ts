@@ -1,36 +1,64 @@
-import SocketIO from 'socket.io-client';
-import { Socket } from "socket.io-client"
+import { user as userStore, useAuthStore } from "../store/index";
+import SocketIO from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { getItem } from "../../core/utils/storage.helper";
-import VueSocketIO from "vue-socket.io"
+import VueSocketIO from "vue-socket.io";
 
 // socketio connection
 
-
 class SocketioService {
-       socket!: Socket;
-       constructor() { }
+  socket!: Socket;
 
-       setupSocketConnection() {
+  userStore!: any;
+  authStore!: any;
+  constructor() { }
 
-              let user: { rsa: string | undefined } = getItem(import.meta.env.VITE_ACCESSTK);
-              if (user && user.rsa) {
-                     this.socket = SocketIO('http://localhost:5000', {
-                            extraHeaders: {
-                                   Authorization: user.rsa,
-                            },
-                     });
-                     new VueSocketIO({
-                            debug: true,
-                            connection: this.socket
-                     })
+  async setupSocketConnection() {
+    this.userStore = userStore();
+    this.authStore = useAuthStore();
 
-              }
-       };
-       disconnect() {
-              if (this.socket) {
-                     this.socket.disconnect();
-              }
-       }
+    let user: { rsa: string | undefined } = getItem(
+      import.meta.env.VITE_ACCESSTK
+    );
+    if (user && user.rsa) {
+
+      this.socket = SocketIO("http://localhost:5000", {
+        extraHeaders: {
+          Authorization: user.rsa,
+        },
+      });
+      new VueSocketIO({
+        debug: true,
+        connection: this.socket,
+      });
+      console.log(this.authStore)
+      // update active status
+      return await this.userStore
+        .updateProfile({ isLoggedIn: true }).then((res: any) => {
+
+          this.authStore.active = true;
+          return Promise.resolve(res)
+        }).catch((err: any) => {
+
+          return Promise.reject(err)
+        })
+    }
+  }
+  async disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+      // update active status
+      return await this.userStore
+        .updateProfile({ isLoggedIn: false }).then((res: any) => {
+
+          this.authStore.active = true;
+          return Promise.resolve(res)
+        }).catch((err: any) => {
+
+          return Promise.reject(err)
+        })
+    }
+  }
 }
 
 export default new SocketioService();

@@ -1,20 +1,26 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted, provide, onBeforeUnmount } from "vue";
+import { ref, reactive, onMounted, provide, onUnmounted } from "vue";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "../modals/logout.vue";
 import createGroup from "../modals/create-group.vue";
 import overlay from "../modals/overlay.vue";
+import preview from "../modals/preview-image.vue";
 import SocketioService from "../core/utils/socket-connection";
 // setup socket connection
 SocketioService.setupSocketConnection();
+const selectedImg = ref<ArrayBuffer>();
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
-onBeforeUnmount(() => {
+const showPreview = ref(false);
+const imageType = ref<string | null>();
+onUnmounted(() => {
   SocketioService.disconnect();
 });
 provide("showCreateGroup", isShowCreateGroup);
-
 provide("showLogout", isLogout);
+provide("showPreview", showPreview);
+provide("selectedImg", selectedImg);
+provide("imageType",imageType);
 </script>
 <template>
   <div class="flex relative">
@@ -27,7 +33,17 @@ provide("showLogout", isLogout);
         @close-logout="isLogout = false"
       />
     </div>
-
+    <!-- image preview component -->
+    <div v-if="showPreview == true">
+      <component :is="overlay" class="" />
+      <component
+        :is="preview"
+        class="z-50 absolute"
+        :image="selectedImg"
+        @close-preview="showPreview = false"
+        @choose-image="setImage"
+      />
+    </div>
     <!-- group create modal -->
     <div v-if="isShowCreateGroup == true">
       <component :is="overlay" />

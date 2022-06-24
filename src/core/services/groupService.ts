@@ -13,7 +13,7 @@ class GroupService {
        async getGroup(groupId: string): Promise<any> {
               const response = await this.request
                      .get(`group/get-group/${groupId}`, { headers: authHeader() })
-              return response.data
+             return response;
        }
        /**
         *get-- get groups
@@ -26,7 +26,7 @@ class GroupService {
                             `group/fetch-groups`,
                             { headers: authHeader() }
                      )
-              return response.data
+             return response;
        }
        /**
       *put-- update group
@@ -40,7 +40,7 @@ class GroupService {
                             { ...data },
                             { headers: authHeader() }
                      )
-              return response.data
+             return response;
        }
 
        /**
@@ -55,7 +55,7 @@ class GroupService {
                             { ...data },
                             { headers: authHeader() }
                      )
-              return response.data
+             return response;
        }
        /**
      *delete-- delete group
@@ -68,7 +68,7 @@ class GroupService {
                             `group/delete/${groupId}`,
                             { headers: authHeader() }
                      )
-              return response.data
+             return response;
        }
 
 }

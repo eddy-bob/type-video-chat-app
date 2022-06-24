@@ -12,7 +12,7 @@ class GroupChatService {
        async deleteChat(data: { chatId: string, groupId: string }): Promise<any> {
               const response = await this.request
                      .delete(`group/chat/?chatId=${data.chatId}&&groupId=${data.groupId}`, { headers: authHeader() })
-              return response.data
+              return response;
        }
        /**
         *get-- get group chats
@@ -25,7 +25,7 @@ class GroupChatService {
                             `group/chat/${groupId}`,
                             { headers: authHeader() }
                      )
-              return response.data
+              return response;
        }
 
 }

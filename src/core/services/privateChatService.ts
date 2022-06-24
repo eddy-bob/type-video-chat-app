@@ -12,7 +12,7 @@ class PrivateChatService {
        async deleteChat(chatId: string): Promise<any> {
               const response = await this.request
                      .delete(`user/private-chat/delete/${chatId}`, { headers: authHeader() })
-              return response.data
+             return response;
        }
        /**
         *get-- get private chats between the logged in user and another
@@ -25,7 +25,7 @@ class PrivateChatService {
                             `user/private-chat/${friendId}/get-chats`,
                             { headers: authHeader() }
                      )
-              return response.data
+             return response;
        }
 
 }
