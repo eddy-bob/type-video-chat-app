@@ -11,7 +11,7 @@ class UserService {
      */
   async getUsers(): Promise<any> {
     const response = await this.request
-      .get(`users`, { headers: authHeader() })
+      .get(`user/users`, { headers: authHeader() })
     return response;
   }
 
@@ -22,7 +22,7 @@ class UserService {
        */
   async deleteUsers(): Promise<any> {
     const response = await this.request
-      .delete(`delete-all`, { headers: authHeader() })
+      .delete(`user/delete-all`, { headers: authHeader() })
     return response;
   }
   /**
@@ -32,7 +32,7 @@ class UserService {
          */
   async deleteUser(userId: string): Promise<any> {
     const response = await this.request
-      .delete(`delete-user-account/${userId}`, { headers: authHeader() })
+      .delete(`user/delete-user-account/${userId}`, { headers: authHeader() })
     return response;
   }
   /**
@@ -42,7 +42,7 @@ class UserService {
        */
   async deleteAccount(): Promise<any> {
     const response = await this.request
-      .delete(`delete-account`, { headers: authHeader() })
+      .delete(`user/delete-account`, { headers: authHeader() })
     return response;
   }
   /**
@@ -52,7 +52,7 @@ class UserService {
    */
   async getUserProfile(userId: string): Promise<any> {
     const response = await this.request
-      .get(`/user-profile/${userId}`, { headers: authHeader() })
+      .get(`user/user-profile/${userId}`, { headers: authHeader() })
     return response;
   }
   /**
@@ -61,7 +61,7 @@ class UserService {
  */
   async getProfile(): Promise<any> {
     const response = await this.request
-      .get(`/profile`, { headers: authHeader() })
+      .get(`user/profile`, { headers: authHeader() })
     return response;
   }
   /**
@@ -72,7 +72,7 @@ class UserService {
   async updateProfile(data: any): Promise<any> {
     const response = await this.request
       .put(
-        "/update-profile",
+        "user/update-profile",
         { ...data },
         { headers: authHeader() }
       )
@@ -86,7 +86,7 @@ class UserService {
   async updateUserProfile(data: any, userId: string): Promise<any> {
     const response = await this.request
       .put(
-        `/update-user/:${userId}`,
+        `user/update-user/:${userId}`,
         { ...data },
         { headers: authHeader() }
       )

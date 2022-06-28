@@ -1,14 +1,13 @@
 import { user as userStore, useAuthStore } from "../store/index";
-import SocketIO from "socket.io-client";
+import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 import { getItem } from "../../core/utils/storage.helper";
-import VueSocketIO from "vue-socket.io";
+import VueSocketIO from "vue-3-socket.io";
 
 // socketio connection
 
 class SocketioService {
   socket!: Socket;
-
   userStore!: any;
   authStore!: any;
   constructor() { }
@@ -21,23 +20,28 @@ class SocketioService {
       import.meta.env.VITE_ACCESSTK
     );
     if (user && user.rsa) {
-
-      this.socket = SocketIO("http://localhost:5000", {
+      this.socket = io("http://localhost:5000", {
         extraHeaders: {
           Authorization: user.rsa,
         },
       });
-      new VueSocketIO({
-        debug: true,
-        connection: this.socket,
-      });
-      console.log(this.authStore)
+
+      // new VueSocketIO({
+      //   debug: true,
+      //   connection: SocketIO("http://localhost:5000", {
+      //     extraHeaders: {
+      //       Authorization: user.rsa,
+      //     },
+      //   });
+      // });
+      console.log(this.socket)
       // update active status
       return await this.userStore
         .updateProfile({ isLoggedIn: true }).then((res: any) => {
 
           this.authStore.active = true;
-          return Promise.resolve(res)
+          console.log(res, this.socket)
+          return Promise.resolve([res, this.socket])
         }).catch((err: any) => {
 
           return Promise.reject(err)

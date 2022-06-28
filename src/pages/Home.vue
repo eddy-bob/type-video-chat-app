@@ -1,26 +1,53 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted, provide, onUnmounted } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  provide,
+  onUnmounted,
+  shallowRef,
+} from "vue";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "../modals/logout.vue";
 import createGroup from "../modals/create-group.vue";
 import overlay from "../modals/overlay.vue";
 import preview from "../modals/preview-image.vue";
 import SocketioService from "../core/utils/socket-connection";
+import { Socket } from "socket.io-client";
 // setup socket connection
-SocketioService.setupSocketConnection();
+SocketioService.setupSocketConnection()
+  .then((response) => {
+    socket.value = response[1];
+    console.log(socket.value);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 const selectedImg = ref<ArrayBuffer>();
+const socket = shallowRef<Socket>();
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
 const showPreview = ref(false);
 const imageType = ref<string | null>();
+const isSetImage = ref(false);
+const setImage = (value: boolean) => {
+  isSetImage.value = value;
+};
 onUnmounted(() => {
-  SocketioService.disconnect();
+  SocketioService.disconnect()
+    .then((response) => {
+      console.log(socket.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 provide("showCreateGroup", isShowCreateGroup);
 provide("showLogout", isLogout);
 provide("showPreview", showPreview);
 provide("selectedImg", selectedImg);
-provide("imageType",imageType);
+provide("setImage", isSetImage);
+provide("imageType", imageType);
 </script>
 <template>
   <div class="flex relative">
@@ -41,7 +68,7 @@ provide("imageType",imageType);
         class="z-50 absolute"
         :image="selectedImg"
         @close-preview="showPreview = false"
-        @choose-image="setImage"
+        @choose-image="setImage(true)"
       />
     </div>
     <!-- group create modal -->

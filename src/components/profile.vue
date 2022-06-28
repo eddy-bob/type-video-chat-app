@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, inject } from "vue";
+import { ref, reactive, inject, watchEffect } from "vue";
 import preview from "../../modals/preview-image.vue";
 import overlay from "../../modals/overlay.vue";
 import chooseImage from "../mixins/choose-file";
@@ -7,9 +7,12 @@ import { notify } from "@kyvg/vue3-notification";
 import { user, useAuthStore } from "../core/store/index";
 const userStore = user();
 const authStore = useAuthStore();
+// pass required image data from the parent
 let showPreview = inject<{ value: boolean }>("showPreview");
 let selectedImg = inject<{ value: ArrayBuffer }>("selectedImg");
 let imageType = inject<{ value: string }>("imageType");
+let setImage = inject<{ value: boolean }>("setImage");
+let editAbout = ref(false);
 const userInfo = reactive<{
   profilePicture?: ArrayBuffer;
   coverPhoto?: ArrayBuffer;
@@ -31,22 +34,30 @@ const setCoverPhoto = () => {
 };
 const selectImg = async (type: string) => {
   const dat = (await chooseImage(event, type, notify)) as FileType;
-  console.log(dat);
   showPreview!.value = dat.showpreview as boolean;
   selectedImg!.value = dat.selectedimg;
   imageType!.value = dat.imagetype;
+  setImage!.value = false;
 };
-const setImage = (type: string) => {
-  if (imageType.value === "profilePicture") {
+
+const insetImage = (type: any) => {
+  if (type!.value === "profilePicture") {
     setProfilePic();
   } else {
     setCoverPhoto();
   }
 };
+watchEffect(() => {
+  if (setImage!.value == true) {
+    insetImage(imageType);
+  }
+});
 </script>
 
 <template>
-  <div class="bg-slate-800 border-r border-r-slate-600 text-gray-300">
+  <div
+    class="bg-slate-800 border-r border-r-slate-600 text-gray-300 overflow-y-scroll myOverflow max-h-screen"
+  >
     <div class="border-b border-slate-600 pb-4">
       <div class="relative space-y-5">
         <img
@@ -101,10 +112,36 @@ const setImage = (type: string) => {
     </div>
     <!--  -->
     <div class="border-b border-slate-600 py-6 px-6 text-xs space-y-4">
-      <p class="">
-        I am a fullstack Engineer with expertise in node.js/typescript and
-        vue.js. Coding to me is as vital as living.
-      </p>
+      <div class="flex">
+        <p class="">
+          I am a fullstack Engineer with expertise in node.js/typescript and
+          vue.js. Coding to me is as vital as living.
+        </p>
+
+        <i
+          class="fas fa-pencil-alt cursor-pointer"
+          @click="editAbout = !editAbout"
+        ></i>
+      </div>
+      <!-- edit about -->
+      <form v-if="editAbout == true" class="space-y-4">
+        <textarea
+          class="p-2 w-full bg-transparent border"
+          name=""
+          id=""
+          rows="5"
+          value="I am a fullstack Engineer with expertise in node.js/typescript and
+          vue.js. Coding to me is as vital as living."
+        ></textarea>
+        <div class="w-full flex justify-end">
+          <button
+            type="submit"
+            class="appBgGreen px-4 py-2 outline-none focus:outline-none"
+          >
+            Update
+          </button>
+        </div>
+      </form>
       <div class="flex font-extrabold space-x-3">
         <i class="fas fa-mail-bulk"></i>
         <p>DestinyJunior@gmail.com</p>
