@@ -1,13 +1,12 @@
 import { user as userStore, useAuthStore } from "../store/index";
 import { io } from "socket.io-client";
-import { Socket } from "socket.io-client";
 import { getItem } from "../../core/utils/storage.helper";
 import VueSocketIO from "vue-3-socket.io";
 
 // socketio connection
 
 class SocketioService {
-  socket!: Socket;
+  socket!: any;
   userStore!: any;
   authStore!: any;
   constructor() { }
@@ -26,15 +25,8 @@ class SocketioService {
         },
       });
 
-      // new VueSocketIO({
-      //   debug: true,
-      //   connection: SocketIO("http://localhost:5000", {
-      //     extraHeaders: {
-      //       Authorization: user.rsa,
-      //     },
-      //   });
-      // });
-      console.log(this.socket)
+      
+      
       // update active status
       return await this.userStore
         .updateProfile({ isLoggedIn: true }).then((res: any) => {

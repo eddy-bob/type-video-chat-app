@@ -1,19 +1,13 @@
 <script lang="ts" setup>
-import {
-  ref,
-  reactive,
-  onMounted,
-  provide,
-  onUnmounted,
-  shallowRef,
-} from "vue";
+import { ref, provide, onBeforeUnmount, shallowRef } from "vue";
+
 import sideNav from "../components/sideNav.vue";
 import appLogout from "../modals/logout.vue";
 import createGroup from "../modals/create-group.vue";
 import overlay from "../modals/overlay.vue";
 import preview from "../modals/preview-image.vue";
 import SocketioService from "../core/utils/socket-connection";
-import { Socket } from "socket.io-client";
+
 // setup socket connection
 SocketioService.setupSocketConnection()
   .then((response) => {
@@ -23,8 +17,10 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
+
 const selectedImg = ref<ArrayBuffer>();
-const socket = shallowRef<Socket>();
+
+const socket = shallowRef<any>();
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
 const showPreview = ref(false);
@@ -33,15 +29,17 @@ const isSetImage = ref(false);
 const setImage = (value: boolean) => {
   isSetImage.value = value;
 };
-onUnmounted(() => {
+// disconnect socket connection and update active status
+onBeforeUnmount(() => {
   SocketioService.disconnect()
     .then((response) => {
-      console.log(socket.value);
+      console.log("this is appearing before onmount", socket.value);
     })
     .catch((err) => {
       console.log(err);
     });
 });
+
 provide("showCreateGroup", isShowCreateGroup);
 provide("showLogout", isLogout);
 provide("showPreview", showPreview);
