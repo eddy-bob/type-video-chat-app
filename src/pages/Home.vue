@@ -1,6 +1,14 @@
 <script lang="ts" setup>
-import { ref, provide, onBeforeUnmount, shallowRef } from "vue";
-
+import {
+  ref,
+  provide,
+  onBeforeUnmount,
+  shallowRef,
+  watch,
+  watchEffect,
+} from "vue";
+import UIcomponent from "../components/UIcomponent/spinner.vue";
+import { useGroupStore, useGroupChat } from "../core/store/index";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "../modals/logout.vue";
 import createGroup from "../modals/create-group.vue";
@@ -17,18 +25,122 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
-
+// initialize store
+const groupStore = useGroupStore();
+const groupChatStore = useGroupChat();
+//variables
 const selectedImg = ref<ArrayBuffer>();
-
+const groupId = ref<string>("");
+const loading = ref(false);
+const friendId = ref<string>("");
 const socket = shallowRef<any>();
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
 const showPreview = ref(false);
 const imageType = ref<string | null>();
 const isSetImage = ref(false);
+const groupProfileData = ref({});
+const friendProfileData = ref({});
+const groupChatData = ref<any[]>([]);
+const chat = ref("");
+// provides
+provide("groupId", groupId);
+provide("showCreateGroup", isShowCreateGroup);
+provide("showLogout", isLogout);
+provide("showPreview", showPreview);
+provide("selectedImg", selectedImg);
+provide("setImage", isSetImage);
+provide("imageType", imageType);
+
 const setImage = (value: boolean) => {
   isSetImage.value = value;
 };
+
+// fetch group details
+const groupProfile = (id: string) => {
+  groupStore
+    .getGroup(id)
+    .then((res) => {
+      groupProfileData.value = res.data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+// fetch groupChat
+const groupChat = (id: string) => {
+  loading.value = true;
+  groupChatStore
+    .getGroupChat(id)
+    .then((res) => {
+      console.log(res);
+      groupChatData.value = res.data.data;
+      loading.value = false;
+    })
+    .catch((err) => {
+      console.log(err);
+      loading.value = false;
+    });
+};
+// listen for when there is a change in the group id
+watch(groupId, (current, previous) => {
+  if (current !== previous) {
+    console.log(previous, current);
+    groupProfile(current);
+    groupChat(current);
+  }
+});
+// add groupchat
+const addGroupChat = () => {
+  console.log(chat.value);
+  // emit add chat
+  if (socket.value) {
+    socket.value.emit("groupMessage", {
+      groupId: groupId.value,
+      message: chat.value,
+    });
+  }
+};
+watchEffect(() => {
+  // listen for new group message
+  if (socket.value) {
+    console.log(socket.value);
+    socket.value.on("newGroupMessage", (data: any) => {
+      console.log(data);
+      groupChatData.value.push(data);
+    });
+
+    socket.value.on("joinGroupSuccess", (data: any) => {
+      console.log(data);
+    });
+
+    socket.value.on("groupJoin", (data: any) => {
+      console.log(data);
+    });
+
+    socket.value.on("groupError", (data: any) => {
+      console.log(data);
+    });
+    socket.value.on("groupChatError", (data: any) => {
+      console.log(data);
+    });
+
+    socket.value.on("groupJoin", (data: any) => {
+      console.log("group", data);
+    });
+    socket.value.on("leaveGroupSuccess", (data: any) => {
+      console.log("group", data);
+    });
+
+    socket.value.on("groupLeave", (data: any) => {
+      console.log("group Leave", data);
+    });
+    socket.value.on("newMessage", (data: any) => {
+      console.log(data);
+    });
+  }
+});
+
 // disconnect socket connection and update active status
 onBeforeUnmount(() => {
   SocketioService.disconnect()
@@ -39,13 +151,6 @@ onBeforeUnmount(() => {
       console.log(err);
     });
 });
-
-provide("showCreateGroup", isShowCreateGroup);
-provide("showLogout", isLogout);
-provide("showPreview", showPreview);
-provide("selectedImg", selectedImg);
-provide("setImage", isSetImage);
-provide("imageType", imageType);
 </script>
 <template>
   <div class="flex relative">
@@ -91,17 +196,46 @@ provide("imageType", imageType);
         <div class="flex space-x-4">
           <div class="relative">
             <img
-              src="/images/jpg/icon.jpg"
-              alt="img"
+              v-if="!groupProfileData"
+              src="
+                   '/images/jpeg/noImg.jpeg'
+              "
+              alt="profile picture"
+              class="rounded-full w-12 h-12"
+            />
+            <img
+              v-else
+              :src="
+                groupProfileData &&
+                groupProfileData?.photo &&
+                groupProfileData?.photo.name !== 'noimage.jpg'
+                  ? groupProfileData?.photo.name !== 'noimage.jpg'
+                  : '/images/jpeg/noImg.jpeg'
+              "
+              alt="profile picture"
               class="rounded-full w-12 h-12"
             />
             <p
+              v-if="!groupProfileData"
               class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-2"
             ></p>
           </div>
           <div>
-            <p class="font-extrabold text-[16px]">Eddy madu</p>
-            <p class="text-xs">Active</p>
+            <p class="font-extrabold text-[16px]">
+              {{
+                groupProfileData?.name ? groupProfileData?.name : "Eddy Madu"
+              }}
+            </p>
+
+            <p
+              class="text-xs"
+              v-if="
+                friendProfileData?.isLoggedIn &&
+                friendProfileData?.isLoggedIn == true
+              "
+            >
+              Active
+            </p>
           </div>
         </div>
         <!--  -->
@@ -113,12 +247,23 @@ provide("imageType", imageType);
       </div>
       <!--  -->
       <!-- chats -->
-      <div class="px-10 py-10 space-y-5 mt-20">
-        <!--  -->
-        <div class="flex justify-end space-x-1 text-gray-300 relative w-full">
-          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" />
-          <!--chat options -->
-          <div
+      <!-- chat heads -->
+      <div
+        v-if="loading == true"
+        class="flex flex-col items-center justify-center h-[300px]"
+      >
+        <component :is="UIcomponent" />
+      </div>
+      <div v-else class="px-10 py-10 space-y-5 mt-20">
+        <div v-for="chat in groupChatData" :key="chat._id">
+          {{ chat }}
+        </div>
+        <!-- chat loop -->
+
+        <!-- <div class="flex justify-end space-x-1 text-gray-300 relative w-full"  >
+          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" /> -->
+        <!--chat options -->
+        <!-- <div
             class="bg-slate-700 p-3 space-y-5 absolute right-[25%] top-[70%] text-sm rounded-lg hidden"
           >
             <div class="flex justify-between">
@@ -159,11 +304,11 @@ provide("imageType", imageType);
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!--  -->
         <!--  -->
 
-        <div
+        <!-- <div
           class="flex justify-start space-x-1 text-gray-300 text-sm w-auto max-w-[50rem]"
         >
           <div class="text-left flex space-x-2">
@@ -191,9 +336,9 @@ provide("imageType", imageType);
               </div>
             </div>
           </div>
-          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" />
-          <!--chat options -->
-          <div
+          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" /> -->
+        <!--chat options -->
+        <!-- <div
             class="bg-slate-700 p-3 space-y-5 absolute left-[47%] top-[35%] text-sm rounded-lg hidden"
           >
             <div class="flex justify-between">
@@ -209,12 +354,15 @@ provide("imageType", imageType);
               <img src="" alt="" />
             </div>
           </div>
-        </div>
+        </div> -->
         <!--  -->
       </div>
       <!--  -->
       <!-- input field -->
-      <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
+      <form
+        class="fixed bottom-0 w-full my-2 text-gray-200 px-10"
+        @submit.prevent="addGroupChat"
+      >
         <div class="flex space-x-3">
           <div class="flex space-x-5">
             <img src="/images/svg/option.svg" alt="" class="w-2" />
@@ -228,15 +376,16 @@ provide("imageType", imageType);
           <input
             type="text"
             name="message"
+            v-model="chat"
             class="focus:outline-none outline-none bg-slate-700 py-2 px-3 w-[60%] text-sm"
             placeholder="message here . . ."
           />
           <!--  -->
-          <div class="bg-slate-700 p-2 rounded-full">
+          <button class="bg-slate-700 p-2 rounded-full">
             <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
-          </div>
+          </button>
         </div>
-      </div>
+      </form>
       <!-- end of input -->
     </div>
   </div>

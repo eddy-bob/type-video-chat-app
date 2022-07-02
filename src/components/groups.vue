@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, inject, reactive } from "vue";
+import { ref, inject } from "vue";
 import { useGroupStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 // define open channel modal func
-const showModal = inject<any>("showCreateGroup");
+const showModal = inject<{ value: boolean }>("showCreateGroup");
+const singleGroupId = inject<{ value: string }>("groupId");
+
 // initialize store
 const store = useGroupStore();
 const loading = ref(false);
@@ -52,7 +54,11 @@ const getActiveGroup = () => {
 };
 // initialize fetch group
 getActiveGroup();
-
+// pass groupId to the home chat page
+const fetchGroupChat = (id: string) => {
+  
+  singleGroupId!.value = id;
+};
 // const openChannelModal = () => {
 //   emit("open-group-modal");
 // };
@@ -112,11 +118,14 @@ getActiveGroup();
             <p class="w-full border-b border-b-gray-500 mb-3"></p>
           </div>
           <div
-            class="flex justify-between px-3"
+            class="flex justify-between"
             v-for="singleGroup in letterGroup[Object.keys(letterGroup)[0]]"
-            :key="singleGroup"
+            :key="singleGroup._id"
           >
-            <div class="flex space-x-3 chathead">
+            <div
+              class="flex space-x-3 chathead cursor-pointer"
+              @click="fetchGroupChat(singleGroup._id)"
+            >
               <div class="relative">
                 <img
                   :src="
