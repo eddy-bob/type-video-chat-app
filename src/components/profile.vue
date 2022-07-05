@@ -62,7 +62,9 @@ watchEffect(() => {
       <div class="relative space-y-5">
         <img
           :src="
-            userInfo.coverPhoto ? userInfo.coverPhoto : '/images/png/cover.png'
+            userInfo.coverPhoto
+              ? userInfo.coverPhoto
+              : '/images/jpeg/noImg.jpeg'
           "
           alt=""
           class="h-48 w-[25rem]"

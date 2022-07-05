@@ -2,6 +2,7 @@
 import { ref, inject } from "vue";
 import { useGroupStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
+import moment from "moment";
 // define open channel modal func
 const showModal = inject<{ value: boolean }>("showCreateGroup");
 const singleGroupId = inject<{ value: string }>("groupId");
@@ -56,7 +57,6 @@ const getActiveGroup = () => {
 getActiveGroup();
 // pass groupId to the home chat page
 const fetchGroupChat = (id: string) => {
-  
   singleGroupId!.value = id;
 };
 // const openChannelModal = () => {

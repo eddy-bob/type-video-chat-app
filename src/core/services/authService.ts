@@ -87,7 +87,7 @@ class AuthService {
    * auth:authorization token
    */
   async getAuthUser(): Promise<any> {
-    const response = await this.request.get("user/my-profile", {
+    const response = await this.request.get("user/profile", {
       headers: authHeader(),
     });
     return response;

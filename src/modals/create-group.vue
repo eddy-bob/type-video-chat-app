@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, reactive } from "vue";
 import preview from "../modals/preview-image.vue";
+import { useGroupStore } from "../core/store/index";
+// initialize group store
+const groupStore = useGroupStore();
+// variables
+const createGroupInfo = reactive({});
+// create group function
+const createGroupMethod = () => {
+  groupStore.createGroup;
+};
 const showFriends = ref(false);
 const showModal: any = inject("showCreateGroup");
 </script>
