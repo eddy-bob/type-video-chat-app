@@ -36,6 +36,7 @@ const groupChatStore = useGroupChat();
 //variables
 const selectedImg = ref<ArrayBuffer>();
 const profile = ref();
+const prev = ref<any>("");
 const groupId = ref<string>("");
 const loading = ref(false);
 const friendId = ref<string>("");
@@ -77,6 +78,28 @@ onUpdated(() => {
     scrollToBottom();
   }
 });
+const showChatOption = (id: string) => {
+  const el = document.getElementById(id);
+
+  const style = window.getComputedStyle(el!, null).getPropertyValue("display");
+  console.log(style);
+
+  if (prev.value !== "") {
+
+    prev.value!.style.display = "none";
+    prev.value = "";
+  }
+
+  if (style === "none") {
+ 
+    el!.style.display = "block";
+    prev.value = el;
+  } else {
+   
+    el!.style.display = "none";
+    prev.value = "";
+  }
+};
 const getProfile = () => {
   authStore
     .getAuthUser()
@@ -144,6 +167,7 @@ const addGroupChat = () => {
       message: groupChats.value,
       attatchment: groupAttatchment.value,
     });
+    groupChats.value = "";
     // set scroll div id to ref
     scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
     // fetch chats
@@ -320,12 +344,40 @@ onBeforeUnmount(() => {
               class="flex justify-end"
             >
               <div>
-                <p
-                  class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
-                  style="overflow-wrap: break-word"
-                >
-                  {{ chat.message }}
-                </p>
+                <div class="relative w-full">
+                  <p
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
+                    style="overflow-wrap: break-word"
+                  >
+                    {{ chat.message }}
+                  </p>
+                  <img
+                    src="/images/svg/option.svg"
+                    @click="showChatOption(chat._id)"
+                    alt=""
+                    class="w-2 absolute left-[-9px] top-0 cursor-pointer"
+                  />
+
+                  <!-- chat options -->
+                  <div
+                    class="bg-slate-500 p-3 space-y-5 absolute right-0 mt-1 border border-gray-700 text-sm rounded-lg z-50 hidden"
+                    :id="chat._id"
+                  >
+                    <div class="flex justify-between">
+                      <p>Forward</p>
+                      <img src="" alt="" />
+                    </div>
+                    <div class="flex justify-between">
+                      <p>Copy</p>
+                      <img src="" alt="" />
+                    </div>
+                    <div class="flex justify-between">
+                      <p>Delete</p>
+                      <img src="" alt="" />
+                    </div>
+                  </div>
+                  <!-- chat options  end-->
+                </div>
                 <div class="flex justify-end space-x-3">
                   <div>
                     <img src="/images/svg/check.svg" alt="check" class="w-2" />
