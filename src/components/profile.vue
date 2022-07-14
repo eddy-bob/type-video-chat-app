@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, inject, watchEffect } from "vue";
+
 import preview from "../../modals/preview-image.vue";
 import overlay from "../../modals/overlay.vue";
 import chooseImage from "../mixins/choose-file";
@@ -12,10 +13,11 @@ let showPreview = inject<{ value: boolean }>("showPreview");
 let selectedImg = inject<{ value: ArrayBuffer }>("selectedImg");
 let imageType = inject<{ value: string }>("imageType");
 let setImage = inject<{ value: boolean }>("setImage");
+let profile = ref<any>({});
 let editAbout = ref(false);
 const userInfo = reactive<{
-  profilePicture?: ArrayBuffer;
-  coverPhoto?: ArrayBuffer;
+  profilePicture?: ArrayBuffer | string;
+  coverPhoto?: ArrayBuffer | string;
   about?: string;
 }>({});
 
@@ -26,11 +28,57 @@ type FileType = {
   selectedimg: ArrayBuffer;
   imagetype: string;
 };
+const getProfile = () => {
+  authStore
+    .getAuthUser()
+    .then((res) => {
+      profile.value = res.data.data;
+      userInfo.profilePicture = profile.value.photo?.url;
+      userInfo.coverPhoto = profile.value.coverPhoto?.url;
+      console.log(profile);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 const setProfilePic = () => {
   userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
+
+  userStore
+    .updateProfilePic(userInfo.profilePicture)
+    .then((res) => {
+      notify({
+        type: "success",
+        title: "Success",
+        text: res.message || "Profile picture update successful",
+      });
+    })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Error",
+        text: err.data.Error || "Profile picture update failed",
+      });
+    });
 };
 const setCoverPhoto = () => {
   userInfo.coverPhoto = selectedImg!.value as ArrayBuffer;
+  userStore
+    .updateCoverPhoto(userInfo.coverPhoto)
+    .then((res) => {
+      notify({
+        type: "success",
+        title: "Success",
+        text: "Cover photo updated successfully",
+      });
+    })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Error",
+        text: err.data.Error || "Cover photo update failed",
+      });
+    });
 };
 const selectImg = async (type: string) => {
   const dat = (await chooseImage(event, type, notify)) as FileType;

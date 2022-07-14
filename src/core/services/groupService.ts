@@ -13,7 +13,7 @@ class GroupService {
        async getGroup(groupId: string): Promise<any> {
               const response = await this.request
                      .get(`group/get-group/${groupId}`, { headers: authHeader() })
-             return response;
+              return response;
        }
        /**
         *get-- get groups
@@ -26,7 +26,7 @@ class GroupService {
                             `group/fetch-groups`,
                             { headers: authHeader() }
                      )
-             return response;
+              return response;
        }
        /**
       *put-- update group
@@ -40,13 +40,13 @@ class GroupService {
                             { ...data },
                             { headers: authHeader() }
                      )
-             return response;
+              return response;
        }
 
        /**
-   *post-- create group
-   * auth:authorization token
-   */
+       *post-- create group
+       * auth:authorization token
+       */
 
        async createGroup(data: GroupInterface): Promise<any> {
               const response = await this.request
@@ -55,7 +55,22 @@ class GroupService {
                             { ...data },
                             { headers: authHeader() }
                      )
-             return response;
+              return response;
+       }
+       /**
+ *put-- update group picture
+ * auth:authorization token
+ * params:groupId
+ */
+
+       async updateGroupPicture(data: { photo: ArrayBuffer, groupId: string }): Promise<any> {
+              const response = await this.request
+                     .put(
+                            `group/update-group-photo/${data.groupId}`,
+                            { photo: data.photo },
+                            { headers: authHeader() }
+                     )
+              return response;
        }
        /**
      *delete-- delete group
@@ -68,7 +83,7 @@ class GroupService {
                             `group/delete/${groupId}`,
                             { headers: authHeader() }
                      )
-             return response;
+              return response;
        }
 
 }

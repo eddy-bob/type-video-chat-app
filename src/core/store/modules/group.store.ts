@@ -40,6 +40,18 @@ const useGroupStore = defineStore('group', {
                             return await Promise.reject(error);
                      }
               },
+              async updateGroupPicture(data: { photo: ArrayBuffer, groupId: string }): Promise<any> {
+                     try {
+
+                            const response = await GroupService.updateGroup(data)
+                            if (response.data) { return await Promise.resolve(response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
+                     } catch (error: any) {
+                            return await Promise.reject(error);
+                     }
+              },
               async createGroup(data: GroupInterface): Promise<any> {
                      try {
 

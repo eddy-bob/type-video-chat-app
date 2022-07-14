@@ -56,6 +56,7 @@ const groupChats = ref("");
 const typing = ref(false);
 const scrollArea = ref<HTMLElement>();
 const privateChats = ref("");
+
 // provides
 provide("groupId", groupId);
 provide("showCreateGroup", isShowCreateGroup);
@@ -85,17 +86,14 @@ const showChatOption = (id: string) => {
   console.log(style);
 
   if (prev.value !== "") {
-
     prev.value!.style.display = "none";
     prev.value = "";
   }
 
   if (style === "none") {
- 
     el!.style.display = "block";
     prev.value = el;
   } else {
-   
     el!.style.display = "none";
     prev.value = "";
   }
@@ -298,8 +296,8 @@ onBeforeUnmount(() => {
               :src="
                 groupProfileData &&
                 groupProfileData?.photo &&
-                groupProfileData?.photo.name !== 'noimage.jpg'
-                  ? groupProfileData?.photo.name
+                groupProfileData?.photo.name !== 'noimage'
+                  ? groupProfileData?.photo.url
                   : '/images/jpeg/noImg.jpeg'
               "
               alt="profile picture"
@@ -448,10 +446,7 @@ onBeforeUnmount(() => {
 
       <!--  -->
       <!-- input field -->
-      <form
-        class="fixed bottom-0 w-full my-2 text-gray-200 px-10"
-        @submit.prevent="addGroupChat"
-      >
+      <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
         <div class="flex space-x-3">
           <div class="flex space-x-5">
             <img src="/images/svg/option.svg" alt="" class="w-2" />
@@ -470,11 +465,15 @@ onBeforeUnmount(() => {
             placeholder="message here . . ."
           />
           <!--  -->
-          <button class="bg-slate-700 p-2 rounded-full">
+          <button
+            type="button"
+            @click="addGroupChat"
+            class="bg-slate-700 p-2 rounded-full"
+          >
             <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
           </button>
         </div>
-      </form>
+      </div>
       <!-- end of input -->
     </div>
     <!-- private chat -->
@@ -555,10 +554,7 @@ onBeforeUnmount(() => {
       </div>
       <!--  -->
       <!-- input field -->
-      <form
-        class="fixed bottom-0 w-full my-2 text-gray-200 px-10"
-        @submit.prevent="addPrivateChat"
-      >
+      <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
         <div class="flex space-x-3">
           <div class="flex space-x-5">
             <img src="/images/svg/option.svg" alt="" class="w-2" />
@@ -577,11 +573,15 @@ onBeforeUnmount(() => {
             placeholder="message here . . ."
           />
           <!--  -->
-          <button class="bg-slate-700 p-2 rounded-full">
+          <button
+            type="button"
+            @click="addPrivateChat"
+            class="bg-slate-700 p-2 rounded-full"
+          >
             <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
           </button>
         </div>
-      </form>
+      </div>
       <!-- end of input -->
     </div>
   </div>

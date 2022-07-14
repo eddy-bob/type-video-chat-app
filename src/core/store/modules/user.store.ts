@@ -98,7 +98,7 @@ const user = defineStore('user', {
         return await Promise.reject(error);
       }
     },
-    async updateProfilePic(data: any): Promise<any> {
+    async updateProfilePic(data: ArrayBuffer): Promise<any> {
       try {
 
         const response = await UserService.updateProfilePic(data);
@@ -110,7 +110,7 @@ const user = defineStore('user', {
         return await Promise.reject(error);
       }
     },
-    async updateCoverPhoto(data: any): Promise<any> {
+    async updateCoverPhoto(data: ArrayBuffer): Promise<any> {
       try {
 
         const response = await UserService.updateCoverPhoto(data);

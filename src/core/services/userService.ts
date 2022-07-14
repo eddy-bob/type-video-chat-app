@@ -97,7 +97,7 @@ class UserService {
    * auth:authorization token
    *@param {*} data
    */
-  async updateProfilePic(data: any): Promise<any> {
+  async updateProfilePic(data: ArrayBuffer): Promise<any> {
     const response = await this.request
       .put(
         "user/update-profile-picture",
@@ -111,7 +111,7 @@ class UserService {
    * auth:authorization token
    *@param {*} data
    */
-  async updateCoverPhoto(data: any): Promise<any> {
+  async updateCoverPhoto(data: ArrayBuffer): Promise<any> {
     const response = await this.request
       .put(
         "user/update-cover-photo",

@@ -1,16 +1,48 @@
 <script setup lang="ts">
 import { ref, inject, reactive } from "vue";
+import letterGroups from "../mixins/letterGrouping";
 import preview from "../modals/preview-image.vue";
-import { useGroupStore } from "../core/store/index";
+import { useGroupStore, useFriend } from "../core/store/index";
 // initialize group store
 const groupStore = useGroupStore();
+// initialize group store
+const friendStore = useFriend();
+// instantiate component
 // variables
-const createGroupInfo = reactive({});
+const friends = ref<any[]>([]);
+const showFriends = ref(false);
+const createGroupInfo = reactive({ name: "", description: "", members: [] });
+const letterGrouping = ref<any[]>([]);
+const loading = ref(false);
 // create group function
 const createGroupMethod = () => {
-  groupStore.createGroup;
+  groupStore
+    .createGroup(createGroupInfo)
+    .then((res) => {
+      console.log(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
-const showFriends = ref(false);
+const getFriends = () => {
+  loading.value = true;
+  friendStore
+    .fetchFriends()
+    .then((res) => {
+      console.log(res.data.data);
+      friends.value = res.data.data;
+      // group friends by letters
+      letterGroups(friends, letterGrouping);
+      loading.value = false;
+    })
+    .catch((err) => {
+      console.log(err);
+      loading.value = false;
+    });
+};
+// fire get friends
+getFriends();
 const showModal: any = inject("showCreateGroup");
 </script>
 
@@ -71,77 +103,47 @@ const showModal: any = inject("showCreateGroup");
               </div>
             </div>
             <!-- chat heads -->
-            <div class="px-5 mt-6">
-              <!--line  -->
-              <div class="flex space-x-4">
-                <p>A</p>
-                <p class="w-full border-b border-b-gray-500 mb-3"></p>
-              </div>
-              <div class="flex justify-between">
-                <label class="text-[12px] font-extrabold mt-2 container">
-                  <div class="flex space-x-3">
-                    <div>
-                      <img
-                        src="/images/jpg/icon.jpg"
-                        alt="img"
-                        class="rounded-full w-8 h-8"
-                      />
-                    </div>
-                    <p>Abdul Daniel</p>
-                  </div>
-
-                  <input type="checkbox" />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-
-              <!--line  -->
-
-              <div class="flex space-x-4">
-                <p>K</p>
-                <p class="w-full border-b border-b-gray-500 mb-3"></p>
-              </div>
-              <div class="flex justify-between">
-                <label class="text-[12px] font-extrabold mt-2 container">
-                  <div class="flex space-x-3">
-                    <div>
-                      <img
-                        src="/images/jpg/icon.jpg"
-                        alt="img"
-                        class="rounded-full w-8 h-8"
-                      />
-                    </div>
-                    <p>Kingsley Madu</p>
-                  </div>
-
-                  <input type="checkbox" />
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-
+            <div
+              v-if="loading == true"
+              class="flex flex-col items-center justify-center h-[300px]"
+            >
+              <component :is="UIcomponent" />
+            </div>
+            <div v-else>
               <!--  -->
-              <!--line  -->
-
-              <div class="flex space-x-4">
-                <p>M</p>
-                <p class="w-full border-b border-b-gray-500 mb-3"></p>
-              </div>
-              <div class="flex justify-between">
-                <label class="text-[12px] font-extrabold mt-2 container">
-                  <div class="flex space-x-3">
-                    <div>
-                      <img
-                        src="/images/jpg/icon.jpg"
-                        alt="img"
-                        class="rounded-full w-8 h-8"
-                      />
+              <div class="px-5 mt-6" v-if="friends[0]">
+                <!--line  -->
+                <div class="flex space-x-4" >
+                  <p>A</p>
+                  <p class="w-full border-b border-b-gray-500 mb-3"></p>
+                </div>
+                <div class="flex justify-between">
+                  <label class="text-[12px] font-extrabold mt-2 container">
+                    <div class="flex space-x-3">
+                      <div>
+                        <img
+                          src="/images/jpg/icon.jpg"
+                          alt="img"
+                          class="rounded-full w-8 h-8"
+                        />
+                      </div>
+                      <p>Abdul Daniel</p>
                     </div>
-                    <p>Muftar Kamilu</p>
-                  </div>
 
-                  <input type="checkbox" />
-                  <span class="checkmark"></span>
-                </label>
+                    <input type="checkbox" />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+
+                <!--line  -->
+              </div>
+              <div v-else class="mt-7">
+                <div class="flex w-full justify-center">
+                  <img src="/images/svg/sadface.svg" alt="" class="w-20" />
+                </div>
+                <p class="text-sm text-center font-extrabold">
+                  oops... you do not have any friend yet<br class="mb-1" />
+                </p>
               </div>
             </div>
           </div>

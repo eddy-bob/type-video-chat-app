@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, inject } from "vue";
+import letterGroups from "../mixins/letterGrouping";
 import { useGroupStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import moment from "moment";
@@ -21,30 +22,8 @@ const getActiveGroup = () => {
     .getGroups()
     .then((res) => {
       groups.value = res.data.data;
-      groups.value.map((element: any) => {
-        // get the first letter  of each group name
-        let elementStart = element.name.split("")[0].toLowerCase();
-        console.log(element);
-        // check if  there is any data returned
-        if (elementStart) {
-          if (letterGrouping.value[0]) {
-            letterGrouping.value.forEach((value) => {
-              console.log(value);
-              if (Object.keys(value)[0] === elementStart) {
-                console.log(Object.keys(value)[0] === elementStart);
-                // add the group to the already existing object
-                value.elementStart.push(element);
-              } else {
-                // create new object if the key doesnt exist yet
-                letterGrouping.value.push({ [elementStart]: [element] });
-              }
-            });
-          } else {
-            letterGrouping.value.push({ [elementStart]: [element] });
-          }
-          console.log(letterGrouping.value);
-        }
-      });
+      // group groups by letters
+      letterGroups(groups, letterGrouping);
 
       loading.value = false;
     })
@@ -129,8 +108,8 @@ const fetchGroupChat = (id: string) => {
               <div class="relative">
                 <img
                   :src="
-                    singleGroup.photo.name !== 'noimage.jpg'
-                      ? singleGroup.photo.name
+                    singleGroup.photo.name !== 'noimage'
+                      ? singleGroup.photo.url
                       : '/images/svg/groupIcon.svg'
                   "
                   alt="img"
