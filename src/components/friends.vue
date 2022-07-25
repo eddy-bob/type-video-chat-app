@@ -1,6 +1,34 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, inject, reactive } from "vue";
+import letterGroups from "../mixins/letterGrouping";
+import { useFriend } from "../core/store/index";
+
+// initialize group store
+const friendStore = useFriend();
+// variables
 const addFriend = ref(false);
+const friends = ref<any[]>([]);
+const letterGrouping = ref<any[]>([]);
+const loading = ref(false);
+// define get friends method
+const getFriends = () => {
+  loading.value = true;
+  friendStore
+    .fetchFriends()
+    .then((res) => {
+      console.log(res.data.data);
+      friends.value = res.data.data;
+      // group friends by letters
+      letterGroups(friends, letterGrouping);
+      loading.value = false;
+    })
+    .catch((err) => {
+      console.log(err);
+      loading.value = false;
+    });
+};
+// fire get friends
+getFriends();
 </script>
 
 <template>
@@ -118,73 +146,98 @@ const addFriend = ref(false);
     >
       <!--line  -->
 
-      <div class="flex space-x-4">
-        <p>A</p>
-        <p class="w-full border-b border-b-gray-500 mb-3"></p>
+      <div
+        v-if="loading == true"
+        class="flex flex-col items-center justify-center h-[300px]"
+      >
+        <component :is="UIcomponent" />
       </div>
-      <div class="flex justify-between">
-        <div class="flex space-x-3 chathead">
-          <div>
-            <img
-              src="/images/jpg/icon.jpg"
-              alt="img"
-              class="rounded-full w-8 h-8"
-            />
-            <p
-              class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-            ></p>
+      <div v-else>
+        <div v-if="friends[0]">
+          <div v-for="letterGroup in letterGrouping" :key="letterGroup">
+          <div class="flex space-x-4">
+            <p>{{ Object.keys(letterGroup)[0].toUpperCase() }}</p>
+            <p class="w-full border-b border-b-gray-500 mb-3"></p>
           </div>
-          <p class="text-[12px] font-extrabold mt-2">Abdul Daniel</p>
-        </div>
-        <img src="/images/svg/option.svg" alt="" class="w-2" />
-      </div>
-
-      <!--line  -->
-
-      <div class="flex space-x-4">
-        <p>D</p>
-        <p class="w-full border-b border-b-gray-500 mb-3"></p>
-      </div>
-      <div class="flex justify-between">
-        <div class="flex space-x-3 chathead">
-          <div>
-            <img
-              src="/images/jpg/icon.jpg"
-              alt="img"
-              class="rounded-full w-8 h-8"
-            />
-            <p
-              class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-            ></p>
+          <div class="flex justify-between"  v-for="singleFriend in letterGroup[Object.keys(letterGroup)[0]]"
+            :key="singleFriend._id">
+            <div class="flex space-x-3 chathead">
+              <div>
+                <img
+                  :src="
+                    singleFriend.photo
+                      ? singleFriend.photo.url
+                      : '/images/svg/groupIcon.svg'
+                  "
+                  alt="img"
+                  class="rounded-full w-8 h-8"
+                />
+                <p
+                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
+                ></p>
+              </div>
+              <p class="text-[12px] font-extrabold mt-2">{{singleFriend.friendName}}</p>
+            </div>
+            <img src="/images/svg/option.svg" alt="" class="w-2" />
           </div>
-          <p class="text-[12px] font-extrabold mt-2">Destiny junior</p>
         </div>
-        <img src="/images/svg/option.svg" alt="" class="w-2" />
-      </div>
 
-      <!--  -->
-      <!--line  -->
+          <!--line  -->
 
-      <div class="flex space-x-4">
-        <p>K</p>
-        <p class="w-full border-b border-b-gray-500 mb-3"></p>
-      </div>
-      <div class="flex justify-between">
-        <div class="flex space-x-3 chathead">
-          <div>
-            <img
-              src="/images/jpg/icon.jpg"
-              alt="img"
-              class="rounded-full w-8 h-8"
-            />
-            <p
-              class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-            ></p>
+          <!-- <div class="flex space-x-4">
+            <p>D</p>
+            <p class="w-full border-b border-b-gray-500 mb-3"></p>
           </div>
-          <p class="text-[12px] font-extrabold mt-2">Kingsley Madu</p>
+          <div class="flex justify-between">
+            <div class="flex space-x-3 chathead">
+              <div>
+                <img
+                  src="/images/jpg/icon.jpg"
+                  alt="img"
+                  class="rounded-full w-8 h-8"
+                />
+                <p
+                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
+                ></p>
+              </div>
+              <p class="text-[12px] font-extrabold mt-2">Destiny junior</p>
+            </div>
+            <img src="/images/svg/option.svg" alt="" class="w-2" />
+          </div> -->
+
+          <!--  -->
+          <!--line  -->
+
+          <!-- <div class="flex space-x-4">
+            <p>K</p>
+            <p class="w-full border-b border-b-gray-500 mb-3"></p>
+          </div>
+          <div class="flex justify-between">
+            <div class="flex space-x-3 chathead">
+              <div>
+                <img
+                  src="/images/jpg/icon.jpg"
+                  alt="img"
+                  class="rounded-full w-8 h-8"
+                />
+                <p
+                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
+                ></p>
+              </div>
+              <p class="text-[12px] font-extrabold mt-2">Kingsley Madu</p>
+            </div>
+            <img src="/images/svg/option.svg" alt="" class="w-2" />
+          </div>
         </div>
-        <img src="/images/svg/option.svg" alt="" class="w-2" />
+      </div> -->
+    </div>
+    <div v-else class="mt-7">
+      <div class="flex w-full justify-center">
+        <img src="/images/svg/sadface.svg" alt="" class="w-20" />
       </div>
+      <p class="text-sm text-center font-extrabold">
+        oops... you do not have any friend yet<br class="mb-1" />
+      </p>
     </div>
   </div>
 </template>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, reactive, inject, watchEffect } from "vue";
+import { ref, reactive, inject, watchEffect, computed } from "vue";
 
 import preview from "../../modals/preview-image.vue";
 import overlay from "../../modals/overlay.vue";
 import chooseImage from "../mixins/choose-file";
 import { notify } from "@kyvg/vue3-notification";
+import { helpers, minLength, maxLength } from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
 import { user, useAuthStore } from "../core/store/index";
 const userStore = user();
 const authStore = useAuthStore();
@@ -41,6 +43,23 @@ const getProfile = () => {
       console.log(err);
     });
 };
+// validation rules
+const rules = computed(() => {
+  return {
+    about: {
+      min: helpers.withMessage(
+        "about cannot be less than 10 characters",
+        minLength(10)
+      ),
+      max: helpers.withMessage(
+        "about cannot be more than 32 characters",
+        maxLength(32)
+      ),
+    },
+  };
+});
+
+const v$ = useVuelidate(rules as any, userInfo);
 const setProfilePic = () => {
   userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
 
@@ -80,6 +99,51 @@ const setCoverPhoto = () => {
       });
     });
 };
+
+//define update profile method
+const updateAbout = async (): Promise<void> => {
+  // check if form is formattted correctly
+  const isFormCorrect = await v$.value.$validate();
+  if (isFormCorrect == true) {
+    isLoading.value = !isLoading.value;
+
+    userStore
+      .updateProfile({
+        about: <string>v$.value.about.$model,
+      })
+      .then((res: Response | any) => {
+        // set the loading notice to false
+        setTimeout(() => {
+          isLoading.value = !isLoading.value;
+        }, 1000);
+        //   send out notification to tell that the signup was successful
+        notify({
+          type: "success",
+          title: "Success",
+          text: "About updated successfully successful. Redirecting...",
+        });
+      })
+      .catch((err: any) => {
+        setTimeout(() => {
+          isLoading.value = !isLoading.value;
+        }, 1000);
+
+        if (err.data && err.data.Error) {
+          notify({
+            type: "error",
+            title: "Error",
+            text: err.data.Error,
+          });
+        } else {
+          notify({
+            type: "error",
+            title: "Error",
+            text: err,
+          });
+        }
+      });
+  }
+};
 const selectImg = async (type: string) => {
   const dat = (await chooseImage(event, type, notify)) as FileType;
   showPreview!.value = dat.showpreview as boolean;
@@ -111,7 +175,7 @@ watchEffect(() => {
         <img
           :src="
             userInfo.coverPhoto
-              ? userInfo.coverPhoto
+              ? userInfo.coverPhoto.url
               : '/images/jpeg/noImg.jpeg'
           "
           alt=""
@@ -132,7 +196,7 @@ watchEffect(() => {
           <img
             :src="
               userInfo.profilePicture
-                ? userInfo.profilePicture
+                ? userInfo.profilePicture.url
                 : '/images/jpg/icon.jpg'
             "
             alt=""
@@ -155,8 +219,10 @@ watchEffect(() => {
       <!--  -->
       <div class="flex justify-center mt-10">
         <div class="text-center">
-          <p class="font-extrabold">Destiny Junior</p>
-          <p class="text-sm">+2349075219854</p>
+          <p class="font-extrabold">
+            {{ userInfo.firstName + " " + userInfo.lastName }}
+          </p>
+          <p class="text-sm">{{ userInfo.phone }}</p>
         </div>
       </div>
     </div>
@@ -164,8 +230,7 @@ watchEffect(() => {
     <div class="border-b border-slate-600 py-6 px-6 text-xs space-y-4">
       <div class="flex">
         <p class="">
-          I am a fullstack Engineer with expertise in node.js/typescript and
-          vue.js. Coding to me is as vital as living.
+          {{ userInfo.about ? userInfo.about : "Hey there, i am amazing" }}
         </p>
 
         <i
@@ -174,24 +239,27 @@ watchEffect(() => {
         ></i>
       </div>
       <!-- edit about -->
-      <form v-if="editAbout == true" class="space-y-4">
+      <div v-if="editAbout == true" class="space-y-4">
+        <div v-if="v$.about.$error" class="text-red-600 text-xs">
+          {{ "* " + v$.about.$errors[0].$message }}
+        </div>
         <textarea
+          v-model="userInfo.about"
           class="p-2 w-full bg-transparent border"
           name=""
           id=""
           rows="5"
-          value="I am a fullstack Engineer with expertise in node.js/typescript and
-          vue.js. Coding to me is as vital as living."
         ></textarea>
         <div class="w-full flex justify-end">
           <button
-            type="submit"
+            @click="updateAbout"
+            type="button"
             class="appBgGreen px-4 py-2 outline-none focus:outline-none"
           >
             Update
           </button>
         </div>
-      </form>
+      </div>
       <div class="flex font-extrabold space-x-3">
         <i class="fas fa-mail-bulk"></i>
         <p>DestinyJunior@gmail.com</p>

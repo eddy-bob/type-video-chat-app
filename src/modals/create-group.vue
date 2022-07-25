@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, reactive } from "vue";
 import letterGroups from "../mixins/letterGrouping";
-import preview from "../modals/preview-image.vue";
 import { useGroupStore, useFriend } from "../core/store/index";
 // initialize group store
 const groupStore = useGroupStore();
@@ -11,9 +10,23 @@ const friendStore = useFriend();
 // variables
 const friends = ref<any[]>([]);
 const showFriends = ref(false);
-const createGroupInfo = reactive({ name: "", description: "", members: [] });
+const createGroupInfo = reactive<{
+  name: string;
+  description: string;
+  members: string[];
+}>({ name: "", description: "", members: [] });
+
 const letterGrouping = ref<any[]>([]);
 const loading = ref(false);
+const checkAction = (event: any, id: string) => {
+  event.target.checked = true ? addMembers(id) : removeMembers(id);
+};
+const addMembers = (id: string) => {
+  createGroupInfo.members.push(id);
+};
+const removeMembers = (id: string) => {
+  createGroupInfo.members.splice(createGroupInfo.members.indexOf(id), 1);
+};
 // create group function
 const createGroupMethod = () => {
   groupStore
@@ -113,28 +126,42 @@ const showModal: any = inject("showCreateGroup");
               <!--  -->
               <div class="px-5 mt-6" v-if="friends[0]">
                 <!--line  -->
-                <div class="flex space-x-4" >
-                  <p>A</p>
-                  <p class="w-full border-b border-b-gray-500 mb-3"></p>
-                </div>
-                <div class="flex justify-between">
-                  <label class="text-[12px] font-extrabold mt-2 container">
-                    <div class="flex space-x-3">
-                      <div>
-                        <img
-                          src="/images/jpg/icon.jpg"
-                          alt="img"
-                          class="rounded-full w-8 h-8"
-                        />
+                <div v-for="letterGroup in letterGrouping" :key="letterGroup">
+                  <div class="flex space-x-4">
+                    <p>{{ Object.keys(letterGroup)[0].toUpperCase() }}</p>
+                    <p class="w-full border-b border-b-gray-500 mb-3"></p>
+                  </div>
+                  <div
+                    class="flex justify-between"
+                    v-for="singleFriend in letterGroup[
+                      Object.keys(letterGroup)[0]
+                    ]"
+                    :key="singleFriend._id"
+                  >
+                    <label class="text-[12px] font-extrabold mt-2 container">
+                      <div class="flex space-x-3">
+                        <div>
+                          <img
+                            :src="
+                              singleFriend.photo
+                                ? singleFriend.photo.url
+                                : '/images/svg/groupIcon.svg'
+                            "
+                            alt="img"
+                            class="rounded-full w-8 h-8"
+                          />
+                        </div>
+                        <p>{{ singleFriend.friendName }}</p>
                       </div>
-                      <p>Abdul Daniel</p>
-                    </div>
 
-                    <input type="checkbox" />
-                    <span class="checkmark"></span>
-                  </label>
+                      <input
+                        type="checkbox"
+                        @change="checkAction(singleFriend.friend)"
+                      />
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
                 </div>
-
                 <!--line  -->
               </div>
               <div v-else class="mt-7">
@@ -142,7 +169,10 @@ const showModal: any = inject("showCreateGroup");
                   <img src="/images/svg/sadface.svg" alt="" class="w-20" />
                 </div>
                 <p class="text-sm text-center font-extrabold">
-                  oops... you do not have any friend yet<br class="mb-1" />
+                  oops... you do not have any friend yet.<br class="mb-1" />
+                  You may search for a user using his fullname or email in
+                  the<br />
+                  search field above
                 </p>
               </div>
             </div>

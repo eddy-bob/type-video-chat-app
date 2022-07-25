@@ -1,4 +1,6 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+</script>
 
 <template>
   <div class="space-y-4 text-gray-300 bg-slate-800 border-r border-r-slate-600">

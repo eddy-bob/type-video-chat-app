@@ -3,14 +3,14 @@ import { createWebHistory, createRouter } from "vue-router";
 // layout
 
 import authenticate from "../helpers/authenticate"
-const SignIn = () => import("../pages/auth/SignIn.vue");
-const SignUp = () => import("../pages/auth/SignUp.vue");
+const SignIn = () => import("../pages/auth/Sign-In.vue");
+const SignUp = () => import("../pages/auth/Sign-Up.vue");
 const SignUpContinue = () => import("../pages/auth/Register-Cont.vue");
-const ChangePassword = () => import("../pages/auth/ChangePassword.vue");
-const ForgotPasswordInit = () => import("../pages/auth/ForgotPasswordInit.vue");
-const ForgotPasswordComplete = () => import("../pages/auth/ForgotPasswordComplete.vue");
-const VerifyEmail = () => import("../pages/VerifyEmail.vue");
-const NotFoundPage = () => import("../pages/NotFound.vue");
+const ChangePassword = () => import("../pages/auth/Change-Password.vue");
+const ForgotPasswordInit = () => import("../pages/auth/Forgot-Password-Init.vue");
+const ForgotPasswordComplete = () => import("../pages/auth/Forgot-Password-Complete.vue");
+const VerifyEmail = () => import("../pages/Verify-Email.vue");
+const NotFoundPage = () => import("../pages/Not-Found.vue");
 const Home = () => import("../pages/Home.vue");
 
 

@@ -38,9 +38,6 @@ getActiveGroup();
 const fetchGroupChat = (id: string) => {
   singleGroupId!.value = id;
 };
-// const openChannelModal = () => {
-//   emit("open-group-modal");
-// };
 </script>
 
 <template>

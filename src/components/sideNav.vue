@@ -12,11 +12,11 @@ const active = shallowRef(recentChats);
 
 const showLogout = inject<any>("showLogout");
 
-const Show = (id: string) => {
+const show = (id: string) => {
   const ele = (document.getElementById(id)!.style.display = "block");
 };
 
-const Hide = (id: string) => {
+const hide = (id: string) => {
   document.getElementById(id)!.style.display = "none";
 };
 </script>
@@ -30,8 +30,8 @@ const Hide = (id: string) => {
         <i
           @click="active = recentChats"
           class="fas fa-comment fa-md"
-          @mouseenter="Show('recentChats')"
-          @mouseleave="Hide('recentChats')"
+          @mouseenter="show('recentChats')"
+          @mouseleave="hide('recentChats')"
         ></i>
 
         <p
@@ -46,8 +46,8 @@ const Hide = (id: string) => {
         <i
           class="fas fa-user-friends fa-md"
           @click="active = friends"
-          @mouseenter="Show('friends')"
-          @mouseleave="Hide('friends')"
+          @mouseenter="show('friends')"
+          @mouseleave="hide('friends')"
         ></i>
 
         <p
@@ -63,8 +63,8 @@ const Hide = (id: string) => {
           xmlns="http://www.w3.org/2000/svg"
           class="w-[25px]"
           @click="active = groups"
-          @mouseenter="Show('groups')"
-          @mouseleave="Hide('groups')"
+          @mouseenter="show('groups')"
+          @mouseleave="hide('groups')"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -90,8 +90,8 @@ const Hide = (id: string) => {
         <i
           class="fas fa-bell fa-lg"
           @click="active = friendRequests"
-          @mouseenter="Show('friendRequests')"
-          @mouseleave="Hide('friendRequests')"
+          @mouseenter="show('friendRequests')"
+          @mouseleave="hide('friendRequests')"
         ></i>
 
         <p
@@ -108,8 +108,8 @@ const Hide = (id: string) => {
           alt="location"
           class="location w-[22px]"
           @click="active = peopleYouMayKnow"
-          @mouseenter="Show('peopleYouMayKnow')"
-          @mouseleave="Hide('peopleYouMayKnow')"
+          @mouseenter="show('peopleYouMayKnow')"
+          @mouseleave="hide('peopleYouMayKnow')"
         />
 
         <p
@@ -125,8 +125,8 @@ const Hide = (id: string) => {
         <i
           class="fas fa-user fa-lg"
           @click="active = profile"
-          @mouseenter="Show('profile')"
-          @mouseleave="Hide('profile')"
+          @mouseenter="show('profile')"
+          @mouseleave="hide('profile')"
         ></i>
 
         <p
@@ -140,8 +140,8 @@ const Hide = (id: string) => {
         <i
           class="fas fa-phone fa-lg"
           @click="active = call"
-          @mouseenter="Show('call')"
-          @mouseleave="Hide('call')"
+          @mouseenter="show('call')"
+          @mouseleave="hide('call')"
         ></i>
 
         <p id="call" class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3">
@@ -152,8 +152,8 @@ const Hide = (id: string) => {
         <i
           @click="showLogout = !showLogout"
           class="fas fa-sign-out-alt fa-2xl fa-red logout"
-          @mouseenter="Show('logout')"
-          @mouseleave="Hide('logout')"
+          @mouseenter="show('logout')"
+          @mouseleave="hide('logout')"
         ></i>
 
         <p

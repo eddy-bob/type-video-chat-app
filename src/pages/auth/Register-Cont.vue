@@ -2,14 +2,15 @@
 import { reactive, ref, computed } from "vue";
 import preview from "../../modals/preview-image.vue";
 import overlay from "../../modals/overlay.vue";
-
+import { user } from "../../core/store/index";
 import { notify } from "@kyvg/vue3-notification";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../core/store/index";
 import useVuelidate from "@vuelidate/core";
 import { helpers, minLength, maxLength } from "@vuelidate/validators";
 import chooseImage from "../../mixins/choose-file";
-// instantiate router
+// instantiate store
+const userStore = user();
 
 // initialize route
 const route = useRoute();
@@ -20,8 +21,8 @@ const store = useAuthStore();
 // define user info
 
 const userInfo = reactive<{
-  profilePicture?: ArrayBuffer;
-  coverPhoto?: ArrayBuffer;
+  profilePicture?: ArrayBuffer | string;
+  coverPhoto?: ArrayBuffer | string;
   about?: string;
 }>({});
 const selectedImg = ref<ArrayBuffer>();
@@ -34,13 +35,97 @@ type FileType = {
   imagetype: string;
 };
 const setProfilePic = () => {
-  userInfo.profilePicture = selectedImg.value as ArrayBuffer;
+  userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
+
+  userStore
+    .updateProfilePic(userInfo.profilePicture)
+    .then((res) => {
+      notify({
+        type: "success",
+        title: "Success",
+        text: res.message || "Profile picture update successful",
+      });
+    })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Error",
+        text: err.data.Error || "Profile picture update failed",
+      });
+    });
 };
 const setCoverPhoto = () => {
-  userInfo.coverPhoto = selectedImg.value as ArrayBuffer;
+  userInfo.coverPhoto = selectedImg!.value as ArrayBuffer;
+  userStore
+    .updateCoverPhoto(userInfo.coverPhoto)
+    .then((res) => {
+      notify({
+        type: "success",
+        title: "Success",
+        text: "Cover photo updated successfully",
+      });
+    })
+    .catch((err) => {
+      notify({
+        type: "error",
+        title: "Error",
+        text: err.data.Error || "Cover photo update failed",
+      });
+    });
+
+  //define update profile method
+  const submitForm = async (): Promise<void> => {
+    // check if form is formattted correctly
+    const isFormCorrect = await v$.value.$validate();
+    if (isFormCorrect == true) {
+      isLoading.value = !isLoading.value;
+
+      userStore
+        .updateProfile({
+          about: <string>v$.value.about.$model,
+        })
+        .then((res: Response | any) => {
+          // set the loading notice to false
+          setTimeout(() => {
+            isLoading.value = !isLoading.value;
+          }, 1000);
+          //   send out notification to tell that the signup was successful
+          notify({
+            type: "success",
+            title: "Success",
+            text: "Profile updated successful. Redirecting...",
+          });
+
+          //   redirect to the signin page
+          setTimeout(() => {
+            window.location.href = "/auth/login";
+          }, 3000);
+        })
+        .catch((err: any) => {
+          setTimeout(() => {
+            isLoading.value = !isLoading.value;
+          }, 1000);
+
+          if (err.data && err.data.Error) {
+            notify({
+              type: "error",
+              title: "Error",
+              text: err.data.Error,
+            });
+          } else {
+            notify({
+              type: "error",
+              title: "Error",
+              text: err,
+            });
+          }
+        });
+    }
+  };
 };
+
 const selectImg = async (type: string) => {
-  const dat = (await chooseImage(event, type, notify)) as FileType;  
+  const dat = (await chooseImage(event, type, notify)) as FileType;
   showPreview.value = dat.showpreview as boolean;
   selectedImg.value = dat.selectedimg;
   imageType.value = dat.imagetype;
@@ -70,57 +155,6 @@ const rules = computed(() => {
 });
 
 const v$ = useVuelidate(rules as any, userInfo);
-//define register method
-const submitForm = async (): Promise<void> => {
-  // check if form is formattted correctly
-  const isFormCorrect = await v$.value.$validate();
-  if (isFormCorrect == true) {
-    isLoading.value = !isLoading.value;
-
-    store
-      .userRegister({
-        about: <string>v$.value.about.$model,
-        profilePicture: userInfo.profilePicture,
-        coverPhoto: userInfo.coverPhoto,
-      })
-      .then((res: Response | any) => {
-        // set the loading notice to false
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-        //   send out notification to tell that the signup was successful
-        notify({
-          type: "success",
-          title: "Success",
-          text: "Profile updated successful. Redirecting...",
-        });
-
-        //   redirect to the signin page
-        setTimeout(() => {
-          window.location.href = "/auth/login";
-        }, 3000);
-      })
-      .catch((err: any) => {
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-
-        if (err.data && err.data.Error) {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err.data.Error,
-          });
-        } else {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err,
-          });
-        }
-      });
-  }
-};
 </script>
 
 <template>

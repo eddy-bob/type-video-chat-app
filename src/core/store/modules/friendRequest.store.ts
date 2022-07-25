@@ -52,6 +52,19 @@ const useFriendRequestStore = defineStore('friend-request', {
                      }
               },
 
+              async getFriendRequests(): Promise<any> {
+                     try {
+
+                            const response = await friendRequestService.getFriendRequests();
+                            if (response.data) { return await Promise.resolve(response) }
+                            else if (response.response) { return await Promise.reject(response.response) }
+                            else { return await Promise.reject(response.message) }
+
+                     } catch (error: any) {
+                            return await Promise.reject(error);
+                     }
+              },
+
 
        }
 })

@@ -294,10 +294,8 @@ onBeforeUnmount(() => {
           <div class="relative">
             <img
               :src="
-                groupProfileData &&
-                groupProfileData?.photo &&
-                groupProfileData?.photo.name !== 'noimage'
-                  ? groupProfileData?.photo.url
+                groupProfileData && groupProfileData?.photo
+                  ? groupProfileData.photo.url
                   : '/images/jpeg/noImg.jpeg'
               "
               alt="profile picture"
@@ -488,10 +486,8 @@ onBeforeUnmount(() => {
           <div class="relative">
             <img
               :src="
-                friendProfileData &&
-                friendProfileData?.photo &&
-                friendProfileData?.photo.name !== 'noimage.jpg'
-                  ? friendProfileData?.photo.name
+                friendProfileData && friendProfileData?.photo
+                  ? friendProfileData?.photo.url
                   : '/images/jpeg/noImg.jpeg'
               "
               alt="profile picture"
