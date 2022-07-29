@@ -101,7 +101,7 @@ class UserService {
     const response = await this.request
       .put(
         "user/update-profile-picture",
-        { ...data },
+        { photo: data },
         { headers: authHeader() }
       )
     return response;
@@ -115,7 +115,7 @@ class UserService {
     const response = await this.request
       .put(
         "user/update-cover-photo",
-        { ...data },
+        { coverPhoto: data },
         { headers: authHeader() }
       )
     return response;
@@ -139,6 +139,15 @@ class UserService {
         { headers: authHeader() }
       )
 
+  }
+  /**
+      *get-- fetch all friends
+      * auth:authorization token
+      */
+  async fetchUser(query: string): Promise<any> {
+    const response = await this.request
+      .get(`user/search-user/?search=${query}`, { headers: authHeader() })
+    return response;
   }
 }
 

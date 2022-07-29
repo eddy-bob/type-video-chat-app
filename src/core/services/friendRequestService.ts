@@ -53,7 +53,7 @@ class FriendRequestService {
      */
        async getFriendRequests(): Promise<any> {
               const response = await this.request
-                     .delete(`user/friend/`, { headers: authHeader() })
+                     .get(`user/friend/request`, { headers: authHeader() })
               return response;
        }
 }

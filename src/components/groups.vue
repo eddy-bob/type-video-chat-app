@@ -6,13 +6,14 @@ import UIcomponent from "../components/UIcomponent/spinner.vue";
 import moment from "moment";
 // define open channel modal func
 const showModal = inject<{ value: boolean }>("showCreateGroup");
+
 const singleGroupId = inject<{ value: string }>("groupId");
 
 // initialize store
 const store = useGroupStore();
 const loading = ref(false);
-const groups = ref([] as any[]);
-const letterGrouping = ref([] as any[]);
+const groups = ref([]);
+const letterGrouping = ref([]);
 // fetch all group user belongs to
 
 const getActiveGroup = () => {
@@ -22,8 +23,11 @@ const getActiveGroup = () => {
     .getGroups()
     .then((res) => {
       groups.value = res.data.data;
+      console.log(res.data.data);
       // group groups by letters
-      letterGroups(groups, letterGrouping);
+
+      letterGroups(groups, letterGrouping, "name");
+      console.log(letterGrouping.value);
 
       loading.value = false;
     })
@@ -93,6 +97,7 @@ const fetchGroupChat = (id: string) => {
             <p>{{ Object.keys(letterGroup)[0].toUpperCase() }}</p>
             <p class="w-full border-b border-b-gray-500 mb-3"></p>
           </div>
+
           <div
             class="flex justify-between"
             v-for="singleGroup in letterGroup[Object.keys(letterGroup)[0]]"
@@ -105,16 +110,13 @@ const fetchGroupChat = (id: string) => {
               <div class="relative">
                 <img
                   :src="
-                    singleGroup.photo.name !== 'noimage'
+                    singleGroup.photo
                       ? singleGroup.photo.url
-                      : '/images/svg/groupIcon.svg'
+                      : '/images/jpeg/noImg.jpeg'
                   "
                   alt="img"
                   class="rounded-full w-8 h-8"
                 />
-                <p
-                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-                ></p>
               </div>
               <p class="text-[12px] font-extrabold mt-2">
                 {{ singleGroup.name }}

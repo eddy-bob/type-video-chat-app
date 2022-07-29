@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_USERDETAILS: string
   readonly VITE_COOKIE_EXPIRE: string
   readonly VITE_SOCKET_URL: string
+  readonly VITE_GOOGLE_MAP_ERROR: string
   // more env variables...
 }
 

@@ -50,7 +50,7 @@ class GroupService {
 
        async createGroup(data: GroupInterface): Promise<any> {
               const response = await this.request
-                     .put(
+                     .post(
                             `group/create`,
                             { ...data },
                             { headers: authHeader() }

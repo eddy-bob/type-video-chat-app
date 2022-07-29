@@ -150,10 +150,14 @@ const submitForm = async (): Promise<void> => {
         }, 1000);
 
         if (err.data && err.data.Error) {
+          console.log(err.data.Error);
           notify({
             type: "error",
             title: "Error",
-            text: err.data.Error,
+            text:
+              err.data.Error === import.meta.env.VITE_GOOGLE_MAP_ERROR
+                ? "Network error"
+                : err.data.Error,
           });
         } else {
           notify({

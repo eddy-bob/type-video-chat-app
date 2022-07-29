@@ -147,6 +147,18 @@ const user = defineStore('user', {
         return await Promise.reject(error);
       }
     },
+    async fetchUser(query: string): Promise<any> {
+      try {
+
+        const response = await UserService.fetchUser(query);
+        if (response.data) { return await Promise.resolve(response) }
+        else if (response.response) { return await Promise.reject(response.response) }
+        else { return await Promise.reject(response.message) }
+
+      } catch (error: any) {
+        return await Promise.reject(error);
+      }
+    },
 
   }
 })

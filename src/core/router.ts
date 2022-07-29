@@ -5,7 +5,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import authenticate from "../helpers/authenticate"
 const SignIn = () => import("../pages/auth/Sign-In.vue");
 const SignUp = () => import("../pages/auth/Sign-Up.vue");
-const SignUpContinue = () => import("../pages/auth/Register-Cont.vue");
+const SignUpContinue = () => import("../pages/auth/Register-Continue.vue");
 const ChangePassword = () => import("../pages/auth/Change-Password.vue");
 const ForgotPasswordInit = () => import("../pages/auth/Forgot-Password-Init.vue");
 const ForgotPasswordComplete = () => import("../pages/auth/Forgot-Password-Complete.vue");
@@ -57,8 +57,8 @@ const routes = [
   },
   {
     path: "/auth/sign-up/continue",
-    name: "page.auth.signup.continue",
-    component: SignUpContinue,
+    name: "page.auth.register.continue",
+    component: SignUpContinue
   },
   {
     path: "/chat-home",

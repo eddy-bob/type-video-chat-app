@@ -11,12 +11,14 @@ const error = ref<string>();
 const loading = ref(false);
 const disabled = ref(false);
 const getFriendRequests = () => {
+  console.log("fired");
   loading.value = true;
   disabled.value = true;
   friendRequestStore
     .getFriendRequests()
     .then((res) => {
       friendRequests.value = res.data.data;
+      console.log(res.data.data);
       loading.value = false;
       disabled.value = false;
     })
@@ -27,6 +29,7 @@ const getFriendRequests = () => {
       disabled.value = false;
     });
 };
+getFriendRequests();
 const acceptFriendRequest = (requestId: string, index: number) => {
   let spinner = document.getElementById(requestId);
   let disabledBtn = document.getElementById(requestId + index);
@@ -115,7 +118,7 @@ const rejectFriendRequest = (requestId: string, index: number) => {
         <!--  -->
         <div
           v-if="!friendRequests[0]"
-          class="space-y-4 flex flex-col items-center justify-center h-[300px]"
+          class="space-y-4 flex flex-col items-center justify-center h-[70px]"
         >
           <p class="text-sm text-center font-extrabold">
             you do not have any recent friend <br class="mb-1" />

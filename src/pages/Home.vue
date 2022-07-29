@@ -326,13 +326,13 @@ onBeforeUnmount(() => {
       </div>
       <div
         v-else
-        class="px-10 py-10 space-y-5 mt-20 h-[500px] flex justify-center overflow-y-scroll myOverflow"
+        class="px-10 py-10 space-y-5 mt-20 h-[500px] overflow-y-scroll myOverflow"
         id="chatScroll"
         v-scroll-directive
       >
         <!-- chat loop -->
 
-        <div class="text-right flex space-x-2">
+        <div class="text-left space-x-2">
           <div class="space-y-2">
             <div
               v-for="chat in groupChatData"
@@ -455,11 +455,13 @@ onBeforeUnmount(() => {
             />
           </div>
 
-          <input
+
+          <textarea
             type="text"
+            
             name="message"
             v-model.lazy="groupChats"
-            class="focus:outline-none outline-none bg-slate-700 py-2 px-3 w-[60%] text-sm"
+            class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 w-[60%] myOverflow text-sm"
             placeholder="message here . . ."
           />
           <!--  -->

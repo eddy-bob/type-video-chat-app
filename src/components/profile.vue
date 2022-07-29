@@ -34,6 +34,7 @@ const getProfile = () => {
   authStore
     .getAuthUser()
     .then((res) => {
+      console.log(res.data.data);
       profile.value = res.data.data;
       userInfo.profilePicture = profile.value.photo?.url;
       userInfo.coverPhoto = profile.value.coverPhoto?.url;
@@ -43,6 +44,7 @@ const getProfile = () => {
       console.log(err);
     });
 };
+getProfile();
 // validation rules
 const rules = computed(() => {
   return {
@@ -52,8 +54,8 @@ const rules = computed(() => {
         minLength(10)
       ),
       max: helpers.withMessage(
-        "about cannot be more than 32 characters",
-        maxLength(32)
+        "about cannot be more than 300 characters",
+        maxLength(300)
       ),
     },
   };
@@ -61,11 +63,10 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules as any, userInfo);
 const setProfilePic = () => {
-  userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
-
   userStore
-    .updateProfilePic(userInfo.profilePicture)
+    .updateProfilePic(selectedImg!.value as ArrayBuffer)
     .then((res) => {
+      userInfo.profilePicture = selectedImg!.value;
       notify({
         type: "success",
         title: "Success",
@@ -73,18 +74,22 @@ const setProfilePic = () => {
       });
     })
     .catch((err) => {
+      console.log(err);
       notify({
         type: "error",
         title: "Error",
-        text: err.data.Error || "Profile picture update failed",
+        text:
+          err.data && err.data.Error
+            ? err.data.Error
+            : "Profile picture update failed",
       });
     });
 };
 const setCoverPhoto = () => {
-  userInfo.coverPhoto = selectedImg!.value as ArrayBuffer;
   userStore
-    .updateCoverPhoto(userInfo.coverPhoto)
+    .updateCoverPhoto(selectedImg!.value as ArrayBuffer)
     .then((res) => {
+      userInfo.coverPhoto = selectedImg!.value;
       notify({
         type: "success",
         title: "Success",
@@ -95,7 +100,10 @@ const setCoverPhoto = () => {
       notify({
         type: "error",
         title: "Error",
-        text: err.data.Error || "Cover photo update failed",
+        text:
+          err.data && err.data.Error
+            ? err.data.Error
+            : "Cover photo update failed",
       });
     });
 };
@@ -112,6 +120,8 @@ const updateAbout = async (): Promise<void> => {
         about: <string>v$.value.about.$model,
       })
       .then((res: Response | any) => {
+        editAbout.value = false;
+        profile.value.about = res.data.data.about;
         // set the loading notice to false
         setTimeout(() => {
           isLoading.value = !isLoading.value;
@@ -120,7 +130,7 @@ const updateAbout = async (): Promise<void> => {
         notify({
           type: "success",
           title: "Success",
-          text: "About updated successfully successful. Redirecting...",
+          text: "About updated successfully",
         });
       })
       .catch((err: any) => {
@@ -174,8 +184,8 @@ watchEffect(() => {
       <div class="relative space-y-5">
         <img
           :src="
-            userInfo.coverPhoto
-              ? userInfo.coverPhoto.url
+            profile?.coverPhoto
+              ? userInfo.coverPhoto
               : '/images/jpeg/noImg.jpeg'
           "
           alt=""
@@ -195,9 +205,7 @@ watchEffect(() => {
         <div class="absolute bottom-[-17%] left-[35%]">
           <img
             :src="
-              userInfo.profilePicture
-                ? userInfo.profilePicture.url
-                : '/images/jpg/icon.jpg'
+              profile?.photo ?  userInfo.profilePicture : '/images/jpeg/noImg.jpeg'
             "
             alt=""
             class="rounded-full border-4 border-slate-800 w-20 h-20"
@@ -220,22 +228,22 @@ watchEffect(() => {
       <div class="flex justify-center mt-10">
         <div class="text-center">
           <p class="font-extrabold">
-            {{ userInfo.firstName + " " + userInfo.lastName }}
+            {{ profile?.firstName + " " + profile?.lastName }}
           </p>
-          <p class="text-sm">{{ userInfo.phone }}</p>
+          <p class="text-sm">{{ profile.phone }}</p>
         </div>
       </div>
     </div>
     <!--  -->
     <div class="border-b border-slate-600 py-6 px-6 text-xs space-y-4">
-      <div class="flex">
+      <div class="flex w-full justify-between">
         <p class="">
-          {{ userInfo.about ? userInfo.about : "Hey there, i am amazing" }}
+          {{ profile.about ? profile.about : "Hey there, i am amazing" }}
         </p>
 
         <i
           class="fas fa-pencil-alt cursor-pointer"
-          @click="editAbout = !editAbout"
+          @click="(editAbout = !editAbout), (userInfo.about = profile.about)"
         ></i>
       </div>
       <!-- edit about -->
@@ -262,11 +270,11 @@ watchEffect(() => {
       </div>
       <div class="flex font-extrabold space-x-3">
         <i class="fas fa-mail-bulk"></i>
-        <p>DestinyJunior@gmail.com</p>
+        <p>{{ profile.email }}</p>
       </div>
       <div class="flex font-extrabold space-x-3">
         <img src="/images/svg/location.svg" alt="location" />
-        <p>California, USA</p>
+        <p>{{ profile.region }},{{ profile.country }}</p>
       </div>
     </div>
     <!--  -->

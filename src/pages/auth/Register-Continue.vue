@@ -35,11 +35,11 @@ type FileType = {
   imagetype: string;
 };
 const setProfilePic = () => {
-  userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
-
   userStore
-    .updateProfilePic(userInfo.profilePicture)
+    .updateProfilePic(selectedImg!.value as ArrayBuffer)
     .then((res) => {
+      userInfo.profilePicture = selectedImg!.value as ArrayBuffer;
+
       notify({
         type: "success",
         title: "Success",
@@ -55,10 +55,10 @@ const setProfilePic = () => {
     });
 };
 const setCoverPhoto = () => {
-  userInfo.coverPhoto = selectedImg!.value as ArrayBuffer;
   userStore
-    .updateCoverPhoto(userInfo.coverPhoto)
+    .updateCoverPhoto(selectedImg!.value as ArrayBuffer)
     .then((res) => {
+      userInfo.coverPhoto = selectedImg!.value as ArrayBuffer;
       notify({
         type: "success",
         title: "Success",
@@ -147,8 +147,8 @@ const rules = computed(() => {
         minLength(10)
       ),
       max: helpers.withMessage(
-        "about cannot be more than 32 characters",
-        maxLength(32)
+        "about cannot be more than 300 characters",
+        maxLength(300)
       ),
     },
   };

@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref, inject, reactive } from "vue";
+import { ref, inject, reactive, computed } from "vue";
 import letterGroups from "../mixins/letterGrouping";
-import { useGroupStore, useFriend } from "../core/store/index";
+import { useGroupStore, useFriend, user } from "../core/store/index";
+import { notify } from "@kyvg/vue3-notification";
+import { helpers, minLength, maxLength } from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import UIcomponent from "../components/UIcomponent/spinner.vue";
 // initialize group store
 const groupStore = useGroupStore();
 // initialize group store
 const friendStore = useFriend();
+// initialize user store
+const userStore = user();
 // instantiate component
 // variables
 const friends = ref<any[]>([]);
 const showFriends = ref(false);
+const query = ref("");
+const searchErr = ref("");
 const createGroupInfo = reactive<{
   name: string;
   description: string;
@@ -18,24 +26,53 @@ const createGroupInfo = reactive<{
 
 const letterGrouping = ref<any[]>([]);
 const loading = ref(false);
-const checkAction = (event: any, id: string) => {
-  event.target.checked = true ? addMembers(id) : removeMembers(id);
-};
+const showModal: any = inject("showCreateGroup");
+
 const addMembers = (id: string) => {
-  createGroupInfo.members.push(id);
+  const isMember = createGroupInfo.members.find((member) => {
+    return member === id;
+  });
+  if (isMember) {
+    return;
+  } else {
+    createGroupInfo.members.push(id);
+  }
+  console.log(id, createGroupInfo.members);
 };
 const removeMembers = (id: string) => {
   createGroupInfo.members.splice(createGroupInfo.members.indexOf(id), 1);
+  console.log(id, createGroupInfo.members);
+};
+const checkAction = (event: any, id: string) => {
+  event.target.checked == true ? addMembers(id) : removeMembers(id);
 };
 // create group function
 const createGroupMethod = () => {
   groupStore
     .createGroup(createGroupInfo)
     .then((res) => {
-      console.log(res.data.data);
+      //   send out notification to tell that the create was successful
+      notify({
+        type: "success",
+        title: "Success",
+        text: "Group created successfully.",
+      });
     })
     .catch((err) => {
       console.log(err);
+      if (err.data && err.data.Error) {
+        notify({
+          type: "error",
+          title: "Error",
+          text: err.data.Error,
+        });
+      } else {
+        notify({
+          type: "error",
+          title: "Error",
+          text: "Oops something went wrong",
+        });
+      }
     });
 };
 const getFriends = () => {
@@ -46,7 +83,7 @@ const getFriends = () => {
       console.log(res.data.data);
       friends.value = res.data.data;
       // group friends by letters
-      letterGroups(friends, letterGrouping);
+      letterGroups(friends, letterGrouping, "friendName");
       loading.value = false;
     })
     .catch((err) => {
@@ -56,7 +93,47 @@ const getFriends = () => {
 };
 // fire get friends
 getFriends();
-const showModal: any = inject("showCreateGroup");
+const searchUser = () => {
+  if (query.value !== "") {
+    loading.value = true;
+    userStore
+      .fetchUser(query.value)
+      .then((res) => {
+        friends.value = res.data.data;
+        // group friends by letters
+        letterGroups(friends, letterGrouping, "firstName");
+        if (friends.value.length == 0) {
+          searchErr.value = "Sorry no user matched your search.";
+        }
+        loading.value = false;
+      })
+      .catch((err) => {
+        console.log(err);
+        searchErr.value = err.data
+          ? err.data.Error
+          : "..Oops something went wrong";
+        loading.value = false;
+      });
+  }
+};
+
+// validation rules
+const rules = computed(() => {
+  return {
+    about: {
+      min: helpers.withMessage(
+        "about cannot be less than 10 characters",
+        minLength(10)
+      ),
+      max: helpers.withMessage(
+        "about cannot be more than 300 characters",
+        maxLength(300)
+      ),
+    },
+  };
+});
+
+const v$ = useVuelidate(rules as any, createGroupInfo);
 </script>
 
 <template>
@@ -75,6 +152,7 @@ const showModal: any = inject("showCreateGroup");
       <div class="space-y-2">
         <p class="font-extrabold text-[16px] pt-5">Name</p>
         <input
+          v-model="createGroupInfo.name"
           type="text"
           name="group-name"
           placeholder="Enter Group Name"
@@ -104,15 +182,22 @@ const showModal: any = inject("showCreateGroup");
             <div class="px-6">
               <!--  -->
               <div
-                class="flex border py-1 px-2 rounded-md fixed w-[31%] top-[35%] z-50 bg-gray-500"
+                class="flex border pl-2 rounded-md fixed w-[31%] top-[35%] z-50 bg-gray-500"
               >
                 <input
                   type="text"
+                  v-model="query"
                   name="search box"
                   class="w-full bg-transparent focus:outline-none outline-none text-gray-900"
-                  placeholder="Search Friend ..."
+                  placeholder="Search user by full name or email ..."
                 />
-                <i class="fas fa-search mt-1"></i>
+                <div
+                  class="flex appBgGreen px-2 space-x-1 py-1 rounded-sm cursor-pointer"
+                  @click="searchUser"
+                >
+                  <p>Search</p>
+                  <i class="fas fa-search mt-1"></i>
+                </div>
               </div>
             </div>
             <!-- chat heads -->
@@ -124,7 +209,7 @@ const showModal: any = inject("showCreateGroup");
             </div>
             <div v-else>
               <!--  -->
-              <div class="px-5 mt-6" v-if="friends[0]">
+              <div class="px-5 mt-8" v-if="friends[0]">
                 <!--line  -->
                 <div v-for="letterGroup in letterGrouping" :key="letterGroup">
                   <div class="flex space-x-4">
@@ -151,12 +236,28 @@ const showModal: any = inject("showCreateGroup");
                             class="rounded-full w-8 h-8"
                           />
                         </div>
-                        <p>{{ singleFriend.friendName }}</p>
+                        <p>
+                          {{
+                            singleFriend.friendName
+                              ? singleFriend.friendName
+                              : singleFriend.firstName +
+                                " " +
+                                singleFriend.lastName
+                          }}
+                        </p>
                       </div>
 
                       <input
                         type="checkbox"
-                        @change="checkAction(singleFriend.friend)"
+                        :id="singleFriend._id"
+                        @change="
+                          checkAction(
+                            $event,
+                            singleFriend.friend
+                              ? singleFriend.friend
+                              : singleFriend._id
+                          )
+                        "
                       />
                       <span class="checkmark"></span>
                     </label>
@@ -168,11 +269,18 @@ const showModal: any = inject("showCreateGroup");
                 <div class="flex w-full justify-center">
                   <img src="/images/svg/sadface.svg" alt="" class="w-20" />
                 </div>
-                <p class="text-sm text-center font-extrabold">
+
+                <p
+                  v-if="searchErr === ''"
+                  class="text-sm text-center font-extrabold"
+                >
                   oops... you do not have any friend yet.<br class="mb-1" />
-                  You may search for a user using his fullname or email in
+                  You may search for a user using his full name or email in
                   the<br />
                   search field above
+                </p>
+                <p v-else class="text-sm text-center font-extrabold">
+                  {{ searchErr }}
                 </p>
               </div>
             </div>
@@ -183,6 +291,7 @@ const showModal: any = inject("showCreateGroup");
       <div class="space-y-3">
         <p class="font-extrabold text-[16px] pt-5">Description</p>
         <textarea
+          v-model.trim="createGroupInfo.description"
           name="description"
           id=""
           cols="40"
@@ -193,6 +302,7 @@ const showModal: any = inject("showCreateGroup");
       <!--  -->
       <div class="pt-3">
         <button
+          @click="createGroupMethod"
           class="w-full font-extrabold text-sm py-2 rounded-sm bg-blue-800"
         >
           Create

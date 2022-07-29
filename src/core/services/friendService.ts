@@ -33,6 +33,7 @@ class FriendService {
                      .get(`user/friend`, { headers: authHeader() })
               return response;
        }
+       
 }
 
 export default new FriendService(http);
