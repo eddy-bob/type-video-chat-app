@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, shallowRef, inject } from "vue";
+import {  shallowRef, inject } from "vue";
 import profile from "../components/profile.vue";
 import friends from "../components/friends.vue";
 import call from "../components/calls.vue";

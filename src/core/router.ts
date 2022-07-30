@@ -11,9 +11,9 @@ const ForgotPasswordInit = () => import("../pages/auth/Forgot-Password-Init.vue"
 const ForgotPasswordComplete = () => import("../pages/auth/Forgot-Password-Complete.vue");
 const VerifyEmail = () => import("../pages/Verify-Email.vue");
 const NotFoundPage = () => import("../pages/Not-Found.vue");
-const Home = () => import("../pages/Home.vue");
-
-
+const PrivateChat = () => import("../pages/PrivateChat/Private-Chat.vue");
+const SideNav = () => import("../components/sideNav.vue");
+const GroupChat = () => import("../pages/GroupChat/Group-Chat.vue");
 
 // import store
 // import store from "./store/index.js";
@@ -59,14 +59,26 @@ const routes = [
     path: "/auth/sign-up/continue",
     name: "page.auth.register.continue",
     component: SignUpContinue
+
   },
   {
-    path: "/chat-home",
-    name: "page.chat.home",
-    component: Home,
+    path: "/private-chat/:chatId",
+    name: "page.privateChat",
+    components: {
+      default: PrivateChat,
+      leftNav: SideNav
+    },
     meta: { requireAuth: true }
   },
-
+  {
+    path: "/group-chat/:groupId",
+    name: "page.GroupChat",
+    components: {
+      default: GroupChat,
+      leftNav: SideNav
+    },
+    meta: { requireAuth: true }
+  },
 
   //add sellers routes below-------
   {

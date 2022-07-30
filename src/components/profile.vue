@@ -205,7 +205,9 @@ watchEffect(() => {
         <div class="absolute bottom-[-17%] left-[35%]">
           <img
             :src="
-              profile?.photo ?  userInfo.profilePicture : '/images/jpeg/noImg.jpeg'
+              profile?.photo
+                ? userInfo.profilePicture
+                : '/images/jpeg/noImg.jpeg'
             "
             alt=""
             class="rounded-full border-4 border-slate-800 w-20 h-20"

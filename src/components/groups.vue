@@ -2,12 +2,15 @@
 import { ref, inject } from "vue";
 import letterGroups from "../mixins/letterGrouping";
 import { useGroupStore } from "../core/store/index";
+import { useRouter } from "vue-router";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import moment from "moment";
 // define open channel modal func
+// initialize route
+const router = useRouter();
 const showModal = inject<{ value: boolean }>("showCreateGroup");
 
-const singleGroupId = inject<{ value: string }>("groupId");
+const singleGroupId = ref<string>();
 
 // initialize store
 const store = useGroupStore();
@@ -49,6 +52,7 @@ const fetchGroupChat = (id: string) => {
     <div class="px-6 space-y-6">
       <div class="flex justify-between pt-5">
         <p class="font-extrabold text-[22px]">Channels#</p>
+
         <i
           class="fas fa-plus border border-gray-300 p-2 rounded-md cursor-pointer"
           @click="showModal = !showModal"
@@ -105,7 +109,12 @@ const fetchGroupChat = (id: string) => {
           >
             <div
               class="flex space-x-3 chathead cursor-pointer"
-              @click="fetchGroupChat(singleGroup._id)"
+              @click="
+                $router.push({
+                  name: 'page.GroupChat',
+                  params: { groupId: singleGroup._id },
+                })
+              "
             >
               <div class="relative">
                 <img

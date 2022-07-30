@@ -246,7 +246,15 @@ const isFriends = (id: string, email: string) => {
               v-for="singleFriend in letterGroup[Object.keys(letterGroup)[0]]"
               :key="singleFriend._id"
             >
-              <div class="flex space-x-3 chathead">
+              <div
+                class="flex space-x-3 chathead cursor-pointer"
+                @click="
+                  $router.push({
+                    name: 'page.privateChat',
+                    params: { chatId: singleFriend._id },
+                  })
+                "
+              >
                 <div>
                   <img
                     :src="
@@ -268,53 +276,6 @@ const isFriends = (id: string, email: string) => {
               <img src="/images/svg/option.svg" alt="" class="w-2" />
             </div>
           </div>
-
-          <!--line  -->
-
-          <!-- <div class="flex space-x-4">
-            <p>D</p>
-            <p class="w-full border-b border-b-gray-500 mb-3"></p>
-          </div>
-          <div class="flex justify-between">
-            <div class="flex space-x-3 chathead">
-              <div>
-                <img
-                  src="/images/jpg/icon.jpg"
-                  alt="img"
-                  class="rounded-full w-8 h-8"
-                />
-                <p
-                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-                ></p>
-              </div>
-              <p class="text-[12px] font-extrabold mt-2">Destiny junior</p>
-            </div>
-            <img src="/images/svg/option.svg" alt="" class="w-2" />
-          </div> -->
-
-          <!--  -->
-          <!--line  -->
-
-          <!-- <div class="flex space-x-4">
-            <p>K</p>
-            <p class="w-full border-b border-b-gray-500 mb-3"></p>
-          </div>
-          <div class="flex justify-between">
-            <div class="flex space-x-3 chathead">
-              <div>
-                <img
-                  src="/images/jpg/icon.jpg"
-                  alt="img"
-                  class="rounded-full w-8 h-8"
-                />
-                <p
-                  class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-                ></p>
-              </div>
-              <p class="text-[12px] font-extrabold mt-2">Kingsley Madu</p>
-            </div>
-            <img src="/images/svg/option.svg" alt="" class="w-2" />
-          </div> -->
         </div>
         <div v-else class="mt-7">
           <div class="flex w-full justify-center">
