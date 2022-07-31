@@ -145,8 +145,10 @@ const addGroupChat = () => {
 watch(route, (current, previous) => {
   groupId.value = route.params.groupId as string;
   // fetch auth user profile
-  groupProfile(groupId.value);
-  groupChat(groupId.value);
+  if (typeof route.params.groupId !== "undefined") {
+    groupProfile(groupId.value);
+    groupChat(groupId.value);
+  }
 });
 groupChat(groupId.value);
 watchEffect(() => {
@@ -214,7 +216,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full bg-slate-800" v-if="groupProfileData.name">
+  <div class="w-full bg-slate-800">
     <!-- nav -->
     <div
       class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed w-[74%] top-0"
@@ -261,115 +263,77 @@ onBeforeUnmount(() => {
       v-scroll-directive
     >
       <!-- chat loop -->
+      <div v-if="groupProfileData.name">
+        <div class="text-left space-x-2">
+          <div class="space-y-2">
+            <div
+              v-for="chat in groupChatData"
+              :key="chat._id"
+              class="flex justify-end"
+            >
+              <div>
+                <div class="relative w-full">
+                  <p
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
+                    style="overflow-wrap: break-word"
+                  >
+                    {{ chat.message }}
+                  </p>
+                  <img
+                    src="/images/svg/option.svg"
+                    @click="showChatOption(chat._id)"
+                    alt=""
+                    class="w-2 absolute left-[-9px] top-0 cursor-pointer"
+                  />
 
-      <div class="text-left space-x-2">
-        <div class="space-y-2">
-          <div
-            v-for="chat in groupChatData"
-            :key="chat._id"
-            class="flex justify-end"
-          >
-            <div>
-              <div class="relative w-full">
-                <p
-                  class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
-                  style="overflow-wrap: break-word"
-                >
-                  {{ chat.message }}
-                </p>
-                <img
-                  src="/images/svg/option.svg"
-                  @click="showChatOption(chat._id)"
-                  alt=""
-                  class="w-2 absolute left-[-9px] top-0 cursor-pointer"
-                />
-
-                <!-- chat options -->
-                <div
-                  class="bg-slate-500 p-3 space-y-5 absolute right-0 mt-1 border border-gray-700 text-sm rounded-lg z-50 hidden"
-                  :id="chat._id"
-                >
-                  <div class="flex justify-between">
-                    <p>Forward</p>
-                    <img src="" alt="" />
+                  <!-- chat options -->
+                  <div
+                    class="bg-slate-500 p-3 space-y-5 absolute right-0 mt-1 border border-gray-700 text-sm rounded-lg z-50 hidden"
+                    :id="chat._id"
+                  >
+                    <div class="flex justify-between">
+                      <p>Forward</p>
+                      <img src="" alt="" />
+                    </div>
+                    <div class="flex justify-between">
+                      <p>Copy</p>
+                      <img src="" alt="" />
+                    </div>
+                    <div class="flex justify-between">
+                      <p>Delete</p>
+                      <img src="" alt="" />
+                    </div>
                   </div>
-                  <div class="flex justify-between">
-                    <p>Copy</p>
-                    <img src="" alt="" />
-                  </div>
-                  <div class="flex justify-between">
-                    <p>Delete</p>
-                    <img src="" alt="" />
-                  </div>
+                  <!-- chat options  end-->
                 </div>
-                <!-- chat options  end-->
-              </div>
-              <div class="flex justify-end space-x-3">
-                <div>
-                  <img src="/images/svg/check.svg" alt="check" class="w-2" />
-                  <img src="/images/svg/check.svg" alt="check" class="w-2" />
+                <div class="flex justify-end space-x-3">
+                  <div>
+                    <img src="/images/svg/check.svg" alt="check" class="w-2" />
+                    <img src="/images/svg/check.svg" alt="check" class="w-2" />
+                  </div>
+                  <p>{{ moment(chat.createdAt).format("hh:mm:ss A") }}</p>
+                  <p class="font-extrabold">
+                    {{ profile._id === chat.sender ? "You" : chat.senderName }}
+                  </p>
                 </div>
-                <p>{{ moment(chat.createdAt).format("hh:mm:ss A") }}</p>
-                <p class="font-extrabold">
-                  {{ profile._id === chat.sender ? "You" : chat.senderName }}
-                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!--  -->
-    <!--  -->
 
-    <!-- <div
-          class="flex justify-start space-x-1 text-gray-300 text-sm w-auto max-w-[50rem]"
-        >
-          <div class="text-left flex space-x-2">
-            <div class="space-y-2">
-              <p
-                class="bg-slate-500 px-4 py-4 rounded-md w-auto max-w-[50rem]"
-                style="overflow-wrap: break-word"
-              >
-                hello eddy
-              </p>
-              <div class="flex justify-end space-x-3">
-                <div class="">
-                  <img
-                    src="/images/jpg/icon.jpg"
-                    alt="img"
-                    class="rounded-full w-10 h-10"
-                  />
-                </div>
-                <p class="font-extrabold">Sam</p>
-                <p>12:36pm</p>
-                <div>
-                  <img src="/images/svg/check.svg" alt="check" class="w-2" />
-                  <img src="/images/svg/check.svg" alt="check" class="w-2" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <img src="/images/svg/option.svg" alt="" class="w-2 mb-20" /> -->
-    <!--chat options -->
-    <!-- <div
-            class="bg-slate-700 p-3 space-y-5 absolute left-[47%] top-[35%] text-sm rounded-lg hidden"
-          >
-            <div class="flex justify-between">
-              <p>Forward</p>
-              <img src="" alt="" />
-            </div>
-            <div class="flex justify-between">
-              <p>Copy</p>
-              <img src="" alt="" />
-            </div>
-            <div class="flex justify-between">
-              <p>Delete</p>
-              <img src="" alt="" />
-            </div>
-          </div>
-        </div> -->
-    <!--  -->
+      <div v-else class="w-full bg-slate-800 text-gray-300 text-center">
+        <div class="flex w-full justify-center">
+          <img src="/images/svg/sadface.svg" alt="" class="w-20" />
+        </div>
+        <p>
+          Ooops we could'nt find the group you <br />are looking for.URL might
+          be broken<br />
+          or group has been deleted/disabled
+        </p>
+      </div>
+    </div>
+
     <!--  -->
 
     <!--  -->
@@ -388,6 +352,7 @@ onBeforeUnmount(() => {
         <textarea
           type="text"
           name="message"
+          :disabled="groupProfileData.firstName ? false : true"
           v-model.lazy="groupChats"
           class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 w-[60%] myOverflow text-sm"
           placeholder="message here . . ."
@@ -404,16 +369,7 @@ onBeforeUnmount(() => {
     </div>
     <!-- end of input -->
   </div>
-  <div class="w-full bg-slate-800 text-gray-300 h-screen pt-5 text-center">
-    <div class="flex w-full justify-center">
-      <img src="/images/svg/sadface.svg" alt="" class="w-20" />
-    </div>
-    <p>
-      Ooops we could'nt find the group you <br />are looking for.URL might be
-      broken<br />
-      or group has been deleted/disabled
-    </p>
-  </div>
+
   <!--  -->
 </template>
 
