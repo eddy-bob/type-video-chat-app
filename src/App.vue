@@ -57,7 +57,7 @@ const setImage = (value: boolean) => {
     <!--  -->
     <notifications class="mt-x" />
     <router-view name="leftNav" class="w-[30rem]"></router-view>
-    <router-view></router-view>
+    <router-view class="w-full"></router-view>
     <!-- <router-view name="rightNav"></router-view> -->
   </div>
 </template>

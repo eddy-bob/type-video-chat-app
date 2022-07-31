@@ -89,11 +89,11 @@ const sendFriendRequest = (id: string) => {
 
 const isFriends = (id: string, email: string) => {
   let isFriend;
+  const dataObj = JSON.parse(
+    sessionStorage.getItem(import.meta.env.VITE_USERDETAILS) as string
+  );
 
-  if (
-    VueCookieNext.getCookie(import.meta.env.VITE_USERDETAILS).customerReg
-      .email === email
-  ) {
+  if (dataObj.customerReg.email === email) {
     return (isFriend = "You");
   }
 
@@ -158,9 +158,7 @@ const isFriends = (id: string, email: string) => {
                   <div>
                     <img
                       :src="
-                        user.photo
-                          ? user.photo.url
-                          : '/images/svg/groupIcon.svg'
+                        user.photo ? user.photo.url : '/images/jpeg/noImg.jpeg'
                       "
                       alt="img"
                       class="rounded-full w-8 h-8"
@@ -260,7 +258,7 @@ const isFriends = (id: string, email: string) => {
                     :src="
                       singleFriend.photo
                         ? singleFriend.photo.url
-                        : '/images/svg/groupIcon.svg'
+                        : '/images/jpeg/noImg.jpeg'
                     "
                     alt="img"
                     class="rounded-full w-8 h-8"

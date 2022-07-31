@@ -137,7 +137,7 @@ const rejectFriendRequest = (requestId: string, index: number) => {
               :src="
                 request.pendingFriendPhoto
                   ? request.pendingFriendPhoto.url
-                  : '/images/jpg/icon.jpg'
+                  : '/images/jpeg/noImg.jpeg'
               "
               alt="img"
               class="rounded-full w-8 h-8"

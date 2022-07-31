@@ -47,6 +47,8 @@ const authStore = defineStore('auth', {
             }
           })
 
+
+          sessionStorage.setItem(import.meta.env.VITE_USERDETAILS, data)
           VueCookieNext.setCookie(import.meta.env.VITE_USERDETAILS,
             data, { expire: import.meta.env.VITE_COOKIE_EXPIRE }
 
