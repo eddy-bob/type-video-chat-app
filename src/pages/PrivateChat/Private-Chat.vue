@@ -16,6 +16,7 @@ import { usePrivateChat, user, useAuthStore } from "../../core/store/index";
 // setup socket connection
 SocketioService.setupSocketConnection()
   .then((response) => {
+    console.log("socket connected");
     socket.value = response[1];
     console.log(socket.value);
   })
@@ -36,16 +37,17 @@ const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 // variables
 const userId = ref<string>();
-const profile = ref();
+const profile = ref({});
 const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
 const privateChats = ref("");
 
 const loading = ref(false);
 const typing = ref(false);
+const friendTyping = ref(false);
 const scrollArea = ref<HTMLElement>();
 const privateChatData = ref<any[]>([]);
-const privateUserProfileData = ref({});
+const privateUserProfileData = ref<any>({});
 const prev = ref<any>("");
 // set groupId on created
 userId.value = route.params.userId as string;
@@ -89,6 +91,7 @@ const privateUserProfile = (id: string) => {
   userStore
     .getUserProfile(id)
     .then((res) => {
+      console.log(res.data.data);
       privateUserProfileData.value = res.data.data;
     })
     .catch((err) => {
@@ -121,19 +124,10 @@ const addPrivateChat = () => {
       message: privateChats.value,
       attatchment: privateAttatchment.value,
     });
+
     privateChats.value = "";
     // set scroll div id to ref
     scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
-    // fetch chats
-    privateChatStore
-      .getChat(userId.value as string)
-      .then((res) => {
-        console.log(res);
-        privateChatData.value = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }
 };
 // listen for when there is a change in the group id
@@ -148,22 +142,45 @@ watch(route, (current, previous) => {
 });
 privateChat(userId.value);
 watchEffect(() => {
-  if (privateChats.value !== "") {
-    typing.value = true;
-    console.log(true);
-  } else {
-    typing.value = false;
-  }
   if (socket.value) {
+    if (privateChats.value !== "") {
+      typing.value = true;
+      socket?.value.emit("typing", {
+        value: true,
+        recipient: privateUserProfileData.value.socket,
+      });
+    } else {
+      typing.value = false;
+      socket?.value.emit("typing", {
+        value: false,
+        recipient: privateUserProfileData.value.socket,
+      });
+    }
     console.log(socket.value);
-    socket.value.on("newMessage", (data: any) => {
-      console.log(data);
-      privateChatData.value.push(data);
+    socket.value.once("newMessage", (data: any) => {
+      privateChatData.value.push({
+        sender: data.name.sender,
+        senderName: data.name.senderName,
+        id: data.name.id,
+        time: data.time,
+        message: data.message,
+        attatchment: data.name.attatchment,
+      });
       privateChats.value = "";
     });
-    socket.value.on("message", (data: any) => {
+    socket.value.on("typing", (data: { value: boolean }) => {
+      friendTyping.value = data.value;
+    });
+    socket.value.once("message", (data: any) => {
       console.log(data);
-      privateChatData.value.push(data);
+      privateChatData.value.push({
+        sender: data.name.sender,
+        senderName: data.name.senderName,
+        id: data.name.id,
+        time: data.time,
+        message: data.message,
+        attatchment: data.name.attatchment,
+      });
       privateChats.value = "";
     });
     socket.value.on("privateForward", (data: any) => {
@@ -214,6 +231,14 @@ onBeforeUnmount(() => {
             alt="profile picture"
             class="rounded-full w-12 h-12"
           />
+          <p
+            v-if="privateUserProfileData.isLoggedIn == true"
+            class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
+          ></p>
+          <p
+            v-else
+            class="absolute w-2 h-2 rounded-full bg-red-700 bottom-0 right-1"
+          ></p>
         </div>
         <div>
           <p class="font-extrabold text-[16px]">
@@ -257,7 +282,10 @@ onBeforeUnmount(() => {
             <div
               v-for="chat in privateChatData"
               :key="chat._id"
-              class="flex justify-end"
+              class="flex"
+              :class="
+                profile._id === chat.sender ? 'justify-end' : 'justify-start'
+              "
             >
               <div>
                 <div class="relative w-full">
@@ -271,7 +299,12 @@ onBeforeUnmount(() => {
                     src="/images/svg/option.svg"
                     @click="showChatOption(chat._id)"
                     alt=""
-                    class="w-2 absolute left-[-9px] top-0 cursor-pointer"
+                    class="w-2 absolute top-0 cursor-pointer"
+                    :class="
+                      profile._id === chat.sender
+                        ? 'left-[-9px]'
+                        : 'right-[-9px]'
+                    "
                   />
 
                   <!-- chat options -->
@@ -294,13 +327,22 @@ onBeforeUnmount(() => {
                   </div>
                   <!-- chat options  end-->
                 </div>
-                <div class="flex justify-end space-x-3">
+                <div
+                  class="flex justify-end space-x-3"
+                  :class="
+                    profile._id === chat.sender
+                      ? 'flex-row'
+                      : 'flex-row-reverse space-x-reverse'
+                  "
+                >
                   <div>
                     <img src="/images/svg/check.svg" alt="check" class="w-2" />
                     <img src="/images/svg/check.svg" alt="check" class="w-2" />
                   </div>
-                  <p>{{ moment(chat.createdAt).format("hh:mm:ss A") }}</p>
-                  <p class="font-extrabold">
+                  <p class="text-sm">
+                    {{ moment(chat.createdAt).format("hh:mm:ss A") }}
+                  </p>
+                  <p class="font-extrabold text-sm">
                     {{ profile._id === chat.sender ? "You" : chat.senderName }}
                   </p>
                 </div>
@@ -308,6 +350,13 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </div>
+        <!-- typing notification -->
+        <p
+          class="font-extrabold text-gray-300 flex justify-end mt-4 text-sm"
+          v-if="friendTyping == true"
+        >
+          Typing. . .
+        </p>
       </div>
       <div v-else class="w-full bg-slate-800 text-gray-300 text-center">
         <div class="flex w-full justify-center">
@@ -344,7 +393,7 @@ onBeforeUnmount(() => {
         <!--  -->
         <button
           type="button"
-          @click="addGroupChat"
+          @click="addPrivateChat"
           class="bg-slate-700 p-2 rounded-full"
         >
           <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />

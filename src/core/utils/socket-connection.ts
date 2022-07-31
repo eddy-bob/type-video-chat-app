@@ -25,12 +25,12 @@ class SocketioService {
         },
       });
 
-      
-      
+
+
       // update active status
       return await this.userStore
         .updateProfile({ isLoggedIn: true }).then((res: any) => {
-
+          console.log(res.data.data)
           this.authStore.active = true;
           console.log(res, this.socket)
           return Promise.resolve([res, this.socket])
