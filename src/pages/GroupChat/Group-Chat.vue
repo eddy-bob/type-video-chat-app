@@ -358,7 +358,7 @@ onBeforeUnmount(() => {
         />
         <!--  -->
         <button
-          :disabled="groupProfileData.firstName ? false : true"
+          :disabled="groupProfileData.name ? false : true"
           type="button"
           @click="addGroupChat"
           class="bg-slate-700 p-2 rounded-full"
