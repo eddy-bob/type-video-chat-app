@@ -120,7 +120,7 @@ const addPrivateChat = () => {
   // emit add chat
   if (socket.value && privateChats.value !== "") {
     socket.value.emit("privateMessage", {
-      userId: privateUserProfileData.value,
+      userId: privateUserProfileData.value._id,
       message: privateChats.value,
       attatchment: privateAttatchment.value,
     });
@@ -147,13 +147,13 @@ watchEffect(() => {
       typing.value = true;
       socket?.value.emit("typing", {
         value: true,
-        recipient: privateUserProfileData.value.socket,
+        recipient: privateUserProfileData.value._id,
       });
     } else {
       typing.value = false;
       socket?.value.emit("typing", {
         value: false,
-        recipient: privateUserProfileData.value.socket,
+        recipient: privateUserProfileData.value._id,
       });
     }
     console.log(socket.value);
