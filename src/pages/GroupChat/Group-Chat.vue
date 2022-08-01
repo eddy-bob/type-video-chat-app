@@ -352,13 +352,13 @@ onBeforeUnmount(() => {
         <textarea
           type="text"
           name="message"
-          :disabled="groupProfileData.firstName ? false : true"
           v-model.lazy="groupChats"
           class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 w-[60%] myOverflow text-sm"
           placeholder="message here . . ."
         />
         <!--  -->
         <button
+          :disabled="groupProfileData.firstName ? false : true"
           type="button"
           @click="addGroupChat"
           class="bg-slate-700 p-2 rounded-full"
