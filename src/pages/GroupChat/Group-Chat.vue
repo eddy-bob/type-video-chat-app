@@ -58,6 +58,12 @@ const scrollToBottom = () => {
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
 };
+const scrollToBottomChat = () => {
+  scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
+
+  const targetHeight = scrollArea.value!.scrollHeight;
+  scrollArea.value!.scrollTop = targetHeight;
+};
 const getProfile = () => {
   authStore
     .getAuthUser()
@@ -266,6 +272,7 @@ onBeforeUnmount(() => {
       v-else
       class="px-10 py-10 space-y-5 mt-20 h-[500px] overflow-y-scroll myOverflow"
       id="chatScroll"
+      style="scroll-behavior: smooth"
       v-scroll-directive
     >
       <!-- chat loop -->
