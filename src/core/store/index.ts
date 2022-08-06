@@ -6,6 +6,7 @@ import usePrivateChat from './modules/privateChat.store';
 import useFriend from './modules/friend.store';
 import user from './modules/user.store';
 
+// import all store modules here and equally export them ( to avoid importing files individually in components)
 export {
   useAuthStore,
   useFriendRequestStore,
@@ -15,5 +16,3 @@ export {
   useFriend,
   user
 };
-
-// import all store modules here and equally export them ( to avoid importing files individually in components)

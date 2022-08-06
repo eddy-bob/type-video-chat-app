@@ -6,9 +6,9 @@ import {
   shallowRef,
   onUpdated,
   onBeforeUnmount,
-  computed,
 } from "vue";
 import { useRoute } from "vue-router";
+import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
 import SocketioService from "../../core/utils/socket-connection";
@@ -37,6 +37,7 @@ const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 // variables
 const userId = ref<string>();
+const friendId = ref("");
 const profile = ref({});
 const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
@@ -50,8 +51,15 @@ const privateChatData = ref<any[]>([]);
 const privateUserProfileData = ref<any>({});
 const prev = ref<any>("");
 // set groupId on created
-userId.value = route.params.userId as string;
+userId.value = route.query.userId as string;
+friendId.value = route.query.id as string;
 const scrollToBottom = () => {
+  const targetHeight = scrollArea.value!.scrollHeight;
+  scrollArea.value!.scrollTop = targetHeight;
+};
+const scrollToBottomChat = () => {
+  scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
+
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
 };
@@ -123,8 +131,38 @@ const addPrivateChat = () => {
       userId: privateUserProfileData.value._id,
       message: privateChats.value,
       attatchment: privateAttatchment.value,
+      friendId: friendId.value,
     });
-
+    socket.value.once("chatError", (data: any) => {
+      console.log(data);
+      notify({
+        type: "error",
+        title: "Error",
+        text: data.message || "Chat send failed",
+      });
+    });
+    socket.value.once("message", (data: any) => {
+      console.log(data);
+      console.log("na me send am");
+      privateChatData.value.push({
+        sender: data.name.sender,
+        senderName: data.name.senderName,
+        id: data.name.id,
+        time: data.time,
+        message: data.message,
+        attatchment: data.name.attatchment,
+      });
+    });
+    socket.value.once("newMessage", (data: any) => {
+      privateChatData.value.push({
+        sender: data.name.sender,
+        senderName: data.name.senderName,
+        id: data.name.id,
+        time: data.time,
+        message: data.message,
+        attatchment: data.name.atatchment,
+      });
+    });
     privateChats.value = "";
     // set scroll div id to ref
     scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
@@ -133,9 +171,9 @@ const addPrivateChat = () => {
 // listen for when there is a change in the group id
 
 watch(route, (current, previous) => {
-  userId.value = route.params.userId as string;
+  userId.value = route.query.userId as string;
   // fetch auth user profile
-  if (typeof route.params.userId !== "undefined") {
+  if (typeof route.query.userId !== "undefined") {
     privateUserProfile(userId.value);
     privateChat(userId.value);
   }
@@ -145,53 +183,58 @@ watchEffect(() => {
   if (socket.value) {
     if (privateChats.value !== "") {
       typing.value = true;
-      socket?.value.emit("typing", {
+      socket.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
     } else {
       typing.value = false;
-      socket?.value.emit("typing", {
+      socket.value.emit("typing", {
         value: false,
         recipient: privateUserProfileData.value._id,
       });
     }
     console.log(socket.value);
-    socket.value.once("newMessage", (data: any) => {
-      privateChatData.value.push({
-        sender: data.name.sender,
-        senderName: data.name.senderName,
-        id: data.name.id,
-        time: data.time,
-        message: data.message,
-        attatchment: data.name.attatchment,
-      });
-      privateChats.value = "";
-    });
+    // socket.value.once("newMessage", (data: any) => {
+    //   privateChatData.value.push({
+    //     sender: data.name.sender,
+    //     senderName: data.name.senderName,
+    //     id: data.name.id,
+    //     time: data.time,
+    //     message: data.message,
+    //     attatchment: data.name.atatchment,
+    //   });
+    // });
+
     socket.value.on("typing", (data: { value: boolean }) => {
       friendTyping.value = data.value;
     });
-    socket.value.once("message", (data: any) => {
-      console.log(data);
-      privateChatData.value.push({
-        sender: data.name.sender,
-        senderName: data.name.senderName,
-        id: data.name.id,
-        time: data.time,
-        message: data.message,
-        attatchment: data.name.attatchment,
-      });
-      privateChats.value = "";
-    });
+    // socket.value.on("message", (data: any) => {
+    //   console.log(data);
+    //   console.log("na me send am");
+    //   privateChatData.value.push({
+    //     sender: data.name.sender,
+    //     senderName: data.name.senderName,
+    //     id: data.name.id,
+    //     time: data.time,
+    //     message: data.message,
+    //     attatchment: data.name.attatchment,
+    //   });
+    // });
     socket.value.on("privateForward", (data: any) => {
       console.log(data);
     });
     socket.value.on("forwardFail", (data: any) => {
       console.log(data);
     });
-    socket.value.on("chatError", (data: any) => {
-      console.log(data);
-    });
+    // socket.value.once("chatError", (data: any) => {
+    //   console.log(data);
+    //   notify({
+    //     type: "error",
+    //     title: "Error",
+    //     text: data.message || "Chat send failed",
+    //   });
+    // });
   }
 });
 onUpdated(() => {
@@ -270,6 +313,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
+      style="scroll-behavior: smooth"
       class="px-10 py-10 space-y-5 mt-20 h-[500px] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
@@ -340,7 +384,11 @@ onBeforeUnmount(() => {
                     <img src="/images/svg/check.svg" alt="check" class="w-2" />
                   </div>
                   <p class="text-sm">
-                    {{ moment(chat.createdAt).format("hh:mm:ss A") }}
+                    {{
+                      chat.time
+                        ? chat.time
+                        : moment(chat.createdAt).format("hh:mm:ss A")
+                    }}
                   </p>
                   <p class="font-extrabold text-sm">
                     {{ profile._id === chat.sender ? "You" : chat.senderName }}
@@ -349,6 +397,12 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
+        </div>
+        <!-- floating button -->
+        <div @click="scrollToBottomChat">
+          <i
+            class="fas fa-chevron-circle-down fa-2xl fixed right-8 bottom-24 cursor-pointer"
+          ></i>
         </div>
         <!-- typing notification -->
         <p

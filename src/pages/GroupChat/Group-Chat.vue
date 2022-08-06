@@ -9,6 +9,7 @@ import {
   computed,
 } from "vue";
 import { useRoute } from "vue-router";
+import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
 import SocketioService from "../../core/utils/socket-connection";
@@ -179,6 +180,11 @@ watchEffect(() => {
     });
     socket.value.on("groupChatError", (data: any) => {
       console.log(data);
+      notify({
+        type: "error",
+        title: "Error",
+        text: data.message || "Chat send failed",
+      });
     });
 
     socket.value.on("groupJoin", (data: any) => {

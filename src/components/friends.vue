@@ -249,7 +249,10 @@ const isFriends = (id: string, email: string) => {
                 @click="
                   $router.push({
                     name: 'page.privateChat',
-                    params: { userId: singleFriend.friend },
+                    query: {
+                      userId: singleFriend.friend,
+                      id: singleFriend._id,
+                    },
                   })
                 "
               >

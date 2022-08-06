@@ -61,7 +61,7 @@ const submitForm = async (): Promise<void> => {
         });
 
         setTimeout(() => {
-          window.location.href = "/chat-home";
+          window.location.href = "/private-chat";
         }, 3000);
       })
       .catch((err: any) => {

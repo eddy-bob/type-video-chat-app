@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { VueCookieNext } from "vue-cookie-next"
+
 import authService from "../../services/authService";
 import { storeItem } from '../../utils/storage.helper';
 import { Register, Login, ForgotPasswordInit, ForgotPasswordComplete, ChangePassword } from "../../../interfaces/auth.interface"
@@ -49,10 +49,7 @@ const authStore = defineStore('auth', {
 
 
           sessionStorage.setItem(import.meta.env.VITE_USERDETAILS, data)
-          VueCookieNext.setCookie(import.meta.env.VITE_USERDETAILS,
-            data, { expire: import.meta.env.VITE_COOKIE_EXPIRE }
-
-          )
+         
           this.isAuthenticated = true;
 
           return await Promise.resolve(response);
@@ -151,7 +148,7 @@ const authStore = defineStore('auth', {
 
       this.isAuthenticated = false;
       sessionStorage.removeItem(import.meta.env.VITE_ACCESSTK);
-      VueCookieNext.removeCookie(import.meta.env.VITE_USERDETAILS)
+      
     },
   },
 });

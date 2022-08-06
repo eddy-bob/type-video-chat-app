@@ -62,7 +62,7 @@ const routes = [
 
   },
   {
-    path: "/private-chat/:userId",
+    path: "/private-chat",
     name: "page.privateChat",
     components: {
       default: PrivateChat,
