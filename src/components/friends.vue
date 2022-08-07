@@ -2,7 +2,6 @@
 import { ref, inject, reactive, customRef } from "vue";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import letterGroups from "../mixins/letterGrouping";
-import { VueCookieNext } from "vue-cookie-next";
 import { notify } from "@kyvg/vue3-notification";
 import { useFriend, user, useFriendRequestStore } from "../core/store/index";
 

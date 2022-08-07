@@ -12,7 +12,13 @@ import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
 import SocketioService from "../../core/utils/socket-connection";
-import { usePrivateChat, user, useAuthStore } from "../../core/store/index";
+import {
+  usePrivateChat,
+  user,
+  useAuthStore,
+  useRecentPrivateChatStore,
+} from "../../core/store/index";
+
 // setup socket connection
 SocketioService.setupSocketConnection()
   .then((response) => {
@@ -31,7 +37,8 @@ const vScrollDirective = {
 
 // initialize route
 const route = useRoute();
-// innitialize store
+// initialize friend request store
+const recentPrivateChatStore = useRecentPrivateChatStore();
 const userStore = user();
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
@@ -75,6 +82,16 @@ const getProfile = () => {
     });
 };
 getProfile();
+const addRecentChat = (data: { relationship: string; friend: string }) => {
+  recentPrivateChatStore
+    .addRecentPrivateChat(data)
+    .then((res) => {
+      console.log(res.data.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 const showChatOption = (id: string) => {
   const el = document.getElementById(id);
 
@@ -167,6 +184,10 @@ const addPrivateChat = () => {
     // set scroll div id to ref
     scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
   }
+  addRecentChat({
+    friend: userId.value as string,
+    relationship: route.query.id as string,
+  });
 };
 // listen for when there is a change in the group id
 

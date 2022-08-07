@@ -1,5 +1,37 @@
 <script lang="ts" setup>
+import { ref } from "vue";
+import { useRecentPrivateChatStore } from "../core/store/index";
+import UIcomponent from "../components/UIcomponent/spinner.vue";
+// initialize friend request store
+const recentPrivateChatStore = useRecentPrivateChatStore();
 
+// variables
+const recentChats = ref<any[]>([]);
+const loading = ref(false);
+const chatsError = ref("");
+// functions
+const fetchRecentChats = () => {
+  loading.value = true;
+  recentPrivateChatStore
+    .getRecentPrivateChats()
+    .then((res) => {
+      loading.value = false;
+      recentChats.value = res.data.data;
+      console.log(recentChats.value);
+      if (!recentChats.value[0]) {
+        chatsError.value =
+          "You have no recent chats at the moment.Go the friends tab to start a conversation";
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      chatsError.value = err.data
+        ? err.data.Error
+        : "..Oops something went wrong";
+      loading.value = false;
+    });
+};
+fetchRecentChats();
 </script>
 
 <template>
@@ -23,51 +55,58 @@
       </div>
     </div>
     <!-- chat heads -->
-    <div class="overflow-y-scroll myOverflow max-h-44">
-      <!--  -->
-      <div class="flex space-x-3 chathead">
-        <div class="relative">
-          <img
-            src="/images/jpg/icon.jpg"
-            alt="img"
-            class="rounded-full w-8 h-8"
-          />
-          <p
-            class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-          ></p>
+    <div
+      v-if="loading == true"
+      class="flex flex-col items-center justify-center h-[300px]"
+    >
+      <component :is="UIcomponent" />
+    </div>
+    <div v-else>
+      <div v-if="recentChats[0]">
+        <div
+          v-for="chat in recentChats"
+          :key="chat.friend"
+          class="overflow-y-scroll myOverflow max-h-44 chathead cursor-pointer"
+        >
+          <!--  -->
+          <div
+            @click="
+              $router.push({
+                name: 'page.privateChat',
+                query: {
+                  userId: chat.friend,
+                  id: chat.relationship,
+                },
+              })
+            "
+            class="flex space-x-3"
+          >
+            <div class="relative">
+              <img
+                :src="chat.photo ? chat.photo.url : '/images/jpeg/noImg.jpeg'"
+                alt="img"
+                class="rounded-full w-8 h-8"
+              />
+              <p
+                class="absolute w-2 bg-green-700 h-2 rounded-full bottom-0 right-1"
+              ></p>
+            </div>
+            <p class="text-[12px] font-extrabold mt-2">{{ chat.friendName }}</p>
+          </div>
         </div>
-        <p class="text-[12px] font-extrabold mt-2">Destiny junior</p>
       </div>
-      <!--  -->
-      <div class="flex space-x-3 chathead">
-        <div class="relative">
-          <img
-            src="/images/jpg/icon.jpg"
-            alt="img"
-            class="rounded-full w-8 h-8"
-          />
-          <p
-            class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-          ></p>
+      <div v-else class="mt-7">
+        <div v-if="chatsError !== ''">
+          <div class="flex w-full justify-center">
+            <img src="/images/svg/sadface.svg" alt="" class="w-20" />
+          </div>
+
+          <p class="text-sm text-center font-extrabold">
+            {{ chatsError }}
+          </p>
         </div>
-        <p class="text-[12px] font-extrabold mt-2">Kingsley madu</p>
-      </div>
-      <!--  -->
-      <div class="flex space-x-3 chathead">
-        <div class="relative">
-          <img
-            src="/images/jpg/icon.jpg"
-            alt="img"
-            class="rounded-full w-8 h-8"
-          />
-          <p
-            class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-          ></p>
-        </div>
-        <p class="text-[12px] font-extrabold mt-2">Destiny junior</p>
       </div>
     </div>
-
     <!-- group chats -->
     <div class="px-6 space-y-6">
       <p class="font-extrabold text-[22px] pt-5">Recent group chats</p>
