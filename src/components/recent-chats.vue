@@ -1,14 +1,17 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRecentPrivateChatStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
+import { useRoute } from "vue-router";
 // initialize friend request store
 const recentPrivateChatStore = useRecentPrivateChatStore();
-
+// initialize route
+const route = useRoute();
 // variables
-const recentChats = ref<any[]>([]);
+// const recentChats = ref<any[]>([]);
 const loading = ref(false);
 const chatsError = ref("");
+const activeColor = ref("rgb(36, 154, 36)");
 // functions
 const fetchRecentChats = () => {
   loading.value = true;
@@ -16,9 +19,8 @@ const fetchRecentChats = () => {
     .getRecentPrivateChats()
     .then((res) => {
       loading.value = false;
-      recentChats.value = res.data.data;
-      console.log(recentChats.value);
-      if (!recentChats.value[0]) {
+      recentPrivateChatStore.recentChats = res.data.data;
+      if (!recentPrivateChatStore.recentChats[0]) {
         chatsError.value =
           "You have no recent chats at the moment.Go the friends tab to start a conversation";
       }
@@ -32,6 +34,15 @@ const fetchRecentChats = () => {
     });
 };
 fetchRecentChats();
+const makeActive = (id: string) => {
+  console.log(route.query.userId);
+  if (document.getElementById(route.query.userId as string)) {
+    document.getElementById(
+      route.query.userId as string
+    )!.style.backgroundColor = "";
+  }
+  document.getElementById(id)!.style.backgroundColor = activeColor.value;
+};
 </script>
 
 <template>
@@ -62,22 +73,28 @@ fetchRecentChats();
       <component :is="UIcomponent" />
     </div>
     <div v-else>
-      <div v-if="recentChats[0]">
+      <div v-if="recentPrivateChatStore.recentChats[0]">
         <div
-          v-for="chat in recentChats"
+          v-for="chat in recentPrivateChatStore.recentChats"
           :key="chat.friend"
+          :id="chat.friend"
+          :class="
+            chat.friend === $route.query.userId ? `bg-[#189f18]` : ''
+          "
           class="overflow-y-scroll myOverflow max-h-44 chathead cursor-pointer"
         >
+       
           <!--  -->
           <div
             @click="
-              $router.push({
-                name: 'page.privateChat',
-                query: {
-                  userId: chat.friend,
-                  id: chat.relationship,
-                },
-              })
+              makeActive(chat.friend),
+                $router.push({
+                  name: 'page.privateChat',
+                  query: {
+                    userId: chat.friend,
+                    id: chat.relationship,
+                  },
+                })
             "
             class="flex space-x-3"
           >
@@ -158,9 +175,9 @@ fetchRecentChats();
 </template>
 
 <style scoped>
-.chathead:first-child {
-  background-color: rgb(36, 154, 36);
-}
+/* .chathead:first-child {
+  background-color: v-bind(activeColor);
+} */
 .chathead {
   padding: 5px 18px 5px 18px;
 }

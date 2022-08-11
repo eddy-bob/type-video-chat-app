@@ -11,6 +11,7 @@ import { useRoute } from "vue-router";
 import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
+
 import SocketioService from "../../core/utils/socket-connection";
 import {
   usePrivateChat,
@@ -87,6 +88,7 @@ const addRecentChat = (data: { relationship: string; friend: string }) => {
     .addRecentPrivateChat(data)
     .then((res) => {
       console.log(res.data.data);
+      recentPrivateChatStore.recentChats = res.data.data;
     })
     .catch((err) => {
       console.log(err);
@@ -179,6 +181,17 @@ const addPrivateChat = () => {
         message: data.message,
         attatchment: data.name.atatchment,
       });
+      recentPrivateChatStore
+        .getRecentPrivateChats()
+        .then((res) => {
+          loading.value = false;
+          recentPrivateChatStore.recentChats = res.data.data;
+        })
+        .catch((err) => {
+          console.log(err);
+
+          loading.value = false;
+        });
     });
     privateChats.value = "";
     // set scroll div id to ref
