@@ -8,6 +8,8 @@ import {
   onBeforeUnmount,
 } from "vue";
 import { useRoute } from "vue-router";
+import videoCall from "../../modals/video-call.vue";
+import voiceCall from "../../modals/voice-call.vue";
 import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
@@ -46,6 +48,7 @@ const authStore = useAuthStore();
 // variables
 const userId = ref<string>();
 const friendId = ref("");
+const showVideo = ref(false);
 const profile = ref({});
 const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
@@ -142,6 +145,10 @@ const privateChat = (id: string) => {
       console.log(err);
       loading.value = false;
     });
+};
+const startVideoCall = () => {
+  showVideo.value = true;
+  const id = route.query.userId as string;
 };
 const addPrivateChat = () => {
   // emit add chat
@@ -291,7 +298,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full bg-slate-800">
+  <div class="w-full bg-slate-800 relative">
+    <component
+      class="absolute top-[15%] left-[8%] z-50 w-[55rem] p-5"
+      v-if="showVideo == true"
+      :callStarted="showVideo"
+      :is="videoCall"
+      @endCall="showVideo = false"
+    />
+    <component class="absolute" :is="voiceCall" />
+
     <!-- nav -->
     <div
       class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed w-[74%] top-0"
@@ -331,9 +347,9 @@ onBeforeUnmount(() => {
       </div>
       <!--  -->
       <div class="flex space-x-4">
-        <i class="fas fa-search"></i>
-        <i class="fas fa-phone-volume"></i>
-        <i class="fas fa-video"></i>
+        <i class="fas fa-search cursor-pointer"></i>
+        <i class="fas fa-phone-volume cursor-pointer"></i>
+        <i class="fas fa-video cursor-pointer" @click="startVideoCall"></i>
       </div>
     </div>
     <!--  -->
