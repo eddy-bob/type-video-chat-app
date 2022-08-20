@@ -6,7 +6,7 @@ import UIcomponent from "../components/UIcomponent/spinner.vue";
 // initialize friend request store
 const friendRequestStore = useFriendRequestStore();
 // variables
-const friendRequests = ref([]);
+const friendRequests = ref<any[]>([]);
 const error = ref<string>();
 const loading = ref(false);
 const disabled = ref(false);
@@ -91,7 +91,7 @@ const rejectFriendRequest = (requestId: string, index: number) => {
 </script>
 
 <template>
-  <div class="space-y-4 text-gray-300 bg-slate-800 border-r border-r-slate-600">
+  <div class="space-y-4 text-gray-300 bg-slate-800 w-full border-r border-r-slate-600">
     <div class="px-6 space-y-6">
       <p class="font-extrabold text-[22px] pt-5">Friend Requests</p>
       <!--  -->

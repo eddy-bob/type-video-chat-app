@@ -46,7 +46,9 @@ const makeActive = (id: string) => {
 </script>
 
 <template>
-  <div class="space-y-4 text-gray-300 bg-slate-800 border-r border-r-slate-600">
+  <div
+    class="space-y-4 text-gray-300 w-full bg-slate-800 border-r border-r-slate-600"
+  >
     <div class="px-6 space-y-6">
       <div class="flex justify-between pt-5">
         <p class="font-extrabold text-[22px]">Recent Chats</p>
@@ -78,12 +80,9 @@ const makeActive = (id: string) => {
           v-for="chat in recentPrivateChatStore.recentChats"
           :key="chat.friend"
           :id="chat.friend"
-          :class="
-            chat.friend === $route.query.userId ? `bg-[#189f18]` : ''
-          "
+          :class="chat.friend === $route.query.userId ? `bg-[#189f18]` : ''"
           class="overflow-y-scroll myOverflow max-h-44 chathead cursor-pointer"
         >
-       
           <!--  -->
           <div
             @click="

@@ -48,6 +48,7 @@ const authStore = useAuthStore();
 // variables
 const userId = ref<string>();
 const friendId = ref("");
+const showVoice=ref(false)
 const showVideo = ref(false);
 const profile = ref({});
 const socket = shallowRef<any>();
@@ -306,50 +307,50 @@ onBeforeUnmount(() => {
       :is="videoCall"
       @endCall="showVideo = false"
     />
-    <component class="absolute" :is="voiceCall" />
+    <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->
-    <div
-      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed w-[74%] top-0"
-    >
-      <!--  -->
-      <div class="flex space-x-4">
-        <div class="relative">
-          <img
-            :src="
-              privateUserProfileData && privateUserProfileData?.photo
-                ? privateUserProfileData.photo.url
-                : '/images/jpeg/noImg.jpeg'
-            "
-            alt="profile picture"
-            class="rounded-full w-12 h-12"
-          />
-          <p
-            v-if="privateUserProfileData.isLoggedIn == true"
-            class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
-          ></p>
-          <p
-            v-else
-            class="absolute w-2 h-2 rounded-full bg-red-700 bottom-0 right-1"
-          ></p>
+    <div class="text-gray-300 bg-slate-700 fixed w-[74%] top-0">
+      <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
+        <!--  -->
+        <div class="flex space-x-4">
+          <div class="relative">
+            <img
+              :src="
+                privateUserProfileData && privateUserProfileData?.photo
+                  ? privateUserProfileData.photo.url
+                  : '/images/jpeg/noImg.jpeg'
+              "
+              alt="profile picture"
+              class="rounded-full w-12 h-12"
+            />
+            <p
+              v-if="privateUserProfileData.isLoggedIn == true"
+              class="absolute w-2 h-2 rounded-full bg-green-700 bottom-0 right-1"
+            ></p>
+            <p
+              v-else
+              class="absolute w-2 h-2 rounded-full bg-red-700 bottom-0 right-1"
+            ></p>
+          </div>
+          <div>
+            <p class="font-extrabold text-[16px]">
+              {{
+                privateUserProfileData?.firstName
+                  ? privateUserProfileData?.firstName +
+                    " " +
+                    privateUserProfileData?.lastName
+                  : ""
+              }}
+            </p>
+          </div>
         </div>
-        <div>
-          <p class="font-extrabold text-[16px]">
-            {{
-              privateUserProfileData?.firstName
-                ? privateUserProfileData?.firstName +
-                  " " +
-                  privateUserProfileData?.lastName
-                : ""
-            }}
-          </p>
+        <!--  -->
+        <div class="flex space-x-4">
+          <i class="fas fa-search cursor-pointer"></i>
+          <i class="fas fa-phone-volume cursor-pointer"></i>
+          <i class="fas fa-video cursor-pointer" @click="startVideoCall"></i>
         </div>
-      </div>
-      <!--  -->
-      <div class="flex space-x-4">
-        <i class="fas fa-search cursor-pointer"></i>
-        <i class="fas fa-phone-volume cursor-pointer"></i>
-        <i class="fas fa-video cursor-pointer" @click="startVideoCall"></i>
       </div>
     </div>
     <!--  -->
@@ -463,14 +464,22 @@ onBeforeUnmount(() => {
         </p>
       </div>
       <div v-else class="w-full bg-slate-800 text-gray-300 text-center">
-        <div class="flex w-full justify-center">
-          <img src="/images/svg/sadface.svg" alt="" class="w-20" />
+        <div v-if="!route.query.userId" class="font-extrabold pt-20">
+          <p>Welcome to ECHAT.</p>
+
+          <p>We how you have a wondeful experience</p>
+          <p>Get started by adding a friend or joining a channel</p>
         </div>
-        <p>
-          Ooops we could'nt find the group you <br />are looking for.URL might
-          be broken<br />
-          or group has been deleted/disabled
-        </p>
+        <div v-else>
+          <div class="flex w-full justify-center">
+            <img src="/images/svg/sadface.svg" alt="" class="w-20" />
+          </div>
+          <p>
+            Ooops we could'nt find the group you <br />are looking for.URL might
+            be broken<br />
+            or group has been deleted/disabled
+          </p>
+        </div>
       </div>
     </div>
     <!--  -->

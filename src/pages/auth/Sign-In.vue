@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../core/store/index";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers, minLength } from "@vuelidate/validators";
+import { useAuth } from "../../composables/auth.composable";
 // instantiate router
 
 // insitialize route
@@ -17,7 +18,7 @@ const userInfo = reactive({
   email: "",
   password: "",
 });
-const isLoading = ref(false);
+const loading = ref(false);
 // validations rule
 const rules = computed(() => {
   return {
@@ -41,49 +42,63 @@ const submitForm = async (): Promise<void> => {
   // check if form is formattted correctly
   const isFormCorrect = await v$.value.$validate();
   if (isFormCorrect == true) {
-    isLoading.value = !isLoading.value;
-
-    store
-      .userLogin({
-        email: <string>v$.value.email.$model,
-        password: <string>v$.value.password.$model,
-      })
-      .then((res: Response | any) => {
-        // set the loading notice to false
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-        //   send out notification to tell that the signin was successful
-        notify({
-          type: "success",
-          title: "Success",
-          text: "SignIn successful. Redirecting...",
-        });
-
-        setTimeout(() => {
-          window.location.href = "/private-chat";
-        }, 3000);
-      })
-      .catch((err: any) => {
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-
-        if (err.data && err.data.Error) {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err.data.Error,
-          });
-        } else {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err,
-          });
-        }
-      });
+    const data = {
+      email: v$.value.email.$model as string,
+      password: v$.value.password.$model as string,
+    };
+    loading.value=true;
+    const [ error, success] = useAuth( store.userLogin(data),loading);
+    // loading.value = isLoading.value;
+    if (success.value !== "") {
+      //   redirect to the signin page
+      setTimeout(() => {
+        window.location.href = "/private-chat";
+      }, 3000);
+    }
   }
+  //   loading.value = !loading.value;
+
+  //   store
+  //     .userLogin({
+  //       email: <string>v$.value.email.$model,
+  //       password: <string>v$.value.password.$model,
+  //     })
+  //     .then((res: Response | any) => {
+  //       // set the loading notice to false
+  //       setTimeout(() => {
+  //         loading.value = !loading.value;
+  //       }, 1000);
+  //       //   send out notification to tell that the signin was successful
+  //       notify({
+  //         type: "success",
+  //         title: "Success",
+  //         text: "SignIn successful. Redirecting...",
+  //       });
+
+  //       setTimeout(() => {
+  //         window.location.href = "/private-chat";
+  //       }, 3000);
+  //     })
+  //     .catch((err: any) => {
+  //       setTimeout(() => {
+  //         loading.value = !loading.value;
+  //       }, 1000);
+
+  //       if (err.data && err.data.Error) {
+  //         notify({
+  //           type: "error",
+  //           title: "Error",
+  //           text: err.data.Error,
+  //         });
+  //       } else {
+  //         notify({
+  //           type: "error",
+  //           title: "Error",
+  //           text: err,
+  //         });
+  //       }
+  //     });
+  // }
 };
 </script>
 
@@ -138,7 +153,7 @@ const submitForm = async (): Promise<void> => {
                 <button
                   class="w-full font-extrabold text-sm py-2 rounded-sm bg-blue-800"
                 >
-                  {{ isLoading == true ? ". . . Signing in" : "login" }}
+                  {{ loading == true ? ". . . Signing in" : "login" }}
                 </button>
               </div>
             </div>

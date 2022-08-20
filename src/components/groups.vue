@@ -8,7 +8,7 @@ import moment from "moment";
 // define open channel modal func
 // initialize route
 const router = useRouter();
-const showModal = inject<{ value: boolean }>("showCreateGroup");
+const showModal = inject("showCreateGroup");
 
 const singleGroupId = ref<string>();
 
@@ -16,7 +16,7 @@ const singleGroupId = ref<string>();
 const store = useGroupStore();
 const loading = ref(false);
 const groups = ref([]);
-const letterGrouping = ref([]);
+const letterGrouping = ref<any[]>([]);
 // fetch all group user belongs to
 
 const getActiveGroup = () => {
@@ -48,7 +48,7 @@ const fetchGroupChat = (id: string) => {
 </script>
 
 <template>
-  <div class="space-y-4 text-gray-300 bg-slate-800 border-r border-r-slate-600">
+  <div class="space-y-4 text-gray-300 w-full bg-slate-800 border-r border-r-slate-600">
     <div class="px-6 space-y-6">
       <div class="flex justify-between pt-5">
         <p class="font-extrabold text-[22px]">Channels#</p>

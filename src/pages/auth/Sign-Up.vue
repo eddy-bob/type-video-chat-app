@@ -4,6 +4,7 @@ import { notify } from "@kyvg/vue3-notification";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../core/store/index";
 import useVuelidate from "@vuelidate/core";
+import { useAuth } from "../../composables/auth.composable";
 import {
   required,
   email,
@@ -39,7 +40,7 @@ const onInput = (phone: number, phoneObject: any, input: any) => {
     userInfo.valid = phoneObject.valid;
   }
 };
-const isLoading = ref(false);
+const loading = ref(false);
 const validateFirstName = () => {
   return /^[a-zA-Z]+$/.test(userInfo.firstName);
 };
@@ -114,60 +115,79 @@ const submitForm = async (): Promise<void> => {
   // check if form is formattted correctly
   const isFormCorrect = await v$.value.$validate();
   if (isFormCorrect == true) {
-    isLoading.value = !isLoading.value;
+    const data = {
+      email: v$.value.email.$model as string,
+      mobile: v$.value.phone.$model as string,
+      password: v$.value.password.$model as string,
+      firstName: v$.value.firstName.$model as string,
+      lastName: v$.value.lastName.$model as string,
+      country: userInfo.country,
+      zipCode: userInfo.zipCode,
+      region: userInfo.region,
+    };
 
-    store
-      .userRegister({
-        email: <string>v$.value.email.$model,
-        mobile: <string>v$.value.phone.$model,
-        password: <string>v$.value.password.$model,
-        firstName: <string>v$.value.firstName.$model,
-        lastName: <string>v$.value.lastName.$model,
-        country: userInfo.country,
-        zipCode: userInfo.zipCode,
-        region: userInfo.region,
-      })
-      .then((res: Response | any) => {
-        // set the loading notice to false
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-        //   send out notification to tell that the signup was successful
-        notify({
-          type: "success",
-          title: "Success",
-          text: "SignUp successful. Redirecting...",
-        });
+    const [error, success] = useAuth(store.userRegister(data), loading);
 
-        //   redirect to the signin page
-        setTimeout(() => {
-          window.location.href = "/auth/login";
-        }, 3000);
-      })
-      .catch((err: any) => {
-        setTimeout(() => {
-          isLoading.value = !isLoading.value;
-        }, 1000);
-
-        if (err.data && err.data.Error) {
-          console.log(err.data.Error);
-          notify({
-            type: "error",
-            title: "Error",
-            text:
-              err.data.Error === import.meta.env.VITE_GOOGLE_MAP_ERROR
-                ? "Network error"
-                : err.data.Error,
-          });
-        } else {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err,
-          });
-        }
-      });
+    if (success.value !== "") {
+      //   redirect to the signin page
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 3000);
+    }
   }
+
+  //   store
+  //     .userRegister({
+  //       email: <string>v$.value.email.$model,
+  //       mobile: <string>v$.value.phone.$model,
+  //       password: <string>v$.value.password.$model,
+  //       firstName: <string>v$.value.firstName.$model,
+  //       lastName: <string>v$.value.lastName.$model,
+  //       country: userInfo.country,
+  //       zipCode: userInfo.zipCode,
+  //       region: userInfo.region,
+  //     })
+  //     .then((res: Response | any) => {
+  //       // set the loading notice to false
+  //       setTimeout(() => {
+  //         loading.value = !loading.value;
+  //       }, 1000);
+  //       //   send out notification to tell that the signup was successful
+  //       notify({
+  //         type: "success",
+  //         title: "Success",
+  //         text: "SignUp successful. Redirecting...",
+  //       });
+
+  //       //   redirect to the signin page
+  //       setTimeout(() => {
+  //         window.location.href = "/auth/login";
+  //       }, 3000);
+  //     })
+  //     .catch((err: any) => {
+  //       setTimeout(() => {
+  //         loading.value = !loading.value;
+  //       }, 1000);
+
+  //       if (err.data && err.data.Error) {
+  //         console.log(err.data.Error);
+  //         notify({
+  //           type: "error",
+  //           title: "Error",
+  //           text:
+  //             err.data.Error === import.meta.env.VITE_GOOGLE_MAP_ERROR
+  //               ? "Network error"
+  //               : err.data.Error,
+  //         });
+  //       } else {
+  //         notify({
+  //           type: "error",
+  //           title: "Error",
+  //           text: err,
+  //         });
+  //       }
+  //     });
+  // }
 };
 </script>
 
@@ -309,7 +329,7 @@ const submitForm = async (): Promise<void> => {
                 <button
                   class="bg-blue-800 w-full font-extrabold text-sm py-2 rounded-sm"
                 >
-                  {{ isLoading == true ? ". . . Signing Up" : "Register" }}
+                  {{ loading == true ? ". . . Signing Up" : "Register" }}
                 </button>
               </div>
             </div>
