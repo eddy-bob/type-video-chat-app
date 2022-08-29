@@ -7,14 +7,13 @@ import { notify } from "@kyvg/vue3-notification";
 
 const success = ref("");
 const error = ref("");
-export const useAuth = (
-  
-  store: any,
-  loading: { value: boolean }
-): any => {
-  store
-    .then((res: Response | any) => {
-      success.value = res.message;
+export const useAuth = (store: any, loading: { value: boolean }): any => {
+  error.value = "";
+  success.value = "";
+  return store
+    .then((res: any) => {
+      success.value = res.data.message;
+
       // set the loading notice to false
       setTimeout(() => {
         loading.value = false;
@@ -23,8 +22,9 @@ export const useAuth = (
       notify({
         type: "success",
         title: "Success",
-        text: "Successful",
+        text: res.data.message,
       });
+      return [error, success];
     })
     .catch((err: any) => {
       setTimeout(() => {
@@ -46,12 +46,13 @@ export const useAuth = (
               : err.data.Error,
         });
       } else {
+        error.value = err;
         notify({
           type: "error",
           title: "Error",
           text: err,
         });
       }
+      return [error, success];
     });
-  return [error, success];
 };

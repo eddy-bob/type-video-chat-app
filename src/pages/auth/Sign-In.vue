@@ -46,10 +46,12 @@ const submitForm = async (): Promise<void> => {
       email: v$.value.email.$model as string,
       password: v$.value.password.$model as string,
     };
-    loading.value=true;
-    const [ error, success] = useAuth( store.userLogin(data),loading);
+    loading.value = true;
+    const [error, success] = await useAuth(store.userLogin(data), loading);
+    console.log(success.value);
     // loading.value = isLoading.value;
     if (success.value !== "") {
+      console.log(true);
       //   redirect to the signin page
       setTimeout(() => {
         window.location.href = "/private-chat";
