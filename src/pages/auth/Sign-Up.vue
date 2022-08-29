@@ -126,7 +126,7 @@ const submitForm = async (): Promise<void> => {
       region: userInfo.region,
     };
 
-    const [error, success] = useAuth(store.userRegister(data), loading);
+    const [error, success] = await useAuth(store.userRegister(data), loading);
 
     if (success.value !== "") {
       //   redirect to the signin page

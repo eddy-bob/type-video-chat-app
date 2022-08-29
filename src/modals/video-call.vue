@@ -4,10 +4,12 @@ import { notify } from "@kyvg/vue3-notification";
 
 const localStream = ref<MediaStream>();
 const localVideoObj = ref<any>({});
+const muted = ref(false);
 const pcConfig = ref<RTCConfiguration>();
 const peerConnection = ref<RTCPeerConnection>();
 const handleIceCandidate = ref<any>();
 const handleRemoteStreamRemoved = ref<any>();
+
 const props = withDefaults(defineProps<{ callStarted: boolean }>(), {
   callStarted: false,
 });
@@ -18,10 +20,17 @@ const stopStreaming = () => {
   localStream.value!.getTracks().forEach((track) => {
     video.src = " ";
     track.stop();
-
   });
 };
-// hulks
+
+const mute = () => {
+  let video: any = document.getElementById("localVid");
+  video.muted = !video.muted;
+  video.muted == true ? (muted.value = true) : (muted.value = false);
+  console.log(video.muted);
+};
+
+// emits
 const emit = defineEmits<{ event: "endCall" }>();
 
 onMounted(() => {
@@ -96,7 +105,12 @@ onBeforeUnmount(() => {
       <div
         class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
       >
-        <i class="fas fa-microphone-slash"></i>
+        <i
+          @click="mute"
+          :class="
+            muted == false ? 'fas fa-microphone-slash' : 'fas fa-microphone'
+          "
+        ></i>
       </div>
       <button
         class="bg-red-500 rounded-lg py-2 px-4 font-extrabold text-xs text-white"
