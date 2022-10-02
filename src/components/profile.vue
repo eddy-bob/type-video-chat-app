@@ -15,7 +15,7 @@ let showPreview = inject<{ value: boolean }>("showPreview");
 let selectedImg = inject<{ value: ArrayBuffer }>("selectedImg");
 let imageType = inject<{ value: string }>("imageType");
 let setImage = inject<{ value: boolean }>("setImage");
-let profile = ref<any>({});
+let profile = ref<any>({})
 let editAbout = ref(false);
 const userInfo = reactive<{
   profilePicture?: ArrayBuffer | string;
@@ -117,7 +117,7 @@ const updateAbout = async (): Promise<void> => {
 
     userStore
       .updateProfile({
-        about: <string>v$.value.about.$model,
+        about: <any>v$.value.about.$model,
       })
       .then((res: Response | any) => {
         editAbout.value = false;
@@ -230,7 +230,11 @@ watchEffect(() => {
       <div class="flex justify-center mt-10">
         <div class="text-center">
           <p class="font-extrabold">
-            {{ profile?.firstName + " " + profile?.lastName }}
+            {{
+              profile._id
+                ? profile.firstName + " " + profile.lastName
+                : "...Loading"
+            }}
           </p>
           <p class="text-sm">{{ profile.phone }}</p>
         </div>
@@ -272,11 +276,11 @@ watchEffect(() => {
       </div>
       <div class="flex font-extrabold space-x-3">
         <i class="fas fa-mail-bulk"></i>
-        <p>{{ profile.email }}</p>
+        <p>{{ profile.email ? profile.email : "...Loading" }}</p>
       </div>
       <div class="flex font-extrabold space-x-3">
         <img src="/images/svg/location.svg" alt="location" />
-        <p>{{ profile.region }},{{ profile.country }}</p>
+        <p>{{ profile.region }} {{ profile.country }}</p>
       </div>
     </div>
     <!--  -->

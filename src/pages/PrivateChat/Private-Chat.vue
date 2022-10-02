@@ -46,9 +46,10 @@ const userStore = user();
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 // variables
+const callData = ref({});
 const userId = ref<string>();
 const friendId = ref("");
-const showVoice=ref(false)
+const showVoice = ref(false);
 const showVideo = ref(false);
 const profile = ref({});
 const socket = shallowRef<any>();
@@ -223,6 +224,19 @@ watch(route, (current, previous) => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
+    socket.value.once(
+      "video_private_call_init",
+      (data: {
+        callerId: string;
+        name: string;
+        peerId: string;
+        callId: string;
+      }) => {
+        callData.value = { ...data };
+        startVideoCall();
+      }
+    );
+
     if (privateChats.value !== "") {
       typing.value = true;
       socket.value.emit("typing", {
@@ -304,7 +318,11 @@ onBeforeUnmount(() => {
       class="absolute top-[15%] left-[8%] z-50 w-[55rem] p-5"
       v-if="showVideo == true"
       :callStarted="showVideo"
+      :callData="callData"
+      status="outgoingCall"
       :is="videoCall"
+      :recieverId="route.query.userId"
+      :socket="socket"
       @endCall="showVideo = false"
     />
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
@@ -379,7 +397,7 @@ onBeforeUnmount(() => {
               :key="chat._id"
               class="flex"
               :class="
-                profile._id === chat.sender ? 'justify-end' : 'justify-start'
+                profile?._id === chat.sender ? 'justify-end' : 'justify-start'
               "
             >
               <div>
@@ -467,7 +485,7 @@ onBeforeUnmount(() => {
         <div v-if="!route.query.userId" class="font-extrabold pt-20">
           <p>Welcome to ECHAT.</p>
 
-          <p>We how you have a wondeful experience</p>
+          <p>We hope you have a wondeful experience</p>
           <p>Get started by adding a friend or joining a channel</p>
         </div>
         <div v-else>

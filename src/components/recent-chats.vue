@@ -117,7 +117,7 @@ const makeActive = (id: string) => {
             <img src="/images/svg/sadface.svg" alt="" class="w-20" />
           </div>
 
-          <p class="text-sm text-center font-extrabold">
+          <p class="text-sm text-center font-extrabold px-6">
             {{ chatsError }}
           </p>
         </div>
