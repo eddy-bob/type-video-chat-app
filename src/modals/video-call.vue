@@ -94,10 +94,9 @@ onMounted(() => {
     console.log(id, "peer");
     peerId.value = id;
 
-    console.log(document.getElementById("video_container"));
-    if (props.callStarted == true) {
+    if (props.callStarted == true && props.status === "outgoingCall") {
       let video: any = document.createElement("video");
-      console.log(video, "na video be this");
+
       video.autoplay = true;
       video.id = "localVid";
       video.muted = true;
@@ -158,11 +157,11 @@ watchEffect(() => {
       incomingCall.value = true;
       showCaller.value = true;
 
-      let video: any = document.createElement("video");
-      video.autoplay = true;
+      let myVideo: any = document.createElement("video");
+      myVideo.autoplay = true;
 
       // append video  to dom
-      document.getElementById("video_container")?.append(video);
+      document.getElementById("video_container")?.append(myVideo);
 
       navigator.mediaDevices
         .getUserMedia({
@@ -170,7 +169,7 @@ watchEffect(() => {
           video: true,
         })
         .then((stream) => {
-          video!.srcObject = stream;
+          myVideo!.srcObject = stream;
           localStream.value = stream;
           const call = processCall(data.peerId, stream, peerConnection.value);
           call.on("stream", (stream: MediaStream) => {
