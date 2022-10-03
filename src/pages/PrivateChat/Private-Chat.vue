@@ -169,7 +169,7 @@ const addPrivateChat = () => {
         text: data.message || "Chat send failed",
       });
     });
-    socket.value.once("message", (data: any) => {
+    socket.value.once("myMessage", (data: any) => {
       console.log(data);
       console.log("na me send am");
       privateChatData.value.push({
@@ -181,27 +181,27 @@ const addPrivateChat = () => {
         attatchment: data.name.attatchment,
       });
     });
-    socket.value.once("newMessage", (data: any) => {
-      privateChatData.value.push({
-        sender: data.name.sender,
-        senderName: data.name.senderName,
-        id: data.name.id,
-        time: data.time,
-        message: data.message,
-        attatchment: data.name.atatchment,
-      });
-      recentPrivateChatStore
-        .getRecentPrivateChats()
-        .then((res) => {
-          loading.value = false;
-          recentPrivateChatStore.recentChats = res.data.data;
-        })
-        .catch((err) => {
-          console.log(err);
+    // socket.value.once("newMessage", (data: any) => {
+    //   privateChatData.value.push({
+    //     sender: data.name.sender,
+    //     senderName: data.name.senderName,
+    //     id: data.name.id,
+    //     time: data.time,
+    //     message: data.message,
+    //     attatchment: data.name.atatchment,
+    //   });
+    //   recentPrivateChatStore
+    //     .getRecentPrivateChats()
+    //     .then((res) => {
+    //       loading.value = false;
+    //       recentPrivateChatStore.recentChats = res.data.data;
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
 
-          loading.value = false;
-        });
-    });
+    //       loading.value = false;
+    //     });
+    // });
     privateChats.value = "";
     // set scroll div id to ref
     scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
@@ -224,18 +224,42 @@ watch(route, (current, previous) => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
-    socket.value.once(
-      "video_private_call_init",
-      (data: {
-        callerId: string;
-        name: string;
-        peerId: string;
-        callId: string;
-      }) => {
-        callData.value = { ...data };
-        startVideoCall();
-      }
-    );
+    socket.value
+      .off("video_private_call_init")
+      .on(
+        "video_private_call_init",
+        (data: {
+          callerId: string;
+          name: string;
+          peerId: string;
+          callId: string;
+        }) => {
+          callData.value = { ...data };
+          console.log("incoming call ");
+          startVideoCall();
+        }
+      );
+    socket.value.off("newMessage").on("newMessage", (data: any) => {
+      privateChatData.value.push({
+        sender: data.name.sender,
+        senderName: data.name.senderName,
+        id: data.name.id,
+        time: data.time,
+        message: data.message,
+        attatchment: data.name.atatchment,
+      });
+      recentPrivateChatStore
+        .getRecentPrivateChats()
+        .then((res) => {
+          loading.value = false;
+          recentPrivateChatStore.recentChats = res.data.data;
+        })
+        .catch((err) => {
+          console.log(err);
+
+          loading.value = false;
+        });
+    });
 
     if (privateChats.value !== "") {
       typing.value = true;
@@ -277,10 +301,10 @@ watchEffect(() => {
     //     attatchment: data.name.attatchment,
     //   });
     // });
-    socket.value.on("privateForward", (data: any) => {
+    socket.value.off("privateForward").on("privateForward", (data: any) => {
       console.log(data);
     });
-    socket.value.on("forwardFail", (data: any) => {
+    socket.value.off("forwardFail").on("forwardFail", (data: any) => {
       console.log(data);
     });
     // socket.value.once("chatError", (data: any) => {

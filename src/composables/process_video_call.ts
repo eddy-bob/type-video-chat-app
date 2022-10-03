@@ -1,11 +1,8 @@
 import { ref } from "vue";
-export const initiateCall = (
-  peerId: string,
-
-  socket: any,
-  userId: any
-) => {
+export const initiateCall = (peerId: string, socket: any, userId: any) => {
+  console.log(peerId, userId);
   socket.emit("private_video_call_init", { userId, peerId });
+  console.log("starting call");
 };
 export const answerCall = (
   socket: any,

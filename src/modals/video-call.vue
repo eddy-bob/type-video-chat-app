@@ -28,11 +28,6 @@ const callData = ref<{
 // create peer connection
 peerConnection.value = new Peer();
 
-peerConnection.value.on("open", (id: string) => {
-  console.log(id, "peer");
-  peerId.value = id;
-});
-
 const props = withDefaults(
   defineProps<{
     callStarted: boolean;
@@ -64,6 +59,7 @@ const reject = () => {
 };
 const stopStreaming = () => {
   let video: any = document.getElementById("localVid");
+
   video.pause();
   localStream.value!.getTracks().forEach((track) => {
     video.src = " ";
@@ -90,39 +86,50 @@ const endCall = () => {
     callData.value.callId
   );
 };
+showCaller.value = props.status === "outgoingCall" && true;
 
 onMounted(() => {
-  if (props.callStarted == true) {
-    let video: any = document.createElement("video");
-    video.autoplay = true;
-    video.id = "localVid";
-    video.muted = true;
-    // append video  to dom
-    document.getElementById("video_container")?.append(video);
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: true,
-        video: true,
-      })
-      .then((stream) => {
-        video!.srcObject = stream;
-        localStream.value = stream;
-        showCaller.value = props.status === "outgoingCall" && true;
-        if (showCaller.value == true) {
-          initiateCall(peerId.value, props.socket, props.recieverId);
-        }
-      })
-      .catch((err) => {
-        notify({
-          type: "error",
-          title: "Error",
-          text: err.message ? err.message : "Could not process call",
+  peerConnection.value.on("open", (id: string) => {
+    console.log(id, "peer");
+    peerId.value = id;
+
+    console.log(document.getElementById("video_container"));
+    if (props.callStarted == true) {
+      let video: any = document.createElement("video");
+      console.log(video, "na video be this");
+      video.autoplay = true;
+      video.id = "localVid";
+      video.muted = true;
+
+      // append video  to dom
+      document.getElementById("video_container")?.append(video);
+      console.log(document.getElementById("video_container"));
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then((stream) => {
+          video!.srcObject = stream;
+          localStream.value = stream;
+
+          if (showCaller.value == true) {
+            console.log(peerId.value);
+            initiateCall(peerId.value, props.socket, props.recieverId);
+          }
+        })
+        .catch((err) => {
+          notify({
+            type: "error",
+            title: "Error",
+            text: err.message ? err.message : "Could not process call",
+          });
         });
-      });
-    // if (video) {
-    //   navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-    // }
-  }
+      // if (video) {
+      //   navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      // }
+    }
+  });
 });
 
 watchEffect(() => {
@@ -152,9 +159,10 @@ watchEffect(() => {
 
       let video: any = document.createElement("video");
       video.autoplay = true;
-      video.muted = true;
+
       // append video  to dom
       document.getElementById("video_container")?.append(video);
+
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
@@ -224,19 +232,15 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <!-- video notify component -->
-    <component
-      @accept="accept()"
-      @reject="reject()"
-      :is="videoCallNotify"
-      v-if="showCaller == false"
-      :caller="callData"
-    >
-    </component>
+
     <div
-      v-else
-      class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md"
+      v-if="showCaller == true"
+      class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md p-8"
     >
-      <div class="grid grid-cols-2" id="video_container">
+      <div
+        class="grid grid-cols-2 h-auto max-h-screen max-w-screen"
+        id="video_container"
+      >
         <!-- local video -->
         <!-- <video
         autoplay="true"
@@ -244,7 +248,7 @@ onBeforeUnmount(() => {
         class="h-[25rem] w-full py-4"
       ></video> -->
       </div>
-      <div class="flex justify-center space-x-5">
+      <div class="flex justify-center space-x-5 pt-4">
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
         >
@@ -268,6 +272,14 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    <component
+      @accept="accept()"
+      @reject="reject()"
+      :is="videoCallNotify"
+      v-else
+      :caller="callData"
+    >
+    </component>
   </div>
 </template>
 

@@ -31,9 +31,13 @@ const getProfile = (id: string) => {
 };
 </script>
 <template>
-  <div class="bg-slate-800 text-gray-300 rounded-md shadow shadow-gray-300 p-5">
-    <div class="space-y-3">
-      <p class="font-extrabold text-gray-300">Incoming video call</p>
+  <div
+    class=" flex justify-center "
+  >
+    <div class="space-y-3 w-1/2 p-10 bg-slate-800 text-gray-300 rounded-md shadow shadow-gray-300">
+      <p class="font-extrabold text-gray-300 text-center">
+        Incoming video call
+      </p>
       <div class="space-y-2">
         <div class="flex justify-center">
           <img
@@ -42,11 +46,18 @@ const getProfile = (id: string) => {
             class="rounded-full border-4 border-slate-800 w-20 h-20"
           />
         </div>
-        <p class="text-center text-gray-300">{{props.caller.name}}</p>
+        <p class="text-center text-gray-300">{{ props.caller.name }}</p>
       </div>
       <div class="flex text-sm font-extrabold justify-between text-gray-300">
-        <button class="px-3 py-2 confirm rounded-md" @click="$emit('accept')">Accept</button>
-        <button class="px-3 py-2 cancel rounded-md" @click="$emit('reject')">Reject</button>
+        <button
+          class="px-3 py-2 confirm rounded-md bg-red"
+          @click="$emit('accept')"
+        >
+          Accept
+        </button>
+        <button class="px-3 py-2 cancel rounded-md" @click="$emit('reject')">
+          Reject
+        </button>
       </div>
     </div>
   </div>

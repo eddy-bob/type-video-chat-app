@@ -23,10 +23,5 @@ const emit = defineEmits<{ (e: "close-logout"): void }>();
 </template>
 
 <style scoped>
-.cancel {
-  background-color: rgb(160, 16, 16);
-}
-.confirm {
-  background-color: rgb(36, 154, 36);
-}
+
 </style>
