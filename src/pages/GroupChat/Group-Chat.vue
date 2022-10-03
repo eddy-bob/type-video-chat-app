@@ -5,8 +5,7 @@ import {
   watch,
   shallowRef,
   onUpdated,
-  onBeforeUnmount,
-  computed,
+  onBeforeUnmount
 } from "vue";
 import { useRoute } from "vue-router";
 import { notify } from "@kyvg/vue3-notification";
@@ -172,6 +171,7 @@ watchEffect(() => {
       groupChatData.value.push(data);
       groupChats.value = "";
     });
+
 
     socket.value.on("joinGroupSuccess", (data: any) => {
       console.log(data);
