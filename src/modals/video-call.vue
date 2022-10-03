@@ -9,7 +9,7 @@ import {
   rejectCall,
 } from "../composables/process_video_call";
 import videoCallNotify from "../modals/video-call-notify.vue";
-// import {Peer} from "peerjs"
+// import * as Peer from "https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js";
 
 const localStream = ref<MediaStream>();
 const peerId = ref("");
@@ -26,10 +26,10 @@ const callData = ref<{
   callId: string;
 }>({ callerId: "", peerId: "", name: "", callId: "" });
 // create peer connection
-// peerConnection.value=new peer()
+peerConnection.value = new Peer();
 
 peerConnection.value.on("open", (id: string) => {
-  console.log(id);
+  console.log(id, "peer");
   peerId.value = id;
 });
 
