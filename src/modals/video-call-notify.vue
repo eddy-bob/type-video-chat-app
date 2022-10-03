@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { user } from "../core/store/index";
 const callerData = ref({});
 // initialize store
@@ -13,23 +13,23 @@ const props = defineProps<{
   };
 }>();
 
-console.log("na caller obj be this", props.caller);
+onMounted(() => {
+  console.log("on mounted in notify");
+  getProfile(props.caller.callerId);
+});
 const getProfile = (id: string) => {
+  console.log(id, "it got to notify");
   userStore
     .getUserProfile(id)
     .then((res) => {
-      console.log(res.data.data);
+      console.log("this is the video notify res", res);
       callerData.value = { ...res.data.data };
-      // callerPic.value =
-      //   res.data.data.photo && res.data.data.photo.url
-      //     ? res.data.data.photo.url
-      //     : "/images/jpeg/noImg.jpeg";
     })
     .catch((err) => {
+      console.log("this is the video notify res", err);
       console.log(err);
     });
   // fetch profile
-  getProfile(props.caller.callerId);
 };
 </script>
 <template>
@@ -52,7 +52,9 @@ const getProfile = (id: string) => {
             class="rounded-full border-4 border-slate-800 w-20 h-20"
           />
         </div>
-        <p class="text-center text-gray-300">{{ props.caller.name }}</p>
+        <p class="text-center text-gray-300 font-extrabold text-md">
+          {{ props.caller.name }}
+        </p>
       </div>
       <div class="flex text-sm font-extrabold justify-between text-gray-300">
         <button

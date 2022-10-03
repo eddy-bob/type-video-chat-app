@@ -24,7 +24,7 @@ const callData = ref<{
   peerId: string;
   name: string;
   callId: string;
-}>({ callerId: "", peerId: "", name: "", callId: "" });
+}>();
 // create peer connection
 peerConnection.value = new Peer();
 
@@ -40,6 +40,7 @@ const props = withDefaults(
     callStarted: false,
   }
 );
+callData.value = { ...props.callData };
 // methods
 const accept = () => {
   answerCall(
@@ -81,9 +82,9 @@ const endCall = () => {
 
   endVideoCall(
     props.socket,
-    callData.value.callerId,
-    callData.value.peerId,
-    callData.value.callId
+    callData.value?.callerId as string,
+    callData.value?.peerId as string,
+    callData.value?.callId as string
   );
 };
 showCaller.value = props.status === "outgoingCall" && true;

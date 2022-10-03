@@ -47,7 +47,12 @@ const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 // variables
-const callData = ref({});
+const callData = ref<{
+  callerId: string;
+  name: string;
+  peerId: string;
+  callId: string;
+}>();
 const userId = ref<string>();
 const friendId = ref("");
 const showVoice = ref(false);
@@ -236,9 +241,10 @@ watchEffect(() => {
           peerId: string;
           callId: string;
         }) => {
+          console.log(data);
           callData.value = { ...data };
+          console.log(callData.value);
           console.log("incoming call");
-          window.alert("incoming call");
           const id = route.query.userId as string;
           status.value = "incomingCall";
           showVideo.value = true;
