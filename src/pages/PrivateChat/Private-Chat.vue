@@ -43,6 +43,7 @@ const route = useRoute();
 // initialize friend request store
 const recentPrivateChatStore = useRecentPrivateChatStore();
 const userStore = user();
+const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 // variables
@@ -149,8 +150,9 @@ const privateChat = (id: string) => {
     });
 };
 const startVideoCall = () => {
-  showVideo.value = true;
+  status.value = "outgoingCall";
   const id = route.query.userId as string;
+  showVideo.value = true;
 };
 const addPrivateChat = () => {
   // emit add chat
@@ -225,9 +227,9 @@ privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
     socket.value
-      .off("video_private_call_init")
+      .off("private_video_call_init")
       .on(
-        "video_private_call_init",
+        "private_video_call_init",
         (data: {
           callerId: string;
           name: string;
@@ -235,8 +237,11 @@ watchEffect(() => {
           callId: string;
         }) => {
           callData.value = { ...data };
-          console.log("incoming call ");
-          startVideoCall();
+          console.log("incoming call");
+          window.alert("incoming call");
+          const id = route.query.userId as string;
+          status.value = "incomingCall";
+          showVideo.value = true;
         }
       );
     socket.value.off("newMessage").on("newMessage", (data: any) => {
@@ -343,7 +348,7 @@ onBeforeUnmount(() => {
       v-if="showVideo == true"
       :callStarted="showVideo"
       :callData="callData"
-      status="outgoingCall"
+      :status="status"
       :is="videoCall"
       :recieverId="route.query.userId"
       :socket="socket"
