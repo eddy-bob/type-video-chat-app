@@ -182,12 +182,12 @@ watchEffect(() => {
 
             call.off("stream").on("stream", (stream: MediaStream) => {
               console.log("streaming");
-              let video: any = document.createElement("video");
-              video!.srcObject = stream;
-              video.autoplay = true;
 
-              if (!remoteCall.value[call.peer]) {
-                console.log("yesss oooooo",call)
+              if (!remoteCall.value[0]) {
+                let video: any = document.createElement("video");
+                video!.srcObject = stream;
+                video.autoplay = true;
+                console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
               }
@@ -215,12 +215,13 @@ watchEffect(() => {
         call.answer(stream);
         call.off("stream").on("stream", (stream: any) => {
           console.log("streaming ooooooo");
-          let video: any = document.createElement("video");
-          video.autoplay = true;
-          video!.srcObject = stream;
-          console.log(call)
-          if (!remoteCall.value[call.peer]) {
-            console.log("yessoooooo",call)
+
+          console.log(call);
+          if (!remoteCall.value[0]) {
+            let video: any = document.createElement("video");
+            video.autoplay = true;
+            video!.srcObject = stream;
+            console.log("yessoooooo", call);
             remoteCall.value.push(call);
 
             document.getElementById("video_container")?.append(video);
