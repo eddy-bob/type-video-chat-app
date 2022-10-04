@@ -241,23 +241,29 @@ watchEffect(() => {
         });
       });
   });
-  props.socket.on(
-    "private_video_call_end_inverse_success",
-    (data: { message: string }) => {
-      console.log(data.message);
-    }
-  );
-  props.socket.on("private_video_call_reciever_rejected", (data: any) => {
-    emit("endCall")
-    notify({
-      type: "error",
-      title: " Call Rejected",
-      text: "User busy",
+  props.socket
+    .off("private_video_call_end_inverse_success")
+    .on(
+      "private_video_call_end_inverse_success",
+      (data: { message: string }) => {
+        console.log(data.message);
+      }
+    );
+  props.socket
+    .off("private_video_call_reciever_rejected")
+    .on("private_video_call_reciever_rejected", (data: any) => {
+      emit("endCall");
+      notify({
+        type: "error",
+        title: " Call Rejected",
+        text: "User busy",
+      });
     });
-  });
-  props.socket.on("private_video_call_reject_success", (data: any) => {
-    emit("endCall");
-  });
+  props.socket
+    .off("private_video_call_reject_success")
+    .on("private_video_call_reject_success", (data: any) => {
+      emit("endCall");
+    });
 });
 
 onBeforeUnmount(() => {
