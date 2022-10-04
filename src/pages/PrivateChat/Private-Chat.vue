@@ -54,7 +54,7 @@ const callData = ref<{
   callId: string;
 }>();
 const userId = ref<string>();
-const friendId = ref("");
+const relationshipId = ref("");
 const showVoice = ref(false);
 const showVideo = ref(false);
 const profile = ref<any>();
@@ -72,7 +72,7 @@ const recieverId = ref("");
 const prev = ref<any>("");
 // set groupId on created
 userId.value = route.query.userId as string;
-friendId.value = route.query.id as string;
+relationshipId.value = route.query.id as string;
 const scrollToBottom = () => {
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
@@ -167,7 +167,7 @@ const addPrivateChat = () => {
       userId: userId.value,
       message: privateChats.value,
       attatchment: privateAttatchment.value,
-      relationshipId: friendId.value,
+      relationshipId: relationshipId.value,
     });
     socket.value.once("chatError", (data: any) => {
       console.log(data);
@@ -222,9 +222,10 @@ const addPrivateChat = () => {
 // listen for when there is a change in the group id
 
 watch(route, (current, previous) => {
-  userId.value = route.query.userId as string;
+  
   // fetch auth user profile
   if (typeof route.query.userId !== "undefined") {
+    userId.value = route.query.userId as string;
     privateUserProfile(userId.value);
     privateChat(userId.value);
   }

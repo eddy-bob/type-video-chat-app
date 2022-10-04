@@ -13,7 +13,7 @@ import videoCallNotify from "../modals/video-call-notify.vue";
 
 const localStream = ref<MediaStream>();
 const peerId = ref("");
-const remoteStream = ref<MediaStream[]>([]);
+const remoteCall = ref<any[]>([]);
 const peerConnection = ref();
 const incomingCall = ref(false);
 const showCaller = ref(false);
@@ -180,15 +180,18 @@ watchEffect(() => {
             myVideo!.srcObject = stream;
             localStream.value = stream;
 
-            call.off("stream").once("stream", (stream: MediaStream) => {
+            call.off("stream").on("stream", (stream: MediaStream) => {
               console.log("streaming");
               let video: any = document.createElement("video");
               video!.srcObject = stream;
               video.autoplay = true;
 
-              document.getElementById("video_container")?.append(video);
+              if (!remoteCall.value[call.peer]) {
+                console.log("yesss oooooo",call)
+                remoteCall.value.push(call);
+                document.getElementById("video_container")?.append(video);
+              }
 
-             
               videoCallProcessed.value = true;
             });
           })
@@ -201,7 +204,7 @@ watchEffect(() => {
           });
       }
     );
-  peerConnection.value.off("call").once("call", (call: any) => {
+  peerConnection.value.once("call", (call: any) => {
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -210,13 +213,19 @@ watchEffect(() => {
       .then((stream) => {
         localStream.value = stream;
         call.answer(stream);
-        call.on("stream", (stream: any) => {
-          console.log("streaming ooooooo")
+        call.off("stream").on("stream", (stream: any) => {
+          console.log("streaming ooooooo");
           let video: any = document.createElement("video");
           video.autoplay = true;
-          document.getElementById("video_container")?.append(video);
           video!.srcObject = stream;
-          remoteStream.value.push(stream);
+          console.log(call)
+          if (!remoteCall.value[call.peer]) {
+            console.log("yessoooooo",call)
+            remoteCall.value.push(call);
+
+            document.getElementById("video_container")?.append(video);
+          }
+
           videoCallProcessed.value = true;
         });
       })
