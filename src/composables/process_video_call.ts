@@ -8,12 +8,19 @@ export const answerCall = (
   socket: any,
   callerId: any,
   peerId: string,
-  callId: any
+  callId: any,
+  recieverId: string
 ) => {
+  console.log({
+    callerId,
+    callId,
+    peerId,
+  });
   socket.emit("private_video_call_answer", {
     callerId,
     callId,
     peerId,
+    recieverId,
   });
 };
 export const rejectCall = (

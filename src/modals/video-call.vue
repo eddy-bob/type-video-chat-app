@@ -41,13 +41,17 @@ const props = withDefaults(
   }
 );
 callData.value = { ...props.callData };
+
 // methods
 const accept = () => {
+  console.log("on accept", callData);
+
   answerCall(
     props.socket,
     props.callData.callerId,
     props.callData.peerId,
-    props.callData.callId
+    props.callData.callId,
+    props.recieverId
   );
 };
 const reject = () => {
@@ -145,54 +149,59 @@ watchEffect(() => {
   //     incomingCall.value = true;
   //   }
   // );
-  props.socket.once(
-    "private_video_call_authorize",
-    (data: {
-      callerId: string;
-      name: string;
-      peerId: string;
-      callId: string;
-    }) => {
-      console.log("authorize event clicked");
-      callData.value = { ...data };
-      incomingCall.value = true;
-      showCaller.value = true;
+  props.socket
+    .off("private_video_call_authorize")
+    .once(
+      "private_video_call_authorize",
+      (data: {
+        callerId: string;
+        name: string;
+        peerId: string;
+        callId: string;
+      }) => {
+        console.log("authorize event clicked");
+        callData.value = { ...data };
+        incomingCall.value = true;
+        showCaller.value = true;
 
-      let myVideo: any = document.createElement("video");
-      myVideo.autoplay = true;
-      myVideo.muted = true;
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: true,
+          })
+          .then((stream) => {
+            const call = processCall(data.peerId, stream, peerConnection.value);
+            let myVideo: any = document.createElement("video");
+            myVideo.autoplay = true;
+            myVideo.id = "localVid";
+            myVideo.muted = true;
+            // append video  to dom
+            document.getElementById("video_container")?.append(myVideo);
+            myVideo!.srcObject = stream;
+            localStream.value = stream;
 
-      // append video  to dom
-      document.getElementById("video_container")?.append(myVideo);
+            call.off("stream").once("stream", (stream: MediaStream) => {
+              console.log("streaming");
+              let video: any = document.createElement("video");
+              video!.srcObject = stream;
+              video.autoplay = true;
 
-      navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: true,
-        })
-        .then((stream) => {
-          myVideo!.srcObject = stream;
-          localStream.value = stream;
-          const call = processCall(data.peerId, stream, peerConnection.value);
-          call.on("stream", (stream: MediaStream) => {
-            let video: any = document.createElement("video");
-            video.autoplay = true;
-            document.getElementById("video_container")?.append(video);
-            video!.srcObject = stream;
-            remoteStream.value.push(stream);
-            videoCallProcessed.value = true;
+              document.getElementById("video_container")?.append(video);
+
+             
+              videoCallProcessed.value = true;
+            });
+          })
+          .catch((err) => {
+            notify({
+              type: "error",
+              title: "Error",
+              text: err.message ? err.message : "Could not process call",
+            });
           });
-        })
-        .catch((err) => {
-          notify({
-            type: "error",
-            title: "Error",
-            text: err.message ? err.message : "Could not process call",
-          });
-        });
-    }
-  );
-  peerConnection.value.on("call", (call: any) => {
+      }
+    );
+  peerConnection.value.off("call").once("call", (call: any) => {
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -202,9 +211,9 @@ watchEffect(() => {
         localStream.value = stream;
         call.answer(stream);
         call.on("stream", (stream: any) => {
+          console.log("streaming ooooooo")
           let video: any = document.createElement("video");
           video.autoplay = true;
-          video.muted = true;
           document.getElementById("video_container")?.append(video);
           video!.srcObject = stream;
           remoteStream.value.push(stream);

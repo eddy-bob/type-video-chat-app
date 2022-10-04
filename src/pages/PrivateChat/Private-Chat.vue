@@ -57,7 +57,7 @@ const userId = ref<string>();
 const friendId = ref("");
 const showVoice = ref(false);
 const showVideo = ref(false);
-const profile = ref({});
+const profile = ref<any>();
 const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
 const privateChats = ref("");
@@ -68,6 +68,7 @@ const friendTyping = ref(false);
 const scrollArea = ref<HTMLElement>();
 const privateChatData = ref<any[]>([]);
 const privateUserProfileData = ref<any>({});
+const recieverId = ref("");
 const prev = ref<any>("");
 // set groupId on created
 userId.value = route.query.userId as string;
@@ -156,17 +157,17 @@ const privateChat = (id: string) => {
 };
 const startVideoCall = () => {
   status.value = "outgoingCall";
-  const id = route.query.userId as string;
   showVideo.value = true;
+  recieverId.value = userId.value as string;
 };
 const addPrivateChat = () => {
   // emit add chat
   if (socket.value && privateChats.value !== "") {
     socket.value.emit("privateMessage", {
-      userId: privateUserProfileData.value._id,
+      userId: userId.value,
       message: privateChats.value,
       attatchment: privateAttatchment.value,
-      friendId: friendId.value,
+      relationshipId: friendId.value,
     });
     socket.value.once("chatError", (data: any) => {
       console.log(data);
@@ -176,7 +177,7 @@ const addPrivateChat = () => {
         text: data.message || "Chat send failed",
       });
     });
-    socket.value.once("myMessage", (data: any) => {
+    socket.value.off("myMessage").on("myMessage", (data: any) => {
       console.log(data);
       console.log("na me send am");
       privateChatData.value.push({
@@ -241,11 +242,14 @@ watchEffect(() => {
           peerId: string;
           callId: string;
         }) => {
+          console.log("it got here");
           console.log(data);
           callData.value = { ...data };
           console.log(callData.value);
           console.log("incoming call");
-          const id = route.query.userId as string;
+          recieverId.value = profile.value._id;
+
+          console.log(recieverId.value);
           status.value = "incomingCall";
           showVideo.value = true;
         }
@@ -356,7 +360,7 @@ onBeforeUnmount(() => {
       :callData="callData"
       :status="status"
       :is="videoCall"
-      :recieverId="route.query.userId"
+      :recieverId="recieverId"
       :socket="socket"
       @endCall="showVideo = false"
     />
