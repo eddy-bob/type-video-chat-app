@@ -153,12 +153,14 @@ watchEffect(() => {
       peerId: string;
       callId: string;
     }) => {
+      console.log("authorize event clicked");
       callData.value = { ...data };
       incomingCall.value = true;
       showCaller.value = true;
 
       let myVideo: any = document.createElement("video");
       myVideo.autoplay = true;
+      myVideo.muted = true;
 
       // append video  to dom
       document.getElementById("video_container")?.append(myVideo);
@@ -202,6 +204,7 @@ watchEffect(() => {
         call.on("stream", (stream: any) => {
           let video: any = document.createElement("video");
           video.autoplay = true;
+          video.muted = true;
           document.getElementById("video_container")?.append(video);
           video!.srcObject = stream;
           remoteStream.value.push(stream);
