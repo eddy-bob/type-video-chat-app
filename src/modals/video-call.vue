@@ -66,11 +66,13 @@ const reject = () => {
 const stopStreaming = () => {
   let video: any = document.getElementById("localVid");
 
-  video.pause();
-  localStream.value!.getTracks().forEach((track) => {
-    video.src = " ";
-    track.stop();
-  });
+  if (video) {
+    video.pause();
+    localStream.value!.getTracks().forEach((track) => {
+      video.src = " ";
+      track.stop();
+    });
+  }
 };
 
 const mute = () => {
@@ -246,11 +248,15 @@ watchEffect(() => {
     }
   );
   props.socket.on("private_video_call_reciever_rejected", (data: any) => {
-    console.log(data);
+    emit("endCall")
+    notify({
+      type: "error",
+      title: " Call Rejected",
+      text: "User busy",
+    });
   });
   props.socket.on("private_video_call_reject_success", (data: any) => {
     emit("endCall");
-    peerConnection.value.close();
   });
 });
 
