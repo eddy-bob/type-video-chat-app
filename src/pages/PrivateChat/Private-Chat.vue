@@ -233,6 +233,7 @@ watch(route, (current, previous) => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
+
     socket.value
       .off("private_video_call_init")
       .on(
@@ -332,6 +333,7 @@ watchEffect(() => {
     //   });
     // });
   }
+  
 });
 onUpdated(() => {
   if (userId.value !== "" && scrollArea.value && typing.value == false) {

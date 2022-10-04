@@ -59,7 +59,8 @@ const reject = () => {
     props.socket,
     props.callData.callerId,
     props.callData.peerId,
-    props.callData.callId
+    props.callData.callId,
+    props.recieverId
   );
 };
 const stopStreaming = () => {
@@ -80,7 +81,7 @@ const mute = () => {
 };
 
 // emits
-const emit = defineEmits<{ event: "endCall" }>();
+const emit = defineEmits<{ (event: "endCall"): void }>();
 const endCall = () => {
   peerConnection.value.close();
 
@@ -244,6 +245,13 @@ watchEffect(() => {
       console.log(data.message);
     }
   );
+  props.socket.on("private_video_call_reciever_rejected", (data: any) => {
+    console.log(data);
+  });
+  props.socket.on("private_video_call_reject_success", (data: any) => {
+    emit("endCall");
+    peerConnection.value.close();
+  });
 });
 
 onBeforeUnmount(() => {
@@ -296,7 +304,7 @@ onBeforeUnmount(() => {
     </div>
     <component
       @accept="accept()"
-      @reject="reject()"
+      @reject="$emit('endCall'), reject()"
       :is="videoCallNotify"
       v-else
       :caller="callData"
