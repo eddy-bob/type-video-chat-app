@@ -28,25 +28,27 @@ export const rejectCall = (
   callerId: any,
   peerId: string,
   callId: any,
-  recieverId:string
+  recieverId: string
 ) => {
   socket.emit("private_video_call_reject", {
     callerId,
     callId,
     peerId,
-  recieverId,
+    recieverId,
   });
 };
 export const endCall = (
   socket: any,
   callerId: any,
   peerId: string,
-  callId: any
+  callId: any,
+  recieverId: string
 ) => {
   socket.emit("private_video_call_end", {
     callerId,
     callId,
     peerId,
+    recieverId,
   });
 };
 export const processCall = (

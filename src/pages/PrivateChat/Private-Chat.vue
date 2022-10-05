@@ -256,6 +256,7 @@ watchEffect(() => {
           showVideo.value = true;
         }
       );
+      
     socket.value.off("newMessage").on("newMessage", (data: any) => {
       privateChatData.value.push({
         sender: data.name.sender,

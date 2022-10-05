@@ -71,6 +71,8 @@ const stopStreaming = () => {
     localStream.value!.getTracks().forEach((track) => {
       video.src = " ";
       track.stop();
+
+      video.remove();
     });
   }
 };
@@ -85,13 +87,12 @@ const mute = () => {
 // emits
 const emit = defineEmits<{ (event: "endCall"): void }>();
 const endCall = () => {
-  peerConnection.value.close();
-
   endVideoCall(
     props.socket,
     callData.value?.callerId as string,
     callData.value?.peerId as string,
-    callData.value?.callId as string
+    callData.value?.callId as string,
+    props.recieverId as string
   );
 };
 showCaller.value = props.status === "outgoingCall" && true;
@@ -107,6 +108,7 @@ onMounted(() => {
       video.autoplay = true;
       video.id = "localVid";
       video.muted = true;
+      video.style.border = "1px solid grey";
 
       // append video  to dom
       document.getElementById("video_container")?.append(video);
@@ -118,6 +120,7 @@ onMounted(() => {
         })
         .then((stream) => {
           video!.srcObject = stream;
+          video!.style.border = "1px solid grey";
           localStream.value = stream;
 
           if (showCaller.value == true) {
@@ -153,6 +156,20 @@ watchEffect(() => {
   //   }
   // );
   props.socket
+    .off("private_video_call_inverse_authorize")
+    .once(
+      "private_video_call_inverse_authorize",
+      (data: {
+        callerId: string;
+        name: string;
+        peerId: string;
+        callId: string;
+      }) => {
+        console.log("authorize inverse event clicked");
+        callData.value = { ...data };
+      }
+    );
+  props.socket
     .off("private_video_call_authorize")
     .once(
       "private_video_call_authorize",
@@ -178,6 +195,7 @@ watchEffect(() => {
             myVideo.autoplay = true;
             myVideo.id = "localVid";
             myVideo.muted = true;
+            myVideo.style.border = "1px solid grey";
             // append video  to dom
             document.getElementById("video_container")?.append(myVideo);
             myVideo!.srcObject = stream;
@@ -190,6 +208,8 @@ watchEffect(() => {
                 let video: any = document.createElement("video");
                 video!.srcObject = stream;
                 video.autoplay = true;
+                video.id = "remoteVideo";
+                video.style.border = "1px solid grey";
                 console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
@@ -223,7 +243,10 @@ watchEffect(() => {
           if (!remoteCall.value[0]) {
             let video: any = document.createElement("video");
             video.autoplay = true;
+            video.style.border = "1px solid grey";
             video!.srcObject = stream;
+
+            video.id = "remoteVideo";
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
 
@@ -242,11 +265,45 @@ watchEffect(() => {
       });
   });
   props.socket
+    .off("private_video_call_end_success")
+    .on("private_video_call_end_success", (data: { message: string }) => {
+      console.log(data.message, "video end ");
+
+      const remote: any = document.getElementById("remoteVideo");
+      const myVid: any = document.getElementById("localVid");
+      if (remote) {
+        console.log("remote dey ooo");
+
+        remote!.srcObject = null;
+        remoteCall.value.length = 0;
+        // const container: any = document.getElementById("video-container");
+        // container?.remove(myVid);
+        // container?.remove(remote);
+        myVid.remove();
+        remote.remove();
+        emit("endCall");
+      } else {
+        // stopStreaming();
+        emit("endCall");
+      }
+    });
+  props.socket
     .off("private_video_call_end_inverse_success")
     .on(
       "private_video_call_end_inverse_success",
       (data: { message: string }) => {
-        console.log(data.message);
+        console.log(data.message, "video end ");
+
+        const remote: any = document.getElementById("remoteVideo");
+
+        if (remote) {
+          console.log("remote dey ooo");
+          // stopStreaming();
+          remote!.srcObject = null;
+          remoteCall.value.length = 0;
+
+          remote.remove();
+        }
       }
     );
   props.socket
@@ -303,7 +360,7 @@ onBeforeUnmount(() => {
         </div>
         <button
           class="bg-red-500 rounded-lg py-2 px-4 font-extrabold text-xs text-white"
-          @click="[endCall, $emit('endCall')]"
+          @click="endCall"
         >
           End Call
         </button>
