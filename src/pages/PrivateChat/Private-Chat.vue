@@ -73,6 +73,16 @@ const prev = ref<any>("");
 // set groupId on created
 userId.value = route.query.userId as string;
 relationshipId.value = route.query.id as string;
+document.addEventListener("beforeunload", () => {
+  SocketioService.disconnect()
+    .then((response) => {
+      console.log("this is appearing before onmount", socket.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 const scrollToBottom = () => {
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
@@ -222,7 +232,6 @@ const addPrivateChat = () => {
 // listen for when there is a change in the group id
 
 watch(route, (current, previous) => {
-  
   // fetch auth user profile
   if (typeof route.query.userId !== "undefined") {
     userId.value = route.query.userId as string;
@@ -233,7 +242,6 @@ watch(route, (current, previous) => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
-
     socket.value
       .off("private_video_call_init")
       .on(
@@ -256,7 +264,22 @@ watchEffect(() => {
           showVideo.value = true;
         }
       );
-      
+    // socket.value
+    //   .off("private_video_call_inverse_init")
+    //   .on(
+    //     "private_video_call_inverse_init",
+    //     (data: {
+    //       callerId: string;
+    //       name: string;
+    //       peerId: string;
+    //       callId: string;
+    //     }) => {
+    //       console.log("i started a call ooo");
+    //       console.log(data);
+    //       callData.value = { ...data };
+    //     }
+    //   );
+
     socket.value.off("newMessage").on("newMessage", (data: any) => {
       privateChatData.value.push({
         sender: data.name.sender,
@@ -334,7 +357,6 @@ watchEffect(() => {
     //   });
     // });
   }
-  
 });
 onUpdated(() => {
   if (userId.value !== "" && scrollArea.value && typing.value == false) {

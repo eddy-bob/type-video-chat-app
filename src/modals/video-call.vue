@@ -14,6 +14,7 @@ import videoCallNotify from "../modals/video-call-notify.vue";
 const localStream = ref<MediaStream>();
 const peerId = ref("");
 const remoteCall = ref<any[]>([]);
+
 const peerConnection = ref();
 const incomingCall = ref(false);
 const showCaller = ref(false);
@@ -40,6 +41,7 @@ const props = withDefaults(
     callStarted: false,
   }
 );
+showCaller.value = props.status === "outgoingCall" && true;
 callData.value = { ...props.callData };
 
 // methods
@@ -64,12 +66,14 @@ const reject = () => {
   );
 };
 const stopStreaming = () => {
+  console.log("stop streaming reached");
   let video: any = document.getElementById("localVid");
 
   if (video) {
     video.pause();
+
     localStream.value!.getTracks().forEach((track) => {
-      video.src = " ";
+      video.src = null;
       track.stop();
 
       video.remove();
@@ -95,7 +99,6 @@ const endCall = () => {
     props.recieverId as string
   );
 };
-showCaller.value = props.status === "outgoingCall" && true;
 
 onMounted(() => {
   peerConnection.value.on("open", (id: string) => {
@@ -156,6 +159,21 @@ watchEffect(() => {
   //   }
   // );
   props.socket
+    .off("private_video_call_inverse_init")
+    .on(
+      "private_video_call_inverse_init",
+      (data: {
+        callerId: string;
+        name: string;
+        peerId: string;
+        callId: string;
+      }) => {
+        console.log("i started a call ooo");
+        console.log(data);
+        callData.value = { ...data };
+      }
+    );
+  props.socket
     .off("private_video_call_inverse_authorize")
     .once(
       "private_video_call_inverse_authorize",
@@ -191,6 +209,7 @@ watchEffect(() => {
           })
           .then((stream) => {
             const call = processCall(data.peerId, stream, peerConnection.value);
+
             let myVideo: any = document.createElement("video");
             myVideo.autoplay = true;
             myVideo.id = "localVid";
@@ -273,7 +292,6 @@ watchEffect(() => {
       const myVid: any = document.getElementById("localVid");
       if (remote) {
         console.log("remote dey ooo");
-
         remote!.srcObject = null;
         remoteCall.value.length = 0;
         // const container: any = document.getElementById("video-container");
@@ -283,7 +301,6 @@ watchEffect(() => {
         remote.remove();
         emit("endCall");
       } else {
-        // stopStreaming();
         emit("endCall");
       }
     });
@@ -293,16 +310,18 @@ watchEffect(() => {
       "private_video_call_end_inverse_success",
       (data: { message: string }) => {
         console.log(data.message, "video end ");
-
+        // stopStreaming();
         const remote: any = document.getElementById("remoteVideo");
 
         if (remote) {
           console.log("remote dey ooo");
-          // stopStreaming();
+          //stopStreaming();
           remote!.srcObject = null;
           remoteCall.value.length = 0;
 
           remote.remove();
+        } else {
+          emit("endCall");
         }
       }
     );
