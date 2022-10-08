@@ -73,7 +73,7 @@ const prev = ref<any>("");
 // set groupId on created
 userId.value = route.query.userId as string;
 relationshipId.value = route.query.id as string;
-document.addEventListener("beforeunload", () => {
+window.addEventListener("beforeunload", () => {
   SocketioService.disconnect()
     .then((response) => {
       console.log("this is appearing before onmount", socket.value);
@@ -430,9 +430,13 @@ onBeforeUnmount(() => {
         </div>
         <!--  -->
         <div class="flex space-x-4">
-          <i class="fas fa-search cursor-pointer"></i>
-          <i class="fas fa-phone-volume cursor-pointer"></i>
-          <i class="fas fa-video cursor-pointer" @click="startVideoCall"></i>
+          <button><i class="fas fa-search cursor-pointer"></i></button>
+
+          <button><i class="fas fa-phone-volume cursor-pointer"></i></button>
+
+          <button :disabled="showVideo" @click="startVideoCall" :class="showVideo==true && 'disabled:opacity-25'">
+            <i class="fas fa-video cursor-pointer"></i>
+          </button>
         </div>
       </div>
     </div>

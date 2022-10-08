@@ -103,9 +103,10 @@ const makeActive = (id: string) => {
                 alt="img"
                 class="rounded-full w-8 h-8"
               />
-              <p
+              
+              <!-- <p
                 class="absolute w-2 bg-green-700 h-2 rounded-full bottom-0 right-1"
-              ></p>
+              ></p> -->
             </div>
             <p class="text-[12px] font-extrabold mt-2">{{ chat.friendName }}</p>
           </div>
