@@ -1,7 +1,7 @@
 import Axios from "axios";
 // create an new axios http instance
 const http = Axios.create({
-  baseURL: "http://localhost:5000/api/v1/",
+  baseURL: "https://eddychatapp.herokuapp.com/api/v1",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
