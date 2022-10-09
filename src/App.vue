@@ -33,7 +33,7 @@ const setImage = (value: boolean) => {
       <component :is="overlay" />
       <component
         :is="appLogout"
-        class="absolute top-[30%] left-[50%] z-50 w-auto p-5"
+        class="absolute top-[30%] lg:left-[50%]  md:left-[30%] left-[12%] z-50 w-auto p-5"
         @close-logout="isLogout = false"
       />
     </div>
@@ -61,7 +61,7 @@ const setImage = (value: boolean) => {
     <router-view
       name="leftNav"
       :class=" showSide == true ? 'block ' : 'hidden lg:block'"
-      class="lg:w-[30rem] w-screen md:relative lg:h-full min-h-screen h-full absolute z-50"
+      class="lg:w-[30rem] w-screen lg:relative lg:h-full min-h-screen h-full absolute z-50"
     ></router-view>
     <router-view class="w-full"></router-view>
     <!-- <router-view name="rightNav"></router-view> -->

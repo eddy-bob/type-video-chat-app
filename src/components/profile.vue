@@ -202,7 +202,7 @@ watchEffect(() => {
             class="hidden"
           />
         </label>
-        <div class="absolute bottom-[-17%] lg:left-[35%] left-[40%]">
+        <div class="absolute bottom-[-17%] lg:left-[35%]  md:left-[45%] left-[40%]">
           <img
             :src="
               profile?.photo

@@ -27,7 +27,9 @@ const hide = (id: string) => {
     <div
       class="px-3 pt-20 bg-slate-700 min-h-screen h-auto space-y-12 text-white"
     >
-    <button class="lg:hidden font-extrabold " @click="showSide=false">x</button>
+      <button class="lg:hidden font-extrabold" @click="showSide = false">
+        <i class="fa-solid fa-rectangle-xmark"></i>
+      </button>
       <!--  -->
       <div class="relative flex cursor-pointer">
         <i

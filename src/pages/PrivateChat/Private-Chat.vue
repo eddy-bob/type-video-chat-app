@@ -72,7 +72,7 @@ const privateUserProfileData = ref<any>({});
 const recieverId = ref("");
 const prev = ref<any>("");
 // inject and provide
-const showSide=inject("showSide")
+const showSide = inject("showSide");
 // set groupId on created
 userId.value = route.query.userId as string;
 relationshipId.value = route.query.id as string;
@@ -383,7 +383,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="w-full bg-slate-800 relative">
     <component
-      class="absolute top-[15%] lg:left-[8%]  z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
+      class="absolute top-[15%] lg:left-[8%] z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
       v-if="showVideo == true"
       :callStarted="showVideo"
       :callData="callData"
@@ -396,12 +396,14 @@ onBeforeUnmount(() => {
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->
-    <div class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0">
+    <div
+      class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0 "
+    >
       <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
         <!--  -->
         <div class="flex space-x-4">
-          <button @click="showSide=!showSide">
-          <i class="fas fa-bars fa-xl lg:hidden" ></i>
+          <button @click="showSide = !showSide">
+            <i class="fas fa-bars fa-xl lg:hidden"></i>
           </button>
           <div class="relative">
             <img
