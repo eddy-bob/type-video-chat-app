@@ -10,6 +10,7 @@ const error = ref("");
 export const useAuth = (store: any, loading: { value: boolean }): any => {
   error.value = "";
   success.value = "";
+  loading.value=true;
   return store
     .then((res: any) => {
       success.value = res.data.message;
