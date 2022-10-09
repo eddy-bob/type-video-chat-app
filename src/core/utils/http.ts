@@ -7,7 +7,7 @@ const http = Axios.create({
   },
 });
 
-http.defaults.headers.common.accept = "application/json";
+// http.defaults.headers.common.accept = "application/json";
 
 // before a request is made start  anything
 http.interceptors.request.use((config) => {

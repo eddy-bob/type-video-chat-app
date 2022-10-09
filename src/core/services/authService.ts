@@ -17,9 +17,7 @@ class AuthService {
 
 
     const response = await this.request.post("user/auth/register", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    
     });
     return response;
   }
