@@ -12,14 +12,14 @@ const userStore = user();
 const authStore = useAuthStore();
 // pass required image data from the parent
 let showPreview = inject<{ value: boolean }>("showPreview");
-let selectedImg = inject<{ value: ArrayBuffer }>("selectedImg");
+let selectedImg = inject<{ value: any }>("selectedImg");
 let imageType = inject<{ value: string }>("imageType");
 let setImage = inject<{ value: boolean }>("setImage");
-let profile = ref<any>({})
+let profile = ref<any>({});
 let editAbout = ref(false);
 const userInfo = reactive<{
-  profilePicture?: ArrayBuffer | string;
-  coverPhoto?: ArrayBuffer | string;
+  profilePicture?: any;
+  coverPhoto?: any;
   about?: string;
 }>({});
 
@@ -27,7 +27,7 @@ const isLoading = ref(false);
 
 type FileType = {
   showpreview: boolean;
-  selectedimg: ArrayBuffer;
+  selectedimg: any;
   imagetype: string;
 };
 const getProfile = () => {
@@ -64,7 +64,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules as any, userInfo);
 const setProfilePic = () => {
   userStore
-    .updateProfilePic(selectedImg!.value as ArrayBuffer)
+    .updateProfilePic(selectedImg!.value as any)
     .then((res) => {
       userInfo.profilePicture = selectedImg!.value;
       notify({
@@ -87,7 +87,7 @@ const setProfilePic = () => {
 };
 const setCoverPhoto = () => {
   userStore
-    .updateCoverPhoto(selectedImg!.value as ArrayBuffer)
+    .updateCoverPhoto(selectedImg!.value as any)
     .then((res) => {
       userInfo.coverPhoto = selectedImg!.value;
       notify({
@@ -202,7 +202,9 @@ watchEffect(() => {
             class="hidden"
           />
         </label>
-        <div class="absolute bottom-[-17%] lg:left-[35%]  md:left-[45%] left-[40%]">
+        <div
+          class="absolute bottom-[-17%] lg:left-[35%] md:left-[45%] left-[40%]"
+        >
           <img
             :src="
               profile?.photo

@@ -49,7 +49,7 @@ const loading = ref(false);
 const typing = ref(false);
 const scrollArea = ref<HTMLElement>();
 const groupChatData = ref<any[]>([]);
-const groupProfileData = ref({});
+const groupProfileData = ref<any>();
 const prev = ref<any>("");
 // set groupId on created
 groupId.value = route.params.groupId as string;

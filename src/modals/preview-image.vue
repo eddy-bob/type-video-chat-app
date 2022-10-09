@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-const prop = defineProps<{ image: ArrayBuffer }>();
+const prop = defineProps<{ image: any }>();
 const emit = defineEmits<{
   (e: "close-preview"): void;
-  (e: "choose-image", chossen: string): void;
+  (e: "choose-image"): void;
 }>();
+const chooseAndClose = () => {
+  emit("choose-image"), emit("close-preview");
+};
 </script>
 
 <template>
@@ -19,7 +22,7 @@ const emit = defineEmits<{
     <div class="w-full flex justify-center">
       <button
         class="appBgGreen text-sm font-extrabold py-3 px-5"
-        @click="emit('choose-image'), emit('close-preview')"
+        @click="chooseAndClose"
       >
         choose image
       </button>

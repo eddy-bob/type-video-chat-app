@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { user } from "../core/store/index";
-const callerData = ref({});
+const callerData = ref<any>();
 // initialize store
 const userStore = user();
 const props = defineProps<{
