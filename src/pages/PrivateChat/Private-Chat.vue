@@ -3,6 +3,7 @@ import {
   ref,
   watchEffect,
   watch,
+  inject,
   shallowRef,
   onUpdated,
   onBeforeUnmount,
@@ -70,6 +71,8 @@ const privateChatData = ref<any[]>([]);
 const privateUserProfileData = ref<any>({});
 const recieverId = ref("");
 const prev = ref<any>("");
+// inject and provide
+const showSide=inject("showSide")
 // set groupId on created
 userId.value = route.query.userId as string;
 relationshipId.value = route.query.id as string;
@@ -380,7 +383,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="w-full bg-slate-800 relative">
     <component
-      class="absolute top-[15%] left-[8%] z-50 w-[55rem] p-5"
+      class="absolute top-[15%] lg:left-[8%]  z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
       v-if="showVideo == true"
       :callStarted="showVideo"
       :callData="callData"
@@ -393,10 +396,13 @@ onBeforeUnmount(() => {
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->
-    <div class="text-gray-300 bg-slate-700 fixed w-[74%] top-0">
+    <div class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0">
       <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
         <!--  -->
         <div class="flex space-x-4">
+          <button @click="showSide=!showSide">
+          <i class="fas fa-bars fa-xl lg:hidden" ></i>
+          </button>
           <div class="relative">
             <img
               :src="
@@ -434,7 +440,11 @@ onBeforeUnmount(() => {
 
           <button><i class="fas fa-phone-volume cursor-pointer"></i></button>
 
-          <button :disabled="showVideo" @click="startVideoCall" :class="showVideo==true && 'disabled:opacity-25'">
+          <button
+            :disabled="showVideo"
+            @click="startVideoCall"
+            :class="showVideo == true && 'disabled:opacity-25'"
+          >
             <i class="fas fa-video cursor-pointer"></i>
           </button>
         </div>
@@ -452,7 +462,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="px-10 py-10 space-y-5 mt-20 h-[500px] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-20 lg:h-[500px] h-screen overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
@@ -571,7 +581,7 @@ onBeforeUnmount(() => {
     </div>
     <!--  -->
     <!-- input field -->
-    <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
+    <div class="fixed bottom-0 w-full my-2 text-gray-200 lg:px-10 px-5">
       <div class="flex space-x-3">
         <div class="flex space-x-5">
           <img src="/images/svg/option.svg" alt="" class="w-2" />
@@ -587,16 +597,20 @@ onBeforeUnmount(() => {
           :disabled="privateUserProfileData.firstName ? false : true"
           name="message"
           v-model.lazy="privateChats"
-          class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 w-[60%] myOverflow text-sm"
+          class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 lg:w-[60%] w-full myOverflow text-sm"
           placeholder="message here . . ."
         />
         <!--  -->
         <button
           type="button"
           @click="addPrivateChat"
-          class="bg-slate-700 p-2 rounded-full"
+          class="bg-slate-700 lg:p-2 p-4 rounded-full"
         >
-          <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
+          <img
+            src="/images/svg/send.svg"
+            alt="send"
+            class="lg:w-[30px] w-[25px]"
+          />
         </button>
       </div>
     </div>

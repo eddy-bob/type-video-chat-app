@@ -178,7 +178,7 @@ watchEffect(() => {
 
 <template>
   <div
-    class="bg-slate-800 border-r border-r-slate-600 text-gray-300 overflow-y-scroll myOverflow max-h-screen"
+    class="bg-slate-800 border-r border-r-slate-600 text-gray-300 overflow-y-scroll myOverflow lg:max-h-screen"
   >
     <div class="border-b border-slate-600 pb-4">
       <div class="relative space-y-5">
@@ -189,7 +189,7 @@ watchEffect(() => {
               : '/images/jpeg/noImg.jpeg'
           "
           alt=""
-          class="h-48 w-[25rem]"
+          class="h-48 lg:w-[25rem] w-screen"
           id="coverphoto"
         />
         <label for="coverPhoto">
@@ -202,7 +202,7 @@ watchEffect(() => {
             class="hidden"
           />
         </label>
-        <div class="absolute bottom-[-17%] left-[35%]">
+        <div class="absolute bottom-[-17%] lg:left-[35%] left-[40%]">
           <img
             :src="
               profile?.photo

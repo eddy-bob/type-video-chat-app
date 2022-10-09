@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {  shallowRef, inject } from "vue";
+import { shallowRef, inject } from "vue";
 import profile from "../components/profile.vue";
 import friends from "../components/friends.vue";
 import call from "../components/calls.vue";
@@ -10,6 +10,8 @@ import recentChats from "../components/recent-chats.vue";
 
 const active = shallowRef(recentChats);
 
+// inject and provide
+const showSide = inject("showSide");
 const showLogout = inject<any>("showLogout");
 
 const show = (id: string) => {
@@ -25,6 +27,7 @@ const hide = (id: string) => {
     <div
       class="px-3 pt-20 bg-slate-700 min-h-screen h-auto space-y-12 text-white"
     >
+    <button class="lg:hidden font-extrabold " @click="showSide=false">x</button>
       <!--  -->
       <div class="relative flex cursor-pointer">
         <i

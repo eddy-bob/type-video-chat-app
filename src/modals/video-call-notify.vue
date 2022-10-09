@@ -35,7 +35,7 @@ const getProfile = (id: string) => {
 <template>
   <div class="flex justify-center">
     <div
-      class="space-y-3 w-1/2 p-10 bg-slate-800 text-gray-300 rounded-md shadow shadow-gray-300"
+      class="space-y-3 lg:w-1/2 w-screen lg:p-10 p-5 bg-slate-800 text-gray-300 rounded-md shadow shadow-gray-300"
     >
       <p class="font-extrabold text-gray-300 text-center">
         Incoming video call

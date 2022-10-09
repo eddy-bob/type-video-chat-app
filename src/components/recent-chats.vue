@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, inject } from "vue";
 import { useRecentPrivateChatStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import { useRoute } from "vue-router";
@@ -12,6 +12,8 @@ const route = useRoute();
 const loading = ref(false);
 const chatsError = ref("");
 const activeColor = ref("rgb(36, 154, 36)");
+// provide in inject
+const showSide = inject("showSide");
 // functions
 const fetchRecentChats = () => {
   loading.value = true;
@@ -87,6 +89,7 @@ const makeActive = (id: string) => {
           <div
             @click="
               makeActive(chat.friend),
+                (showSide = false),
                 $router.push({
                   name: 'page.privateChat',
                   query: {
@@ -103,7 +106,7 @@ const makeActive = (id: string) => {
                 alt="img"
                 class="rounded-full w-8 h-8"
               />
-              
+
               <!-- <p
                 class="absolute w-2 bg-green-700 h-2 rounded-full bottom-0 right-1"
               ></p> -->

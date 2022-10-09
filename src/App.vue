@@ -10,6 +10,7 @@ import preview from "./modals/preview-image.vue";
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
 const showPreview = ref(false);
+const showSide = ref(true);
 const imageType = ref<string | null>();
 const isSetImage = ref(false);
 const selectedImg = ref<ArrayBuffer>();
@@ -19,6 +20,7 @@ provide("showPreview", showPreview);
 provide("selectedImg", selectedImg);
 provide("setImage", isSetImage);
 provide("imageType", imageType);
+provide("showSide", showSide);
 const setImage = (value: boolean) => {
   isSetImage.value = value;
 };
@@ -51,12 +53,16 @@ const setImage = (value: boolean) => {
       <component :is="overlay" />
       <component
         :is="createGroup"
-        class="absolute top-[5%] left-[40%] z-50 w-auto p-5"
+        class="absolute lg:top-[5%] top-[15%] lg:left-[40%] z-50 w-auto lg:p-5 p-3"
       />
     </div>
     <!--  -->
     <notifications class="mt-x" />
-    <router-view name="leftNav" class="w-[30rem]"></router-view>
+    <router-view
+      name="leftNav"
+      :class=" showSide == true ? 'block ' : 'hidden lg:block'"
+      class="lg:w-[30rem] w-screen md:relative lg:h-full min-h-screen h-full absolute z-50"
+    ></router-view>
     <router-view class="w-full"></router-view>
     <!-- <router-view name="rightNav"></router-view> -->
   </div>

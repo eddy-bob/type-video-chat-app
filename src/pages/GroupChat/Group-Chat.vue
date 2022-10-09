@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
   <div class="w-full bg-slate-800">
     <!-- nav -->
     <div
-      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed w-[74%] top-0"
+      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:w-[74%] w-screen top-0"
     >
       <!--  -->
       <div class="flex space-x-4">
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
-      class="px-10 py-10 space-y-5 mt-20 h-[500px] overflow-y-scroll myOverflow"
+      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[500px] h-screen overflow-y-scroll myOverflow"
       id="chatScroll"
       style="scroll-behavior: smooth"
       v-scroll-directive
@@ -351,7 +351,7 @@ onBeforeUnmount(() => {
 
     <!--  -->
     <!-- input field -->
-    <div class="fixed bottom-0 w-full my-2 text-gray-200 px-10">
+    <div class="fixed bottom-0 w-full my-2 text-gray-200 lg:px-10 px-5">
       <div class="flex space-x-3">
         <div class="flex space-x-5">
           <img src="/images/svg/option.svg" alt="" class="w-2" />
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
           type="text"
           name="message"
           v-model.lazy="groupChats"
-          class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 w-[60%] myOverflow text-sm"
+          class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 lg:w-[60%] w-screen myOverflow text-sm"
           placeholder="message here . . ."
         />
         <!--  -->
@@ -374,9 +374,9 @@ onBeforeUnmount(() => {
           :disabled="groupProfileData.name ? false : true"
           type="button"
           @click="addGroupChat"
-          class="bg-slate-700 p-2 rounded-full"
+          class="bg-slate-700 lg:p-2  p-4 rounded-full"
         >
-          <img src="/images/svg/send.svg" alt="send" class="w-[30px]" />
+          <img src="/images/svg/send.svg" alt="send" class="lg:w-[30px] w-[25px]" />
         </button>
       </div>
     </div>
