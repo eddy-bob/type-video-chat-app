@@ -9,8 +9,10 @@ import {
   rejectCall,
 } from "../composables/process_video_call";
 import videoCallNotify from "../modals/video-call-notify.vue";
+
 // import * as Peer from "https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js";
 
+import { Peer } from "peerjs";
 const localStream = ref<MediaStream>();
 const peerId = ref("");
 const remoteCall = ref<any[]>([]);
