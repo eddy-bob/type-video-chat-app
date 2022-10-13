@@ -18,6 +18,7 @@ const userInfo = reactive({
   email: "",
   password: "",
 });
+
 const loading = ref(false);
 // validations rule
 const rules = computed(() => {
