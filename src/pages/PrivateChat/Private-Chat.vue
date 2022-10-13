@@ -33,6 +33,7 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
+  console.log(import.meta.env.MODE)
 const vScrollDirective = {
   mounted: (el: HTMLElement) => {
     el.scrollTop = el.scrollHeight;
