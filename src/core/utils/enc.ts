@@ -2,7 +2,7 @@ import CryptoJS from "crypto-js";
 
 const cipher = (text: string) => {
   const passphrase = import.meta.env.VITE_PASSPHRASE;
-  return CryptoJS.AES.encrypt(text, passphrase||"eddytesting if it works").toString();
+  return CryptoJS.AES.encrypt(text, passphrase).toString();
 };
 
 const decipher = (ciphertext: string) => {
