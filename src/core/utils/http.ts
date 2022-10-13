@@ -1,7 +1,10 @@
 import Axios from "axios";
 // create an new axios http instance
 const http = Axios.create({
-  baseURL: "https://eddychatapp.herokuapp.com/api/v1",
+  baseURL:
+    import.meta.env.VITE_MODE === "production"
+      ? "https://eddychatapp.herokuapp.com/api/v1"
+      : "http://localhost:5000/api/v1",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
   },
