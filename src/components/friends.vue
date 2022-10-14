@@ -12,6 +12,8 @@ const userStore = user();
 
 // initialize friend request store
 const friendRequestStore = useFriendRequestStore();
+// inject and provide
+const showSide = inject("showSide");
 // variables
 const addFriend = ref(false);
 const friends = ref<any[]>([]);
@@ -255,7 +257,8 @@ const isFriends = (id: string, email: string) => {
                       userId: singleFriend.friend,
                       id: singleFriend._id,
                     },
-                  })
+                  }),
+                    (showSide = false)
                 "
               >
                 <div>
