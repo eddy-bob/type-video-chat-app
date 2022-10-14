@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { ref, inject, reactive, customRef } from "vue";
+import { ref, inject, computed } from "vue";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import letterGroups from "../mixins/letterGrouping";
 import { notify } from "@kyvg/vue3-notification";
 import { useFriend, user, useFriendRequestStore } from "../core/store/index";
+import screenResize from "../composables/detect_screen_size";
 
 // initialize group store
 const friendStore = useFriend();
@@ -19,10 +20,15 @@ const addFriend = ref(false);
 const friends = ref<any[]>([]);
 
 const letterGrouping = ref<any[]>([]);
+
 const loading = ref<boolean>(false);
 const query = ref("");
 const users = ref<any[]>([]);
 const searchErr = ref("");
+
+const screenSize = computed(() => {
+  return screenResize();
+});
 // define get friends method
 const getFriends = () => {
   loading.value = true;
@@ -104,6 +110,15 @@ const isFriends = (id: string, email: string) => {
   });
   return isFriend;
 };
+// watchers
+
+// watch(screenSize, (current, prev) => {
+//   console.log(screenSize.value);
+//   if (screenSize.value && current !== prev) {
+//     screenSize.value = current;
+//     console.log(current);
+//   }
+// });
 </script>
 
 <template>
@@ -249,7 +264,7 @@ const isFriends = (id: string, email: string) => {
               :key="singleFriend._id"
             >
               <div
-                class="flex space-x-3 chathead cursor-pointer"
+                class="flex space-x-3 chathead cursor-pbointer"
                 @click="
                   $router.push({
                     name: 'page.privateChat',
@@ -258,9 +273,10 @@ const isFriends = (id: string, email: string) => {
                       id: singleFriend._id,
                     },
                   }),
-                    (showSide = false)
+                    screenSize < 800 && (showSide = false)
                 "
               >
+                
                 <div>
                   <img
                     :src="

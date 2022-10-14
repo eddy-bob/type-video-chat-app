@@ -1002,6 +1002,11 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+screen-size-detector@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/screen-size-detector/-/screen-size-detector-1.0.4.tgz#15b2a1beed2783a8e7c78a3dc882be993b5a288c"
+  integrity sha512-0oDPNt4klYzcWnxe04l/lNv0BSdJWFhilwNFSpQ9Bn3y3R12MsN4dc1bZnKnjRUV1HfVF54sRCAxdbxFa5sr5w==
+
 sdp@^2.12.0, sdp@^2.6.0:
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/sdp/-/sdp-2.12.0.tgz#338a106af7560c86e4523f858349680350d53b22"

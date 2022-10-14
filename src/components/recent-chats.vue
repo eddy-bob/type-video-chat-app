@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref, inject } from "vue";
+import { onMounted, ref, inject, watch, computed } from "vue";
 import { useRecentPrivateChatStore } from "../core/store/index";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import { useRoute } from "vue-router";
+import screen from "../composables/detect_screen_size";
+import screenResize from "../composables/detect_screen_size";
+
 // initialize friend request store
 const recentPrivateChatStore = useRecentPrivateChatStore();
 // initialize route
@@ -12,8 +15,13 @@ const route = useRoute();
 const loading = ref(false);
 const chatsError = ref("");
 const activeColor = ref("rgb(36, 154, 36)");
+
 // provide in inject
 const showSide = inject("showSide");
+
+const screenSize = computed(() => {
+  return screenResize();
+});
 // functions
 const fetchRecentChats = () => {
   loading.value = true;
@@ -45,6 +53,11 @@ const makeActive = (id: string) => {
   }
   document.getElementById(id)!.style.backgroundColor = activeColor.value;
 };
+// watch(screenSize, (current, prev) => {
+//   if (current !== prev) {
+//     screenSize.value = current;
+//   }
+// });
 </script>
 
 <template>
@@ -89,7 +102,7 @@ const makeActive = (id: string) => {
           <div
             @click="
               makeActive(chat.friend),
-                (showSide = false),
+                screenSize < 800 && (showSide = false),
                 $router.push({
                   name: 'page.privateChat',
                   query: {
