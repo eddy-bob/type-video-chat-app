@@ -10,13 +10,16 @@ import useVuelidate from "@vuelidate/core";
 import { user, useAuthStore } from "../core/store/index";
 const userStore = user();
 const authStore = useAuthStore();
+
 // pass required image data from the parent
 let showPreview = inject<{ value: boolean }>("showPreview");
+const showSide = inject<{ value: boolean }>("showSide");
 let selectedImg = inject<{ value: any }>("selectedImg");
 let imageType = inject<{ value: string }>("imageType");
 let setImage = inject<{ value: boolean }>("setImage");
 let profile = ref<any>({});
 let editAbout = ref(false);
+
 const userInfo = reactive<{
   profilePicture?: any;
   coverPhoto?: any;
@@ -160,6 +163,7 @@ const selectImg = async (type: string) => {
   selectedImg!.value = dat.selectedimg;
   imageType!.value = dat.imagetype;
   setImage!.value = false;
+  showSide!.value = false;
 };
 
 const insetImage = (type: any) => {

@@ -41,7 +41,7 @@ const hide = (id: string) => {
 
         <p
           id="recentChats"
-          class="absolute z-50 left-5 hidden bg-gray-800 py-2 px-3"
+          class="absolute z-40 left-5 hidden bg-gray-800 py-2 px-3"
         >
           chats
         </p>
