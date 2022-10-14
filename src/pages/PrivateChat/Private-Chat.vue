@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
             ></p>
           </div>
           <div>
-            <p class="font-extrabold text-[16px] lg:mt-0 mt-4">
+            <p class="font-extrabold text-[16px] lg:mt-0 mt-3">
               {{
                 privateUserProfileData?.firstName
                   ? privateUserProfileData?.firstName +
