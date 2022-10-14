@@ -21,7 +21,7 @@ const showSide = inject<{ value: boolean }>("showSide");
 
 <template>
   <div
-    class="bg-slate-900 lg:left-[25%] lg:right-[25%] lg:top-[4%] top-[9%] lg:h-[80%] lg:m-0 m-4 h-1/2 rounded-md lg:p-2 lg-pb-0 pb-5 text-gray-300 space-y-3"
+    class="bg-slate-900 lg:left-[25%] lg:right-[25%] lg:top-[4%] top-[9%] lg:h-[80%]  lg:w-auto w-screen lg:m-0 m-4 h-1/2 rounded-md lg:p-2 lg-pb-0 pb-5 text-gray-300 space-y-3"
   >
     <p class="text-right cursor-pointer p-1" @click="emit('close-preview')">
       X
