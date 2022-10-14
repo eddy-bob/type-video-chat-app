@@ -33,7 +33,7 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
-  console.log(import.meta.env.MODE)
+console.log(import.meta.env.MODE);
 const vScrollDirective = {
   mounted: (el: HTMLElement) => {
     el.scrollTop = el.scrollHeight;
@@ -397,9 +397,7 @@ onBeforeUnmount(() => {
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->
-    <div
-      class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0 "
-    >
+    <div class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0">
       <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
         <!--  -->
         <div class="flex space-x-4">
@@ -426,7 +424,7 @@ onBeforeUnmount(() => {
             ></p>
           </div>
           <div>
-            <p class="font-extrabold text-[16px]  lg:mt-0 mt-3">
+            <p class="font-extrabold text-[16px] lg:mt-0 mt-4">
               {{
                 privateUserProfileData?.firstName
                   ? privateUserProfileData?.firstName +
