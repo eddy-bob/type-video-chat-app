@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { provide, ref } from "vue";
+import { provide, ref, computed, watchEffect } from "vue";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "./modals/logout.vue";
 import createGroup from "./modals/create-group.vue";
 import overlay from "./modals/overlay.vue";
 import preview from "./modals/preview-image.vue";
+import screenResize from "./composables/detect_screen_size";
 
 // variables
 const isShowCreateGroup = ref(false);
@@ -14,6 +15,7 @@ const showSide = ref(true);
 const imageType = ref<string | null>();
 const isSetImage = ref(false);
 const selectedImg = ref<ArrayBuffer>();
+
 provide("showCreateGroup", isShowCreateGroup);
 provide("showLogout", isLogout);
 provide("showPreview", showPreview);
@@ -24,6 +26,14 @@ provide("showSide", showSide);
 const setImage = (value: boolean) => {
   isSetImage.value = value;
 };
+const screenSize = computed(() => {
+  return screenResize();
+});
+watchEffect(() => {
+  if (screenSize.value > 1000) {
+    showSide.value = true;
+  }
+});
 </script>
 
 <template>
@@ -33,7 +43,7 @@ const setImage = (value: boolean) => {
       <component :is="overlay" />
       <component
         :is="appLogout"
-        class="absolute top-[30%] lg:left-[50%]  md:left-[30%] left-[12%] z-50 w-auto p-5"
+        class="absolute top-[30%] lg:left-[50%] md:left-[30%] left-[12%] z-50 w-auto p-5"
         @close-logout="isLogout = false"
       />
     </div>
@@ -60,7 +70,7 @@ const setImage = (value: boolean) => {
     <notifications class="mt-x" />
     <router-view
       name="leftNav"
-      :class=" showSide == true ? 'block ' : 'hidden lg:block'"
+      :class="showSide == true ? 'block ' : 'hidden lg:block'"
       class="lg:w-[30rem] w-screen lg:relative lg:h-full min-h-screen h-full absolute z-50"
     ></router-view>
     <router-view class="w-full"></router-view>
