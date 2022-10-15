@@ -5,7 +5,7 @@ import {
   watch,
   shallowRef,
   onUpdated,
-  onBeforeUnmount
+  onBeforeUnmount,
 } from "vue";
 import { useRoute } from "vue-router";
 import { notify } from "@kyvg/vue3-notification";
@@ -172,7 +172,6 @@ watchEffect(() => {
       groupChats.value = "";
     });
 
-
     socket.value.on("joinGroupSuccess", (data: any) => {
       console.log(data);
     });
@@ -231,7 +230,7 @@ onBeforeUnmount(() => {
   <div class="w-full bg-slate-800">
     <!-- nav -->
     <div
-      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:w-[74%] w-screen top-0"
+      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:relative z-50 lg:w-full w-screen top-0"
     >
       <!--  -->
       <div class="flex space-x-4">
@@ -374,9 +373,13 @@ onBeforeUnmount(() => {
           :disabled="groupProfileData.name ? false : true"
           type="button"
           @click="addGroupChat"
-          class="bg-slate-700 lg:p-2  p-4 rounded-full"
+          class="bg-slate-700 lg:p-2 p-4 rounded-full"
         >
-          <img src="/images/svg/send.svg" alt="send" class="lg:w-[30px] w-[25px]" />
+          <img
+            src="/images/svg/send.svg"
+            alt="send"
+            class="lg:w-[30px] w-[25px]"
+          />
         </button>
       </div>
     </div>

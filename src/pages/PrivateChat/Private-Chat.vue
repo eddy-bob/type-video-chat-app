@@ -261,7 +261,7 @@ watchEffect(() => {
           callData.value = { ...data };
           console.log(callData.value);
           console.log("incoming call");
-          console.log(callData.value)
+          console.log(callData.value);
           recieverId.value = profile.value._id;
 
           console.log(recieverId.value);
@@ -398,7 +398,9 @@ onBeforeUnmount(() => {
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->
-    <div class="text-gray-300 bg-slate-700 fixed lg:w-[74%] w-screen top-0">
+    <div
+      class="text-gray-300 bg-slate-700 fixed lg:relative lg:w-full w-screen top-0"
+    >
       <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
         <!--  -->
         <div class="flex space-x-4">
