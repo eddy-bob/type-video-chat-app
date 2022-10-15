@@ -13,10 +13,6 @@ const props = defineProps<{
   };
 }>();
 
-onMounted(() => {
-  console.log("on mounted in notify");
-  getProfile(props.caller.callerId);
-});
 const getProfile = (id: string) => {
   console.log(id, "it got to notify");
   userStore
@@ -31,6 +27,7 @@ const getProfile = (id: string) => {
     });
   // fetch profile
 };
+getProfile(props.caller.callerId);
 </script>
 <template>
   <div class="flex justify-center">
@@ -44,7 +41,7 @@ const getProfile = (id: string) => {
         <div class="flex justify-center">
           <img
             :src="
-              callerData.photo && callerData.photo.url
+              callerData && callerData.photo && callerData.photo.url
                 ? callerData.photo.url
                 : '/images/jpeg/noImg.jpeg'
             "

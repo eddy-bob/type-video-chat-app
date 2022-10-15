@@ -261,6 +261,7 @@ watchEffect(() => {
           callData.value = { ...data };
           console.log(callData.value);
           console.log("incoming call");
+          console.log(callData.value)
           recieverId.value = profile.value._id;
 
           console.log(recieverId.value);

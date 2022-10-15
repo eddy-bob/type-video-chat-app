@@ -45,6 +45,7 @@ const props = withDefaults(
 );
 showCaller.value = props.status === "outgoingCall" && true;
 callData.value = { ...props.callData };
+console.log(callData.value);
 
 // methods
 const accept = () => {
@@ -201,6 +202,7 @@ watchEffect(() => {
       }) => {
         console.log("authorize event clicked");
         callData.value = { ...data };
+
         incomingCall.value = true;
         showCaller.value = true;
 
