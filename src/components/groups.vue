@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, computed } from "vue";
 import letterGroups from "../mixins/letterGrouping";
 import { useGroupStore } from "../core/store/index";
 import { useRouter } from "vue-router";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 import moment from "moment";
+import screenResize from "../composables/detect_screen_size";
 // define open channel modal func
 // initialize route
 const router = useRouter();
-const showModal = inject("showCreateGroup");
+// provide and inject
+const showModal = inject<{ value: boolean }>("showCreateGroup");
+const showSide = inject<{ value: boolean }>("showSide");
 
 const singleGroupId = ref<string>();
 
@@ -41,21 +44,31 @@ const getActiveGroup = () => {
 };
 // initialize fetch group
 getActiveGroup();
+const toggleModal = () => {
+  showModal!.value = !showModal!.value;
+  screenSize.value < 800 && (showSide!.value = false);
+};
 // pass groupId to the home chat page
 const fetchGroupChat = (id: string) => {
   singleGroupId!.value = id;
 };
+
+const screenSize = computed(() => {
+  return screenResize();
+});
 </script>
 
 <template>
-  <div class="space-y-4 text-gray-300 w-full bg-slate-800 border-r border-r-slate-600">
+  <div
+    class="space-y-4 text-gray-300 w-full bg-slate-800 border-r border-r-slate-600"
+  >
     <div class="px-6 space-y-6">
       <div class="flex justify-between pt-5">
         <p class="font-extrabold text-[22px]">Channels#</p>
 
         <i
           class="fas fa-plus border border-gray-300 p-2 rounded-md cursor-pointer"
-          @click="showModal = !showModal"
+          @click="toggleModal"
         ></i>
       </div>
 
@@ -91,7 +104,7 @@ const fetchGroupChat = (id: string) => {
         <div class="flex justify-center">
           <i
             class="fas fa-plus border border-gray-300 p-2 rounded-md cursor-pointer"
-            @click="showModal = !showModal"
+            @click="toggleModal"
           ></i>
         </div>
       </div>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, inject, reactive, computed } from "vue";
+import { ref, inject, reactive, computed, watchEffect } from "vue";
 import letterGroups from "../mixins/letterGrouping";
 import { useGroupStore, useFriend, user } from "../core/store/index";
 import { notify } from "@kyvg/vue3-notification";
 import { helpers, minLength, maxLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
+
+
 // initialize group store
 const groupStore = useGroupStore();
 // initialize group store
@@ -17,6 +19,7 @@ const userStore = user();
 const friends = ref<any[]>([]);
 const showFriends = ref(false);
 const query = ref("");
+
 const searchErr = ref("");
 const createGroupInfo = reactive<{
   name: string;
@@ -26,7 +29,9 @@ const createGroupInfo = reactive<{
 
 const letterGrouping = ref<any[]>([]);
 const loading = ref(false);
+// provide and inject
 const showModal: any = inject("showCreateGroup");
+
 
 const addMembers = (id: string) => {
   const isMember = createGroupInfo.members.find((member) => {
@@ -134,6 +139,8 @@ const rules = computed(() => {
 });
 
 const v$ = useVuelidate(rules as any, createGroupInfo);
+
+
 </script>
 
 <template>
