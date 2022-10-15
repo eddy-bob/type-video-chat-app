@@ -21,7 +21,7 @@ class SocketioService {
     if (user && user.rsa) {
       this.socket = io(
         import.meta.env.prod == true
-          ? "https://eddychatapp.herokuapp.com:52793"
+          ? "https://eddychatapp.herokuapp.com:0.0.0.0"
           : "http://localhost:5000",
         {
           extraHeaders: {
