@@ -9,7 +9,7 @@ class SocketioService {
   socket!: any;
   userStore!: any;
   authStore!: any;
-  constructor() { }
+  constructor() {}
 
   async setupSocketConnection() {
     this.userStore = userStore();
@@ -19,25 +19,29 @@ class SocketioService {
       import.meta.env.VITE_ACCESSTK
     );
     if (user && user.rsa) {
-      this.socket = io("http://localhost:5000", {
-        extraHeaders: {
-          Authorization: user.rsa,
-        },
-      });
-
-
+      this.socket = io(
+        import.meta.env.prod
+          ? "https://eddychatapp.herokuapp.com/"
+          : "http://localhost:5000",
+        {
+          extraHeaders: {
+            Authorization: user.rsa,
+          },
+        }
+      );
 
       // update active status
       return await this.userStore
-        .updateProfile({ isLoggedIn: true }).then((res: any) => {
-          console.log(res.data.data)
+        .updateProfile({ isLoggedIn: true })
+        .then((res: any) => {
+          console.log(res.data.data);
           this.authStore.active = true;
-          console.log(res, this.socket)
-          return Promise.resolve([res, this.socket])
-        }).catch((err: any) => {
-
-          return Promise.reject(err)
+          console.log(res, this.socket);
+          return Promise.resolve([res, this.socket]);
         })
+        .catch((err: any) => {
+          return Promise.reject(err);
+        });
     }
   }
   async disconnect() {
@@ -45,14 +49,14 @@ class SocketioService {
       this.socket.disconnect();
       // update active status
       return await this.userStore
-        .updateProfile({ isLoggedIn: false }).then((res: any) => {
-
+        .updateProfile({ isLoggedIn: false })
+        .then((res: any) => {
           this.authStore.active = true;
-          return Promise.resolve(res)
-        }).catch((err: any) => {
-
-          return Promise.reject(err)
+          return Promise.resolve(res);
         })
+        .catch((err: any) => {
+          return Promise.reject(err);
+        });
     }
   }
 }
