@@ -466,7 +466,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-20 lg:h-[500px] h-screen overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-20  lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
@@ -586,7 +586,7 @@ onBeforeUnmount(() => {
     <!--  -->
     <!-- input field -->
     <div class="fixed bottom-0 w-full my-2 text-gray-200 lg:px-10 px-5">
-      <div class="flex space-x-3">
+      <div class="flex lg:space-x-3 space-x-6">
         <div class="flex space-x-5">
           <img src="/images/svg/option.svg" alt="" class="w-2" />
           <img

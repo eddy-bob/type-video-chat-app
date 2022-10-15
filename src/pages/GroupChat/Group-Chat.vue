@@ -5,6 +5,7 @@ import {
   watch,
   shallowRef,
   onUpdated,
+  inject,
   onBeforeUnmount,
 } from "vue";
 import { useRoute } from "vue-router";
@@ -51,6 +52,8 @@ const scrollArea = ref<HTMLElement>();
 const groupChatData = ref<any[]>([]);
 const groupProfileData = ref<any>();
 const prev = ref<any>("");
+// inject and provide
+const showSide = inject("showSide");
 // set groupId on created
 groupId.value = route.params.groupId as string;
 const scrollToBottom = () => {
@@ -227,13 +230,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full bg-slate-800">
+  <div class="w-full bg-slate-800 relative">
     <!-- nav -->
     <div
-      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:relative z-50 lg:w-full w-screen top-0"
+      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:relative lg:w-full w-screen top-0"
     >
       <!--  -->
       <div class="flex space-x-4">
+        <button @click="showSide = !showSide">
+          <i class="fas fa-bars fa-xl lg:hidden"></i>
+        </button>
         <div class="relative">
           <img
             :src="
@@ -246,16 +252,16 @@ onBeforeUnmount(() => {
           />
         </div>
         <div>
-          <p class="font-extrabold text-[16px]">
+          <p class="font-extrabold text-[16px] lg:mt-0 mt-3">
             {{ groupProfileData?.name ? groupProfileData?.name : "" }}
           </p>
         </div>
       </div>
       <!--  -->
       <div class="flex space-x-4">
-        <i class="fas fa-search"></i>
-        <i class="fas fa-phone-volume"></i>
-        <i class="fas fa-video"></i>
+        <button><i class="fas fa-search"></i></button>
+        <button><i class="fas fa-phone-volume"></i></button>
+        <button><i class="fas fa-video"></i></button>
       </div>
     </div>
     <!--  -->
@@ -269,7 +275,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
-      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[500px] h-screen overflow-y-scroll myOverflow"
+      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
       id="chatScroll"
       style="scroll-behavior: smooth"
       v-scroll-directive
