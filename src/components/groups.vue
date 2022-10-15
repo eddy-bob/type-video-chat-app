@@ -126,7 +126,7 @@ const screenSize = computed(() => {
                 $router.push({
                   name: 'page.GroupChat',
                   params: { groupId: singleGroup._id },
-                })
+                }),  screenSize < 800 && (showSide = false)
               "
             >
               <div class="relative">

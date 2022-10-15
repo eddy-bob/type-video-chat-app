@@ -55,7 +55,8 @@ const submitForm = async (): Promise<void> => {
       console.log(true);
       //   redirect to the signin page
       setTimeout(() => {
-        window.location.href = "/private-chat";
+        router.replace("/private-chat");
+        route;
       }, 3000);
     }
   }
