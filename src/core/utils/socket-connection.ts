@@ -27,6 +27,7 @@ class SocketioService {
           extraHeaders: {
             Authorization: user.rsa,
           },
+          
         }
       );
 
