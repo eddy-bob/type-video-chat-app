@@ -7,7 +7,6 @@ import { helpers, minLength, maxLength } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import UIcomponent from "../components/UIcomponent/spinner.vue";
 
-
 // initialize group store
 const groupStore = useGroupStore();
 // initialize group store
@@ -31,7 +30,6 @@ const letterGrouping = ref<any[]>([]);
 const loading = ref(false);
 // provide and inject
 const showModal: any = inject("showCreateGroup");
-
 
 const addMembers = (id: string) => {
   const isMember = createGroupInfo.members.find((member) => {
@@ -139,12 +137,12 @@ const rules = computed(() => {
 });
 
 const v$ = useVuelidate(rules as any, createGroupInfo);
-
-
 </script>
 
 <template>
-  <div class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md">
+  <div
+    class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md lg:w-auto w-full mx-2"
+  >
     <div class="flex justify-between border-b pb-4">
       <p class="font-extrabold text-[19px]">create channel</p>
       <p
@@ -183,13 +181,13 @@ const v$ = useVuelidate(rules as any, createGroupInfo);
             ></i>
           </div>
           <div
-            class="overflow-y-scroll myOverflow h-40 relative"
+            class="overflow-y-scroll myOverflow lg:h-40 relative"
             v-if="showFriends == true"
           >
             <div class="px-6">
               <!--  -->
               <div
-                class="flex border pl-2 rounded-md fixed w-[31%] top-[35%] z-50 bg-gray-500"
+                class="flex border pl-2 rounded-md fixed lg:w-[25%] w-[70%] top-[35%] z-50 bg-gray-500"
               >
                 <input
                   type="text"
@@ -303,7 +301,7 @@ const v$ = useVuelidate(rules as any, createGroupInfo);
           id=""
           cols="40"
           rows="2"
-          class="bg-transparent border px-1 rounded-md"
+          class="bg-transparent border px-1 rounded-md w-full lg:w-auto"
         ></textarea>
       </div>
       <!--  -->
