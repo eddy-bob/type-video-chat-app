@@ -119,6 +119,8 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
       video.style.border = "1px solid grey";
+      video!.style.width = "100%";
+      myVideo!.style.height = "100px";
 
       // append video  to dom
       document.getElementById("video_container")?.append(video);
@@ -221,16 +223,6 @@ watchEffect(() => {
           .then((stream) => {
             const call = processCall(data.peerId, stream, peerConnection.value);
 
-            let myVideo: any = document.createElement("video");
-            myVideo.autoplay = true;
-            myVideo.id = "localVid";
-            myVideo.muted = true;
-            myVideo.style.border = "1px solid grey";
-            // append video  to dom
-            document.getElementById("video_container")?.append(myVideo);
-            myVideo!.srcObject = stream;
-            localStream.value = stream;
-
             call.off("stream").on("stream", (stream: MediaStream) => {
               console.log("streaming");
 
@@ -243,6 +235,21 @@ watchEffect(() => {
                 console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
+
+                let myVideo: any = document.createElement("video");
+                myVideo.autoplay = true;
+                myVideo.id = "localVid";
+                myVideo.muted = true;
+                myVideo.style.border = "1px solid grey";
+                myVideo!.style.position = "absolute";
+                myVideo!.style.bottom = "0%";
+                myVideo!.style.right = "0%";
+                myVideo!.style.width = "100px";
+                myVideo!.style.height = "100px";
+                // append video  to dom
+                document.getElementById("video_container")?.append(myVideo);
+                myVideo!.srcObject = stream;
+                localStream.value = stream;
               }
 
               videoCallProcessed.value = true;
@@ -282,6 +289,14 @@ watchEffect(() => {
             remoteCall.value.push(call);
 
             document.getElementById("video_container")?.append(video);
+
+            let myVideo: any = document.getElementById("localVid");
+            myVideo!.style.position = "absolute";
+            myVideo!.style.bottom = "0%";
+            myVideo!.style.right = "0%";
+            myVideo!.style.width = "100px";
+            myVideo!.style.height = "100px";
+            document.getElementById("video_container")?.append(myVideo);
           }
 
           videoCallProcessed.value = true;
@@ -334,6 +349,11 @@ watchEffect(() => {
           remoteCall.value.length = 0;
 
           remote.remove();
+          let myVideo: any = document.getElementById("localVid");
+          myVideo!.style.position = "relative";
+
+          myVideo!.style.width = "100%";
+          myVideo!.style.height = "100px";
         } else {
           emit("endCall");
         }
@@ -369,10 +389,10 @@ onBeforeUnmount(() => {
 
     <div
       v-if="showCaller == true"
-      class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md p-8"
+      class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md p-2"
     >
       <div
-        class="grid grid-cols-2 h-auto max-h-screen max-w-screen"
+        class="h-auto max-h-screen w-auto max-w-screen relative"
         id="video_container"
       >
         <!-- local video -->
@@ -418,7 +438,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-video {
+#remoteVideo {
   width: 100%;
   height: 100%;
   object-fit: cover;
