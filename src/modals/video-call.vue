@@ -193,7 +193,7 @@ watchEffect(() => {
       }) => {
         console.log("authorize inverse event clicked");
         callData.value = { ...data };
-        stop()
+        stop();
       }
     );
   props.socket
@@ -206,6 +206,7 @@ watchEffect(() => {
         peerId: string;
         callId: string;
       }) => {
+        stop();
         console.log("authorize event clicked");
         callData.value = { ...data };
 
