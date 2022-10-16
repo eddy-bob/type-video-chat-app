@@ -11,6 +11,7 @@ import {
 import { useRoute } from "vue-router";
 import videoCall from "../../modals/video-call.vue";
 import voiceCall from "../../modals/voice-call.vue";
+
 import { notify } from "@kyvg/vue3-notification";
 import UIcomponent from "../../components/UIcomponent/spinner.vue";
 import moment from "moment";
@@ -22,6 +23,8 @@ import {
   useAuthStore,
   useRecentPrivateChatStore,
 } from "../../core/store/index";
+import { useVibrate } from "@vueuse/core";
+
 
 // setup socket connection
 SocketioService.setupSocketConnection()
@@ -33,7 +36,8 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
-console.log(import.meta.env.MODE);
+
+
 const vScrollDirective = {
   mounted: (el: HTMLElement) => {
     el.scrollTop = el.scrollHeight;
@@ -48,6 +52,7 @@ const userStore = user();
 const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
+const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
 // variables
 const callData = ref<{
   callerId: string;
@@ -87,6 +92,9 @@ window.addEventListener("beforeunload", () => {
     });
 });
 
+const viberate = () => {
+  vibrate();
+};
 const scrollToBottom = () => {
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
@@ -261,6 +269,7 @@ watchEffect(() => {
           callData.value = { ...data };
           console.log(callData.value);
           console.log("incoming call");
+          viberate()
           console.log(callData.value);
           recieverId.value = profile.value._id;
 
@@ -440,7 +449,9 @@ onBeforeUnmount(() => {
         </div>
         <!--  -->
         <div class="flex space-x-4">
-          <button><i class="fas fa-search cursor-pointer"></i></button>
+          <button>
+            <i class="fas fa-search cursor-pointer"></i>
+          </button>
 
           <button><i class="fas fa-phone-volume cursor-pointer"></i></button>
 
@@ -466,7 +477,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-20  lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-20 lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
@@ -486,9 +497,8 @@ onBeforeUnmount(() => {
               <div>
                 <div class="relative w-full">
                   <p
-                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem] "
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem]"
                     style="overflow-wrap: break-word"
-
                   >
                     {{ chat.message }}
                   </p>

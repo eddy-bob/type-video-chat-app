@@ -9,7 +9,8 @@ import {
   rejectCall,
 } from "../composables/process_video_call";
 import videoCallNotify from "../modals/video-call-notify.vue";
-
+import { useVibrate } from "@vueuse/core";
+const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
 // import * as Peer from "https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js";
 
 import { Peer } from "peerjs";
@@ -174,6 +175,7 @@ watchEffect(() => {
         console.log("i started a call ooo");
         console.log(data);
         callData.value = { ...data };
+        vibrate();
       }
     );
   props.socket
@@ -259,6 +261,7 @@ watchEffect(() => {
       .then((stream) => {
         localStream.value = stream;
         call.answer(stream);
+        stop();
         call.off("stream").on("stream", (stream: any) => {
           console.log("streaming ooooooo");
 
@@ -291,6 +294,7 @@ watchEffect(() => {
     .off("private_video_call_end_success")
     .on("private_video_call_end_success", (data: { message: string }) => {
       console.log(data.message, "video end ");
+      stop();
 
       const remote: any = document.getElementById("remoteVideo");
       const myVid: any = document.getElementById("localVid");
@@ -315,6 +319,7 @@ watchEffect(() => {
       (data: { message: string }) => {
         console.log(data.message, "video end ");
         // stopStreaming();
+        stop();
         const remote: any = document.getElementById("remoteVideo");
 
         if (remote) {
@@ -338,11 +343,13 @@ watchEffect(() => {
         title: " Call Rejected",
         text: "User busy",
       });
+      stop();
     });
   props.socket
     .off("private_video_call_reject_success")
     .on("private_video_call_reject_success", (data: any) => {
       emit("endCall");
+      stop();
     });
 });
 
