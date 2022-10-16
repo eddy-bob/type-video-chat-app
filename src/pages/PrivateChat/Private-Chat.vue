@@ -383,7 +383,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full bg-slate-800 relative">
+  <div class="w-full bg-slate-800 min-h-screen h-auto relative">
     <component
       class="absolute top-[15%] lg:left-[8%] z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
       v-if="showVideo == true"
@@ -488,7 +488,7 @@ onBeforeUnmount(() => {
                   <p
                     class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem] "
                     style="overflow-wrap: break-word"
-                    
+
                   >
                     {{ chat.message }}
                   </p>
