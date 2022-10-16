@@ -118,7 +118,7 @@ onMounted(() => {
       video.autoplay = true;
       video.id = "localVid";
       video.muted = true;
-      video.style.border = "1px solid grey";
+
       video!.style.width = "100%";
       video!.style.height = "500px";
 
@@ -132,7 +132,7 @@ onMounted(() => {
         })
         .then((stream) => {
           video!.srcObject = stream;
-          video!.style.border = "1px solid grey";
+
           localStream.value = stream;
 
           if (showCaller.value == true) {
@@ -231,7 +231,7 @@ watchEffect(() => {
                 video!.srcObject = stream;
                 video.autoplay = true;
                 video.id = "remoteVideo";
-                video.style.border = "1px solid grey";
+
                 video.style.position = "relative";
                 video!.style.width = "100%";
                 video!.style.height = "500px";
@@ -243,7 +243,7 @@ watchEffect(() => {
                 myVideo.autoplay = true;
                 myVideo.id = "localVid";
                 myVideo.muted = true;
-                myVideo.style.border = "1px solid grey";
+
                 myVideo!.style.position = "absolute";
                 myVideo!.style.bottom = "0%";
                 myVideo!.style.right = "0%";
@@ -284,7 +284,7 @@ watchEffect(() => {
           if (!remoteCall.value[0]) {
             let video: any = document.createElement("video");
             video.autoplay = true;
-            video.style.border = "1px solid grey";
+
             video!.srcObject = stream;
             video!.style.position = "relative";
             video.id = "remoteVideo";
@@ -394,7 +394,7 @@ onBeforeUnmount(() => {
 
     <div
       v-if="showCaller == true"
-      class="bg-slate-800 shadow shadow-gray-300 text-gray-300 rounded-md p-2"
+      class="bg-slate-800 shadow shadow-gray-300 w-auto text-gray-300 rounded-md p-2"
     >
       <div
         class="h-auto max-h-screen w-auto max-w-screen relative"
