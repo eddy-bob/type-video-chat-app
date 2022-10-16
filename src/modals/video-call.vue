@@ -193,6 +193,7 @@ watchEffect(() => {
       }) => {
         console.log("authorize inverse event clicked");
         callData.value = { ...data };
+        stop()
       }
     );
   props.socket
