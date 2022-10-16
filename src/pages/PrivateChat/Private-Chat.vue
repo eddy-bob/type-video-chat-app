@@ -25,7 +25,6 @@ import {
 } from "../../core/store/index";
 import { useVibrate } from "@vueuse/core";
 
-
 // setup socket connection
 SocketioService.setupSocketConnection()
   .then((response) => {
@@ -36,7 +35,6 @@ SocketioService.setupSocketConnection()
   .catch((err) => {
     console.log(err);
   });
-
 
 const vScrollDirective = {
   mounted: (el: HTMLElement) => {
@@ -52,7 +50,9 @@ const userStore = user();
 const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
-const { vibrate, stop, isSupported } = useVibrate({ pattern: [3000, 1000, 3000] });
+const { vibrate, stop, isSupported } = useVibrate({
+  pattern: [3000, 1000, 3000],
+});
 // variables
 const callData = ref<{
   callerId: string;
@@ -254,6 +254,19 @@ watch(route, (current, previous) => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
+    if (privateChats.value !== "") {
+      typing.value = true;
+      socket.value.emit("typing", {
+        value: true,
+        recipient: privateUserProfileData.value._id,
+      });
+    } else {
+      typing.value = false;
+      socket.value.emit("typing", {
+        value: false,
+        recipient: privateUserProfileData.value._id,
+      });
+    }
     socket.value
       .off("private_video_call_init")
       .on(
@@ -269,7 +282,7 @@ watchEffect(() => {
           callData.value = { ...data };
           console.log(callData.value);
           console.log("incoming call");
-          viberate()
+          viberate();
           console.log(callData.value);
           recieverId.value = profile.value._id;
 
@@ -316,19 +329,19 @@ watchEffect(() => {
         });
     });
 
-    if (privateChats.value !== "") {
-      typing.value = true;
-      socket.value.emit("typing", {
-        value: true,
-        recipient: privateUserProfileData.value._id,
-      });
-    } else {
-      typing.value = false;
-      socket.value.emit("typing", {
-        value: false,
-        recipient: privateUserProfileData.value._id,
-      });
-    }
+    // if (privateChats.value !== "") {
+    //   typing.value = true;
+    //   socket.value.emit("typing", {
+    //     value: true,
+    //     recipient: privateUserProfileData.value._id,
+    //   });
+    // } else {
+    //   typing.value = false;
+    //   socket.value.emit("typing", {
+    //     value: false,
+    //     recipient: privateUserProfileData.value._id,
+    //   });
+    // }
     console.log(socket.value);
     // socket.value.once("newMessage", (data: any) => {
     //   privateChatData.value.push({
