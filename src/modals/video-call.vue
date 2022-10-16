@@ -120,7 +120,7 @@ onMounted(() => {
       video.muted = true;
       video.style.border = "1px solid grey";
       video!.style.width = "100%";
-      myVideo!.style.height = "100px";
+      video!.style.height = "100px";
 
       // append video  to dom
       document.getElementById("video_container")?.append(video);
