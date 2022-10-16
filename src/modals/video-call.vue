@@ -22,7 +22,9 @@ const peerConnection = ref();
 const incomingCall = ref(false);
 const showCaller = ref(false);
 const muted = ref(false);
-const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
+const { vibrate, stop, isSupported } = useVibrate({
+  pattern: [1000, 1000, 3000],
+});
 const videoCallProcessed = ref(false);
 const callData = ref<{
   callerId: string;

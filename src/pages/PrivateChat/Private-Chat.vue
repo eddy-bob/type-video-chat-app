@@ -52,7 +52,7 @@ const userStore = user();
 const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
-const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
+const { vibrate, stop, isSupported } = useVibrate({ pattern: [3000, 1000, 3000] });
 // variables
 const callData = ref<{
   callerId: string;
