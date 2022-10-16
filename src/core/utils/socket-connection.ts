@@ -18,9 +18,10 @@ class SocketioService {
     let user: { rsa: string | undefined } = getItem(
       import.meta.env.VITE_ACCESSTK
     );
+    
     if (user && user.rsa) {
       this.socket = io(
-        import.meta.env.prod == true
+        import.meta.env.PROD == true
           ? "https://eddychatapp.herokuapp.com:80?id=2"
           : "http://localhost:5000",
         {
