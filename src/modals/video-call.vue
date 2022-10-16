@@ -119,8 +119,9 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video!.style.width = "100%";
-      video!.style.height = "500px";
+      video.classlist.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
+      // video!.style.width = "100%";
+      // video!.style.height = "500px";
 
       // append video  to dom
       document.getElementById("video_container")?.append(video);
@@ -233,8 +234,10 @@ watchEffect(() => {
                 video.id = "remoteVideo";
 
                 video.style.position = "relative";
-                video!.style.width = "100%";
-                video!.style.height = "500px";
+                video.classlist.add(
+                  "lg:h-[500px] h-screen lg:w-[100%] w-screen"
+                );
+
                 console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
@@ -247,8 +250,9 @@ watchEffect(() => {
                 myVideo!.style.position = "absolute";
                 myVideo!.style.bottom = "0%";
                 myVideo!.style.right = "0%";
-                myVideo!.style.width = "300px";
-                myVideo!.style.height = "300px";
+                // myVideo!.style.width = "300px";
+                // myVideo!.style.height = "300px";
+                myVideo.classlist.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
                 // append video  to dom
                 document.getElementById("video_container")?.append(myVideo);
                 myVideo!.srcObject = stream;
@@ -288,8 +292,9 @@ watchEffect(() => {
             video!.srcObject = stream;
             video!.style.position = "relative";
             video.id = "remoteVideo";
-            video!.style.width = "100%";
-            video!.style.height = "500px";
+            // video!.style.width = "100%";
+            // video!.style.height = "500px";
+            video.classlist.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
 
@@ -299,8 +304,9 @@ watchEffect(() => {
             myVideo!.style.position = "absolute";
             myVideo!.style.bottom = "0%";
             myVideo!.style.right = "0%";
-            myVideo!.style.width = "300px";
-            myVideo!.style.height = "300px";
+              myVideo.classlist.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
+            // myVideo!.style.width = "300px";
+            // myVideo!.style.height = "300px";
             document.getElementById("video_container")?.append(myVideo);
           }
 
