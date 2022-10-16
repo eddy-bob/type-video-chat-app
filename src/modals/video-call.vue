@@ -232,6 +232,7 @@ watchEffect(() => {
                 video.autoplay = true;
                 video.id = "remoteVideo";
                 video.style.border = "1px solid grey";
+                 video.style.position = "relative"
                 console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
@@ -283,7 +284,7 @@ watchEffect(() => {
             video.autoplay = true;
             video.style.border = "1px solid grey";
             video!.srcObject = stream;
-
+            video!.style.position = "relative";
             video.id = "remoteVideo";
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
