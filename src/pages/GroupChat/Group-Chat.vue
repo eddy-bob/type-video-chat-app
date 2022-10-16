@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
   <div class="w-full bg-slate-800 min-h-screen h-auto relative">
     <!-- nav -->
     <div
-      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:relative lg:w-full w-screen top-0"
+      class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed z-30 lg:relative lg:w-full w-screen top-0"
     >
       <!--  -->
       <div class="flex space-x-4">
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
-      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
+      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[600px] h-[700px] overflow-y-scroll myOverflow"
       id="chatScroll"
       style="scroll-behavior: smooth"
       v-scroll-directive

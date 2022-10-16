@@ -438,7 +438,7 @@ onBeforeUnmount(() => {
 
     <!-- nav -->
     <div
-      class="text-gray-300 bg-slate-700 fixed lg:relative lg:w-full w-screen top-0"
+      class="text-gray-300 bg-slate-700 fixed lg:relative z-30 lg:w-full w-screen top-0"
     >
       <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
         <!--  -->
@@ -507,7 +507,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 lg:mt-20  lg:h-[500px] h-[80%] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 lg:h-[600px] h-[700px] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
