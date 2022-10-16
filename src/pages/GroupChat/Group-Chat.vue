@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
-      class="lg:px-10 px-5 py-10 space-y-5 mt-20 lg:h-[500px] h-[700px] overflow-y-scroll myOverflow"
+      class="lg:px-10 px-5 py-10 space-y-5 mt-20 h-[600px] overflow-y-scroll myOverflow"
       id="chatScroll"
       style="scroll-behavior: smooth"
       v-scroll-directive
