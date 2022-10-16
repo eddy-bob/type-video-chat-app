@@ -119,7 +119,7 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classlist.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
+      video.classList.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -234,7 +234,7 @@ watchEffect(() => {
                 video.id = "remoteVideo";
 
                 video.style.position = "relative";
-                video.classlist.add(
+                video.classList.add(
                   "lg:h-[500px] h-screen lg:w-[100%] w-screen"
                 );
 
@@ -252,7 +252,7 @@ watchEffect(() => {
                 myVideo!.style.right = "0%";
                 // myVideo!.style.width = "300px";
                 // myVideo!.style.height = "300px";
-                myVideo.classlist.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
+                myVideo.classList.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
                 // append video  to dom
                 document.getElementById("video_container")?.append(myVideo);
                 myVideo!.srcObject = stream;
@@ -294,7 +294,7 @@ watchEffect(() => {
             video.id = "remoteVideo";
             // video!.style.width = "100%";
             // video!.style.height = "500px";
-            video.classlist.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
+            video.classList.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
 
@@ -304,7 +304,7 @@ watchEffect(() => {
             myVideo!.style.position = "absolute";
             myVideo!.style.bottom = "0%";
             myVideo!.style.right = "0%";
-            myVideo.classlist.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
+            myVideo.classList.add("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
             // myVideo!.style.width = "300px";
             // myVideo!.style.height = "300px";
             document.getElementById("video_container")?.append(myVideo);
@@ -362,8 +362,8 @@ watchEffect(() => {
           remote.remove();
           let myVideo: any = document.getElementById("localVid");
           myVideo!.style.position = "relative";
-          myVideo.classlist.remove("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
-          myVideo.classlist.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
+          myVideo.classList.remove("lg:h-[300px] h-1/3 lg:w-[300px] w-1/3");
+          myVideo.classList.add("lg:h-[500px] h-screen lg:w-[100%] w-screen");
           // myVideo!.style.width = "100%";
           // myVideo!.style.height = "500px";
         } else {
