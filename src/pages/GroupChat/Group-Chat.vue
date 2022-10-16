@@ -230,7 +230,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full bg-slate-800 relative">
+  <div class="w-full bg-slate-800 min-h-screen h-auto relative">
     <!-- nav -->
     <div
       class="flex px-8 py-4 text-gray-300 justify-between bg-slate-700 fixed lg:relative lg:w-full w-screen top-0"
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
               <div>
                 <div class="relative w-full">
                   <p
-                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem]"
                     style="overflow-wrap: break-word"
                   >
                     {{ chat.message }}
