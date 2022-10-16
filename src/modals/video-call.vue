@@ -9,11 +9,11 @@ import {
   rejectCall,
 } from "../composables/process_video_call";
 import videoCallNotify from "../modals/video-call-notify.vue";
+import { Peer } from "peerjs";
 import { useVibrate } from "@vueuse/core";
-const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
+
 // import * as Peer from "https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js";
 
-import { Peer } from "peerjs";
 const localStream = ref<MediaStream>();
 const peerId = ref("");
 const remoteCall = ref<any[]>([]);
@@ -22,6 +22,7 @@ const peerConnection = ref();
 const incomingCall = ref(false);
 const showCaller = ref(false);
 const muted = ref(false);
+const { vibrate, stop, isSupported } = useVibrate({ pattern: [300, 100, 300] });
 const videoCallProcessed = ref(false);
 const callData = ref<{
   callerId: string;
