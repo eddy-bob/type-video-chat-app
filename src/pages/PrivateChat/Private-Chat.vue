@@ -486,8 +486,9 @@ onBeforeUnmount(() => {
               <div>
                 <div class="relative w-full">
                   <p
-                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm max-w-[50rem]"
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem] "
                     style="overflow-wrap: break-word"
+                    
                   >
                     {{ chat.message }}
                   </p>
