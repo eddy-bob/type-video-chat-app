@@ -251,6 +251,23 @@ watch(route, (current, previous) => {
     privateChat(userId.value);
   }
 });
+const typingNotify = () => {
+  if (socket.value) {
+    if (privateChats.value !== "") {
+      typing.value = true;
+      socket.value.emit("typing", {
+        value: true,
+        recipient: privateUserProfileData.value._id,
+      });
+    } else {
+      typing.value = false;
+      socket.value.emit("typing", {
+        value: false,
+        recipient: privateUserProfileData.value._id,
+      });
+    }
+  }
+};
 privateChat(userId.value);
 watchEffect(() => {
   if (socket.value) {
@@ -622,6 +639,8 @@ onBeforeUnmount(() => {
 
         <textarea
           type="text"
+          @blur="typingNotify"
+          @focus="typingNotify"
           :disabled="privateUserProfileData.firstName ? false : true"
           name="message"
           v-model.lazy="privateChats"
