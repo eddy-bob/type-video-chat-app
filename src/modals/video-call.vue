@@ -120,7 +120,7 @@ onMounted(() => {
       video.muted = true;
       video.style.border = "1px solid grey";
       video!.style.width = "100%";
-      video!.style.height = "100px";
+      video!.style.height = "500px";
 
       // append video  to dom
       document.getElementById("video_container")?.append(video);
@@ -232,7 +232,9 @@ watchEffect(() => {
                 video.autoplay = true;
                 video.id = "remoteVideo";
                 video.style.border = "1px solid grey";
-                 video.style.position = "relative"
+                video.style.position = "relative";
+                video!.style.width = "100%";
+                video!.style.height = "500px";
                 console.log("yesss oooooo", call);
                 remoteCall.value.push(call);
                 document.getElementById("video_container")?.append(video);
@@ -245,8 +247,8 @@ watchEffect(() => {
                 myVideo!.style.position = "absolute";
                 myVideo!.style.bottom = "0%";
                 myVideo!.style.right = "0%";
-                myVideo!.style.width = "100px";
-                myVideo!.style.height = "100px";
+                myVideo!.style.width = "300px";
+                myVideo!.style.height = "300px";
                 // append video  to dom
                 document.getElementById("video_container")?.append(myVideo);
                 myVideo!.srcObject = stream;
@@ -286,6 +288,8 @@ watchEffect(() => {
             video!.srcObject = stream;
             video!.style.position = "relative";
             video.id = "remoteVideo";
+            video!.style.width = "100%";
+            video!.style.height = "500px";
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
 
@@ -295,8 +299,8 @@ watchEffect(() => {
             myVideo!.style.position = "absolute";
             myVideo!.style.bottom = "0%";
             myVideo!.style.right = "0%";
-            myVideo!.style.width = "100px";
-            myVideo!.style.height = "100px";
+            myVideo!.style.width = "300px";
+            myVideo!.style.height = "300px";
             document.getElementById("video_container")?.append(myVideo);
           }
 
@@ -354,7 +358,7 @@ watchEffect(() => {
           myVideo!.style.position = "relative";
 
           myVideo!.style.width = "100%";
-          myVideo!.style.height = "100px";
+          myVideo!.style.height = "500px";
         } else {
           emit("endCall");
         }
