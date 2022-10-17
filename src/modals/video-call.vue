@@ -109,7 +109,6 @@ const endCall = () => {
 
 onMounted(() => {
   peerConnection.value.on("open", (id: string) => {
-    console.log(id, "peer");
     peerId.value = id;
 
     if (props.callStarted == true && props.status === "outgoingCall") {
@@ -119,7 +118,15 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classList.add("lg:h-[100%]", "h-auto", "lg:w-[100%]", "w-[100%]");
+      video.classList.add(
+        "lg:h-[100vh]",
+        "h-[100%]",
+        "lg:w-[100vw]",
+        "fixed",
+        "object-cover",
+        "w-[100%]"
+      );
+
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -236,9 +243,11 @@ watchEffect(() => {
                 video.style.position = "relative";
 
                 video.classList.add(
-                  "lg:h-auto",
-                  "h-auto",
-                  "lg:w-[100%]",
+                  "lg:h-[100vh]",
+                  "h-[100%]",
+                  "lg:w-[100vw]",
+                  "fixed",
+                  "object-cover",
                   "w-[100%]"
                 );
 
@@ -305,11 +314,12 @@ watchEffect(() => {
             // video!.style.height = "500px";
 
             video.classList.add(
-              "lg:h-auto",
-              "h-auto",
-
-              "lg:w-[100%]",
-              "w-[100%]"
+              "lg:h-[100vh]",
+        "h-[100%]",
+        "lg:w-[100vw]",
+        "fixed",
+        "object-cover",
+        "w-[100%]"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
@@ -390,10 +400,11 @@ watchEffect(() => {
             "w-1/3"
           );
           myVideo.classList.add(
-            "lg:h-auto",
-            "h-auto",
-
-            "lg:w-[100%]",
+            "lg:h-[100vh]",
+            "h-[100%]",
+            "lg:w-[100vw]",
+            "fixed",
+            "object-cover",
             "w-[100%]"
           );
           // myVideo!.style.width = "100%";
@@ -428,17 +439,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div>
+  <div class="">
     <!-- video notify component -->
 
-    <div
-      v-if="showCaller == true"
-      class="bg-slate-800 shadow shadow-gray-300 w-screen text-gray-300 rounded-md p-2"
-    >
-      <div
-        class="h-auto w-screen relative"
-        id="video_container"
-      >
+    <div v-if="showCaller == true" class="text-gray-300 w-full">
+      <div class="h-auto w-auto relative" id="video_container">
         <!-- local video -->
         <!-- <video
         autoplay="true"
@@ -446,7 +451,9 @@ onBeforeUnmount(() => {
         class="h-[25rem] w-full py-4"
       ></video> -->
       </div>
-      <div class="flex justify-center space-x-5 pt-4">
+      <div
+        class="flex justify-center space-x-5 pt-4 fixed bottom-10 left-[40%]"
+      >
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
         >
@@ -474,7 +481,7 @@ onBeforeUnmount(() => {
       @accept="accept()"
       @reject="$emit('endCall'), reject()"
       :is="videoCallNotify"
-      class="absolute w-full top-[15%]"
+      class="w-screen lg:px-0 px-4 pt-10"
       v-else
       :caller="callData"
     >

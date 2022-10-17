@@ -4,6 +4,7 @@ import {
   watchEffect,
   watch,
   inject,
+  provide,
   shallowRef,
   onUpdated,
   onBeforeUnmount,
@@ -29,8 +30,8 @@ import { useVibrate } from "@vueuse/core";
 SocketioService.setupSocketConnection()
   .then((response) => {
     console.log("socket connected");
-    socket.value = response[1];
-    console.log(socket.value);
+    socket!.value  = response[1];
+    console.log(socket!.value);
   })
   .catch((err) => {
     console.log(err);
@@ -47,25 +48,25 @@ const route = useRoute();
 // initialize friend request store
 const recentPrivateChatStore = useRecentPrivateChatStore();
 const userStore = user();
-const status = ref("");
+// const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
 const { vibrate, stop, isSupported } = useVibrate({
   pattern: [3000, 1000, 3000],
 });
 // variables
-const callData = ref<{
-  callerId: string;
-  name: string;
-  peerId: string;
-  callId: string;
-}>();
+// const callData = ref<{
+//   callerId: string;
+//   name: string;
+//   peerId: string;
+//   callId: string;
+// }>();
 const userId = ref<string>();
 const relationshipId = ref("");
 const showVoice = ref(false);
-const showVideo = ref(false);
+// const showVideo = ref(false);
 const profile = ref<any>();
-const socket = shallowRef<any>();
+// const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
 const privateChats = ref("");
 
@@ -75,17 +76,29 @@ const friendTyping = ref(false);
 const scrollArea = ref<HTMLElement>();
 const privateChatData = ref<any[]>([]);
 const privateUserProfileData = ref<any>({});
-const recieverId = ref("");
+// const recieverId = ref("");
 const prev = ref<any>("");
 // inject and provide
 const showSide = inject("showSide");
+
+const showVideo = inject<{value:boolean}>("showVideo");
+const socket = inject<{value:any}>("socket");
+const recieverId = inject<{value:string}>("recieverId");
+const status = inject<{value:any}>("status");
+const callData = inject<{value:{
+  callerId: string;
+  name: string;
+  peerId: string;
+  callId: string;
+}}>("callData");
+
 // set groupId on created
 userId.value = route.query.userId as string;
 relationshipId.value = route.query.id as string;
 window.addEventListener("beforeunload", () => {
   SocketioService.disconnect()
     .then((response) => {
-      console.log("this is appearing before onmount", socket.value);
+      console.log("this is appearing before onmount", socket!.value);
     })
     .catch((err) => {
       console.log(err);
@@ -178,20 +191,20 @@ const privateChat = (id: string) => {
     });
 };
 const startVideoCall = () => {
-  status.value = "outgoingCall";
-  showVideo.value = true;
-  recieverId.value = userId.value as string;
+  status!.value = "outgoingCall";
+  showVideo!.value = true;
+  recieverId!.value = userId.value as string;
 };
 const addPrivateChat = () => {
   // emit add chat
-  if (socket.value && privateChats.value !== "") {
-    socket.value.emit("privateMessage", {
+  if (socket!.value && privateChats.value !== "") {
+    socket!.value.emit("privateMessage", {
       userId: userId.value,
       message: privateChats.value,
       attatchment: privateAttatchment.value,
       relationshipId: relationshipId.value,
     });
-    socket.value.once("chatError", (data: any) => {
+    socket!.value.once("chatError", (data: any) => {
       console.log(data);
       notify({
         type: "error",
@@ -199,7 +212,7 @@ const addPrivateChat = () => {
         text: data.message || "Chat send failed",
       });
     });
-    socket.value.off("myMessage").on("myMessage", (data: any) => {
+    socket!.value.off("myMessage").on("myMessage", (data: any) => {
       console.log(data);
       console.log("na me send am");
       privateChatData.value.push({
@@ -252,16 +265,16 @@ watch(route, (current, previous) => {
   }
 });
 const typingNotify = () => {
-  if (socket.value) {
+  if (socket!.value) {
     if (privateChats.value !== "") {
       typing.value = true;
-      socket.value.emit("typing", {
+      socket!.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
     } else {
       typing.value = false;
-      socket.value.emit("typing", {
+      socket!.value.emit("typing", {
         value: false,
         recipient: privateUserProfileData.value._id,
       });
@@ -270,21 +283,21 @@ const typingNotify = () => {
 };
 privateChat(userId.value);
 watchEffect(() => {
-  if (socket.value) {
+  if (socket!.value) {
     if (privateChats.value !== "") {
       typing.value = true;
-      socket.value.emit("typing", {
+      socket!.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
     } else {
       typing.value = false;
-      socket.value.emit("typing", {
+      socket!.value.emit("typing", {
         value: false,
         recipient: privateUserProfileData.value._id,
       });
     }
-    socket.value
+    socket!.value
       .off("private_video_call_init")
       .on(
         "private_video_call_init",
@@ -296,16 +309,16 @@ watchEffect(() => {
         }) => {
           console.log("it got here");
           console.log(data);
-          callData.value = { ...data };
-          console.log(callData.value);
+          callData!.value = { ...data };
+          console.log(callData!.value);
           console.log("incoming call");
           viberate();
-          console.log(callData.value);
-          recieverId.value = profile.value._id;
+          console.log(callData!.value);
+          recieverId!.value = profile.value._id;
 
-          console.log(recieverId.value);
-          status.value = "incomingCall";
-          showVideo.value = true;
+          console.log(recieverId!.value);
+          status!.value = "incomingCall";
+          showVideo!.value = true;
         }
       );
     // socket.value
@@ -324,7 +337,7 @@ watchEffect(() => {
     //     }
     //   );
 
-    socket.value.off("newMessage").on("newMessage", (data: any) => {
+    socket!.value.off("newMessage").on("newMessage", (data: any) => {
       privateChatData.value.push({
         sender: data.name.sender,
         senderName: data.name.senderName,
@@ -359,7 +372,7 @@ watchEffect(() => {
     //     recipient: privateUserProfileData.value._id,
     //   });
     // }
-    console.log(socket.value);
+    console.log(socket!.value);
     // socket.value.once("newMessage", (data: any) => {
     //   privateChatData.value.push({
     //     sender: data.name.sender,
@@ -371,7 +384,7 @@ watchEffect(() => {
     //   });
     // });
 
-    socket.value.on("typing", (data: { value: boolean }) => {
+    socket!.value.on("typing", (data: { value: boolean }) => {
       friendTyping.value = data.value;
     });
     // socket.value.on("message", (data: any) => {
@@ -386,10 +399,10 @@ watchEffect(() => {
     //     attatchment: data.name.attatchment,
     //   });
     // });
-    socket.value.off("privateForward").on("privateForward", (data: any) => {
+    socket!.value.off("privateForward").on("privateForward", (data: any) => {
       console.log(data);
     });
-    socket.value.off("forwardFail").on("forwardFail", (data: any) => {
+    socket!.value.off("forwardFail").on("forwardFail", (data: any) => {
       console.log(data);
     });
     // socket.value.once("chatError", (data: any) => {
@@ -413,7 +426,7 @@ onUpdated(() => {
 onBeforeUnmount(() => {
   SocketioService.disconnect()
     .then((response) => {
-      console.log("this is appearing before onmount", socket.value);
+      console.log("this is appearing before onmount", socket!.value);
     })
     .catch((err) => {
       console.log(err);
@@ -423,8 +436,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="w-full bg-slate-800 min-h-screen h-auto relative">
-    <component
-      class="absolute lg:left-[0%] z-50 lg:w-[55rem] w-screen top-0 px-3"
+    <!-- <component
+      class="absolute lg:left-[0%] z-50 w-screen top-0 px-3"
       v-if="showVideo == true"
       :callStarted="showVideo"
       :callData="callData"
@@ -433,7 +446,7 @@ onBeforeUnmount(() => {
       :recieverId="recieverId"
       :socket="socket"
       @endCall="showVideo = false"
-    />
+    /> -->
     <component class="absolute" v-if="showVoice == true" :is="voiceCall" />
 
     <!-- nav -->

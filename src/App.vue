@@ -1,17 +1,27 @@
 <script setup lang="ts">
-import { provide, ref, computed, watchEffect } from "vue";
+import { provide, ref, shallowRef, computed, inject, watchEffect } from "vue";
 import sideNav from "../components/sideNav.vue";
 import appLogout from "./modals/logout.vue";
 import createGroup from "./modals/create-group.vue";
 import overlay from "./modals/overlay.vue";
 import preview from "./modals/preview-image.vue";
 import screenResize from "./composables/detect_screen_size";
-
+import videoCall from "./modals/video-call.vue";
 // variables
 const isShowCreateGroup = ref(false);
 const isLogout = ref(false);
+const status = ref("");
 const showPreview = ref(false);
+const recieverId = ref("");
 const showSide = ref(true);
+const showVideo = ref(false);
+const callData = ref<{
+  callerId: string;
+  name: string;
+  peerId: string;
+  callId: string;
+}>();
+const socket = shallowRef<any>();
 const imageType = ref<string | null>();
 const isSetImage = ref(false);
 const selectedImg = ref<ArrayBuffer>();
@@ -23,6 +33,13 @@ provide("selectedImg", selectedImg);
 provide("setImage", isSetImage);
 provide("imageType", imageType);
 provide("showSide", showSide);
+
+provide("showVideo", showVideo);
+provide("socket", socket);
+provide("recieverId", recieverId);
+provide("status", status);
+provide("callData", callData);
+
 const setImage = (value: boolean) => {
   isSetImage.value = value;
 };
@@ -47,6 +64,18 @@ watchEffect(() => {
         @close-logout="isLogout = false"
       />
     </div>
+    <!-- video call -->
+    <component
+      class="absolute left-0 z-50"
+      v-if="showVideo == true"
+      :callStarted="showVideo"
+      :callData="callData"
+      :status="status"
+      :is="videoCall"
+      :recieverId="recieverId"
+      :socket="socket"
+      @endCall="showVideo = false"
+    />
     <!-- image preview component -->
     <div v-if="showPreview == true">
       <component :is="overlay" class="" />
@@ -71,7 +100,7 @@ watchEffect(() => {
     <router-view
       name="leftNav"
       :class="showSide == true ? 'block ' : 'hidden lg:block'"
-      class="lg:w-[30rem] w-screen lg:relative lg:h-full min-h-screen h-full absolute z-50"
+      class="lg:w-[30rem] w-screen lg:relative lg:h-full min-h-screen h-full absolute z-40"
     ></router-view>
     <router-view class="w-full"></router-view>
     <!-- <router-view name="rightNav"></router-view> -->
