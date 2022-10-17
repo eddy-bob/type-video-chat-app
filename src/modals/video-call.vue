@@ -119,14 +119,7 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classList.add(
-        "lg:h-[100%]",
-        "h-auto",
-        "lg:w-[100%]",
-        "w-[100%]",
-        "max-h-screen",
-        "pb-[56.25%]"
-      );
+      video.classList.add("lg:h-[100%]", "h-auto", "lg:w-[100%]", "w-[100%]");
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -246,9 +239,7 @@ watchEffect(() => {
                   "lg:h-auto",
                   "h-auto",
                   "lg:w-[100%]",
-                  "max-h-screen",
-                  "w-[100%]",
-                  "pb-[56.25%]"
+                  "w-[100%]"
                 );
 
                 console.log("yesss oooooo", call);
@@ -318,8 +309,7 @@ watchEffect(() => {
               "h-auto",
               "max-h-screen",
               "lg:w-[100%]",
-              "w-[100%]",
-              "pb-[56.25%]"
+              "w-[100%]"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
@@ -404,8 +394,7 @@ watchEffect(() => {
             "h-auto",
             "max-h-screen",
             "lg:w-[100%]",
-            "w-[100%]",
-            "pb-[56.25%]"
+            "w-[100%]"
           );
           // myVideo!.style.width = "100%";
           // myVideo!.style.height = "500px";
@@ -485,7 +474,7 @@ onBeforeUnmount(() => {
       @accept="accept()"
       @reject="$emit('endCall'), reject()"
       :is="videoCallNotify"
-      class="relative top-[15%]"
+      class="absolute top-[15%]"
       v-else
       :caller="callData"
     >
