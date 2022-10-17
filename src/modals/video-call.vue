@@ -452,7 +452,7 @@ onBeforeUnmount(() => {
       ></video> -->
       </div>
       <div
-      v-if=""
+        v-if="localStream"
         class="flex justify-center space-x-5 pt-4 fixed bottom-10 lg:left-[40%]"
       >
         <div
@@ -471,12 +471,16 @@ onBeforeUnmount(() => {
         >
           End Call
         </button>
+
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
         >
           <i class="fas fa-desktop"></i>
         </div>
+
       </div>
+      
+
     </div>
     <component
       @accept="accept()"
