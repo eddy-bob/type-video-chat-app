@@ -30,7 +30,7 @@ import { useVibrate } from "@vueuse/core";
 SocketioService.setupSocketConnection()
   .then((response) => {
     console.log("socket connected");
-    socket!.value  = response[1];
+    socket!.value = response[1];
     console.log(socket!.value);
   })
   .catch((err) => {
@@ -81,16 +81,18 @@ const prev = ref<any>("");
 // inject and provide
 const showSide = inject("showSide");
 
-const showVideo = inject<{value:boolean}>("showVideo");
-const socket = inject<{value:any}>("socket");
-const recieverId = inject<{value:string}>("recieverId");
-const status = inject<{value:any}>("status");
-const callData = inject<{value:{
-  callerId: string;
-  name: string;
-  peerId: string;
-  callId: string;
-}}>("callData");
+const showVideo = inject<{ value: boolean }>("showVideo");
+const socket = inject<{ value: any }>("socket");
+const recieverId = inject<{ value: string }>("recieverId");
+const status = inject<{ value: any }>("status");
+const callData = inject<{
+  value: {
+    callerId: string;
+    name: string;
+    peerId: string;
+    callId: string;
+  };
+}>("callData");
 
 // set groupId on created
 userId.value = route.query.userId as string;
@@ -192,7 +194,7 @@ const privateChat = (id: string) => {
 };
 const startVideoCall = () => {
   status!.value = "outgoingCall";
-  showVideo!.value = true;
+  showVideo!.value = true as boolean;
   recieverId!.value = userId.value as string;
 };
 const addPrivateChat = () => {
@@ -318,7 +320,7 @@ watchEffect(() => {
 
           console.log(recieverId!.value);
           status!.value = "incomingCall";
-          showVideo!.value = true;
+          showVideo!.value = true as boolean;
         }
       );
     // socket.value
