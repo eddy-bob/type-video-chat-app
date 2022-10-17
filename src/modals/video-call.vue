@@ -307,7 +307,7 @@ watchEffect(() => {
             video.classList.add(
               "lg:h-auto",
               "h-auto",
-              "max-h-screen",
+              
               "lg:w-[100%]",
               "w-[100%]"
             );
@@ -392,7 +392,7 @@ watchEffect(() => {
           myVideo.classList.add(
             "lg:h-auto",
             "h-auto",
-            "max-h-screen",
+            
             "lg:w-[100%]",
             "w-[100%]"
           );
@@ -474,7 +474,7 @@ onBeforeUnmount(() => {
       @accept="accept()"
       @reject="$emit('endCall'), reject()"
       :is="videoCallNotify"
-      class="absolute top-[15%]"
+      class="absolute w-full top-[15%]"
       v-else
       :caller="callData"
     >
