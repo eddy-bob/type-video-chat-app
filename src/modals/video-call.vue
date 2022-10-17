@@ -315,11 +315,11 @@ watchEffect(() => {
 
             video.classList.add(
               "lg:h-[100vh]",
-        "h-[100%]",
-        "lg:w-[100vw]",
-        "fixed",
-        "object-cover",
-        "w-[100%]"
+              "h-[100%]",
+              "lg:w-[100vw]",
+              "fixed",
+              "object-cover",
+              "w-[100%]"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
