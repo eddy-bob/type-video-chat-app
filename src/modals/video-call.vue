@@ -307,6 +307,7 @@ watchEffect(() => {
             video.classList.add(
               "lg:h-auto",
               "h-auto",
+              "max-h-screen",
               "lg:w-[100%]",
               "w-[100%]"
             );
@@ -391,6 +392,7 @@ watchEffect(() => {
           myVideo.classList.add(
             "lg:h-auto",
             "h-auto",
+            "max-h-screen",
             "lg:w-[100%]",
             "w-[100%]"
           );
