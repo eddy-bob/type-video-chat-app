@@ -119,7 +119,7 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classList.add("lg:h-[100%]", "h-auto", "lg:w-[100%]", "w-[100%]");
+      video.classList.add("lg:h-[100%]", "h-[", "lg:w-[100%]", "w-[100%]");
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -307,7 +307,7 @@ watchEffect(() => {
             video.classList.add(
               "lg:h-auto",
               "h-auto",
-              
+
               "lg:w-[100%]",
               "w-[100%]"
             );
@@ -392,7 +392,7 @@ watchEffect(() => {
           myVideo.classList.add(
             "lg:h-auto",
             "h-auto",
-            
+
             "lg:w-[100%]",
             "w-[100%]"
           );
@@ -433,10 +433,10 @@ onBeforeUnmount(() => {
 
     <div
       v-if="showCaller == true"
-      class="bg-slate-800 shadow shadow-gray-300 w-auto text-gray-300 rounded-md p-2"
+      class="bg-slate-800 shadow shadow-gray-300 w-screen text-gray-300 rounded-md p-2"
     >
       <div
-        class="h-auto max-h-screen w-auto max-w-screen relative"
+        class="h-auto w-screen relative"
         id="video_container"
       >
         <!-- local video -->
