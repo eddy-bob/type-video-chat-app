@@ -120,11 +120,11 @@ onMounted(() => {
 
       video.classList.add(
         "lg:h-[100vh]",
-        "h-[100%]",
+        "h-screen",
         "lg:w-[100vw]",
         "fixed",
         "object-cover",
-        "w-[100%]"
+        "w-screen"
       );
 
       // video!.style.width = "100%";
