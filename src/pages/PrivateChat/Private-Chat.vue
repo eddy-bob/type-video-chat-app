@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="w-full bg-slate-800 min-h-screen h-auto relative">
     <component
-      class="absolute top-[15%] lg:left-[8%] z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
+      class="absolute  lg:left-[8%] z-50 lg:w-[55rem] w-screen lg:p-5 px-3"
       v-if="showVideo == true"
       :callStarted="showVideo"
       :callData="callData"

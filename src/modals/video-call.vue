@@ -119,12 +119,7 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classList.add(
-        "lg:h-[500px]",
-        "h-screen",
-        "lg:w-[100%]",
-        "w-screen"
-      );
+      video.classList.add("lg:h-[100%]", "h-auto", "lg:w-[100%]", "w-[100%]");
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -241,10 +236,10 @@ watchEffect(() => {
                 video.style.position = "relative";
 
                 video.classList.add(
-                  "lg:h-[500px]",
-                  "h-screen",
+                  "lg:h-auto",
+                  "h-auto",
                   "lg:w-[100%]",
-                  "w-screen"
+                  "w-[100%]"
                 );
 
                 console.log("yesss oooooo", call);
@@ -310,10 +305,10 @@ watchEffect(() => {
             // video!.style.height = "500px";
 
             video.classList.add(
-              "lg:h-[500px]",
-              "h-screen",
+              "lg:h-auto",
+              "h-auto",
               "lg:w-[100%]",
-              "w-screen"
+              "w-[100%]"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
@@ -394,10 +389,10 @@ watchEffect(() => {
             "w-1/3"
           );
           myVideo.classList.add(
-            "lg:h-[500px]",
-            "h-screen",
+            "lg:h-auto",
+            "h-auto",
             "lg:w-[100%]",
-            "w-screen"
+            "w-[100%]"
           );
           // myVideo!.style.width = "100%";
           // myVideo!.style.height = "500px";
