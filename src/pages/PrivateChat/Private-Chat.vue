@@ -501,9 +501,9 @@ onBeforeUnmount(() => {
           <button><i class="fas fa-phone-volume cursor-pointer"></i></button>
 
           <button
-            :disabled="showVideo"
+            :disabled="showVideo.value"
             @click="startVideoCall"
-            :class="showVideo == true && 'disabled:opacity-25'"
+            :class="showVideo.value == true && 'disabled:opacity-25'"
           >
             <i class="fas fa-video cursor-pointer"></i>
           </button>
