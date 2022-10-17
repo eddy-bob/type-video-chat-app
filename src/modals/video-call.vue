@@ -125,7 +125,7 @@ onMounted(() => {
         "lg:w-[100%]",
         "w-[100%]",
         "max-h-screen",
-        " pb-[56.25%]"
+        "pb-[56.25%]"
       );
       // video!.style.width = "100%";
       // video!.style.height = "500px";
@@ -248,7 +248,7 @@ watchEffect(() => {
                   "lg:w-[100%]",
                   "max-h-screen",
                   "w-[100%]",
-                  " pb-[56.25%]"
+                  "pb-[56.25%]"
                 );
 
                 console.log("yesss oooooo", call);
@@ -319,7 +319,7 @@ watchEffect(() => {
               "max-h-screen",
               "lg:w-[100%]",
               "w-[100%]",
-              " pb-[56.25%]"
+              "pb-[56.25%]"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
