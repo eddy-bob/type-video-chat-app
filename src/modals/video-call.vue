@@ -123,7 +123,8 @@ onMounted(() => {
         "lg:h-[100%]",
         "h-auto",
         "lg:w-[100%]",
-        "w-[100%], max-h-screen",
+        "w-[100%]",
+        "max-h-screen",
         " pb-[56.25%]"
       );
       // video!.style.width = "100%";
