@@ -452,7 +452,8 @@ onBeforeUnmount(() => {
       ></video> -->
       </div>
       <div
-        class="flex justify-center space-x-5 pt-4 fixed bottom-10 left-[40%]"
+      v-if=""
+        class="flex justify-center space-x-5 pt-4 fixed bottom-10 lg:left-[40%]"
       >
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
@@ -489,10 +490,4 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-#remoteVideo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-</style>
+<style scoped></style>
