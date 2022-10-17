@@ -244,11 +244,11 @@ watchEffect(() => {
 
                 video.classList.add(
                   "lg:h-[100vh]",
-                  "h-[100%]",
+                  "h-screen",
                   "lg:w-[100vw]",
                   "fixed",
                   "object-cover",
-                  "w-[100%]"
+                  "w-screen"
                 );
 
                 console.log("yesss oooooo", call);
@@ -315,11 +315,11 @@ watchEffect(() => {
 
             video.classList.add(
               "lg:h-[100vh]",
-              "h-[100%]",
+              "h-screen",
               "lg:w-[100vw]",
               "fixed",
               "object-cover",
-              "w-[100%]"
+              "w-screen"
             );
             console.log("yessoooooo", call);
             remoteCall.value.push(call);
@@ -401,11 +401,11 @@ watchEffect(() => {
           );
           myVideo.classList.add(
             "lg:h-[100vh]",
-            "h-[100%]",
+            "h-screen",
             "lg:w-[100vw]",
             "fixed",
             "object-cover",
-            "w-[100%]"
+            "w-screen"
           );
           // myVideo!.style.width = "100%";
           // myVideo!.style.height = "500px";
