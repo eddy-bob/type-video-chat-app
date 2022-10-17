@@ -119,7 +119,12 @@ onMounted(() => {
       video.id = "localVid";
       video.muted = true;
 
-      video.classList.add("lg:h-[100%]", "h-auto", "lg:w-[100%]", "w-[100%]");
+      video.classList.add(
+        "lg:h-[100%]",
+        "h-auto",
+        "lg:w-[100%]",
+        "w-[100%], max-h-screen"
+      );
       // video!.style.width = "100%";
       // video!.style.height = "500px";
 
@@ -239,6 +244,7 @@ watchEffect(() => {
                   "lg:h-auto",
                   "h-auto",
                   "lg:w-[100%]",
+                  "max-h-screen",
                   "w-[100%]"
                 );
 
