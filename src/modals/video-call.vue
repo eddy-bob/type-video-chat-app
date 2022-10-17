@@ -472,7 +472,7 @@ onBeforeUnmount(() => {
       @accept="accept()"
       @reject="$emit('endCall'), reject()"
       :is="videoCallNotify"
-      class="top"
+      class="top-[15%]"
       v-else
       :caller="callData"
     >
