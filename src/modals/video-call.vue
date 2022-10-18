@@ -188,7 +188,6 @@ watchEffect(() => {
         console.log("i started a call ooo");
         console.log(data);
         callData.value = { ...data };
-        vibrate();
       }
     );
   props.socket
@@ -228,8 +227,12 @@ watchEffect(() => {
             audio: true,
             video: true,
           })
-          .then((stream) => {
-            const call = processCall(data.peerId, stream, peerConnection.value);
+          .then((myStream) => {
+            const call = processCall(
+              data.peerId,
+              myStream,
+              peerConnection.value
+            );
 
             call.off("stream").on("stream", (stream: MediaStream) => {
               console.log("streaming");
@@ -273,8 +276,8 @@ watchEffect(() => {
                 );
                 // append video  to dom
                 document.getElementById("video_container")?.append(myVideo);
-                myVideo!.srcObject = stream;
-                localStream.value = stream;
+                myVideo!.srcObject = myStream;
+                localStream.value = myStream;
               }
 
               videoCallProcessed.value = true;
