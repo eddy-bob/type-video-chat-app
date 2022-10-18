@@ -268,7 +268,6 @@ watch(route, (current, previous) => {
 });
 const typingNotify = () => {
   if (socket!.value) {
-  
     const myEvent: any = event;
     if (myEvent?.target!.value !== "") {
       console.log("typing");
@@ -290,7 +289,7 @@ const typingNotify = () => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket!.value) {
-    // typingNotify()
+    typingNotify();
     // if (privateChats.value !== "") {
     //   typing.value = true;
     //   socket!.value.emit("typing", {
@@ -547,7 +546,7 @@ onBeforeUnmount(() => {
               <div>
                 <div class="relative w-full">
                   <p
-                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem]  max-w-[20rem]"
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem]"
                     style="overflow-wrap: break-word"
                   >
                     {{ chat.message }}
