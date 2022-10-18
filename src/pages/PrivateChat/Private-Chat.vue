@@ -268,13 +268,17 @@ watch(route, (current, previous) => {
 });
 const typingNotify = () => {
   if (socket!.value) {
-    if (privateChats.value !== "") {
+  
+    const myEvent: any = event;
+    if (myEvent?.target!.value !== "") {
+      console.log("typing");
       typing.value = true;
       socket!.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
     } else {
+      console.log(" stop typing");
       typing.value = false;
       socket!.value.emit("typing", {
         value: false,
@@ -286,19 +290,20 @@ const typingNotify = () => {
 privateChat(userId.value);
 watchEffect(() => {
   if (socket!.value) {
-    if (privateChats.value !== "") {
-      typing.value = true;
-      socket!.value.emit("typing", {
-        value: true,
-        recipient: privateUserProfileData.value._id,
-      });
-    } else {
-      typing.value = false;
-      socket!.value.emit("typing", {
-        value: false,
-        recipient: privateUserProfileData.value._id,
-      });
-    }
+    // typingNotify()
+    // if (privateChats.value !== "") {
+    //   typing.value = true;
+    //   socket!.value.emit("typing", {
+    //     value: true,
+    //     recipient: privateUserProfileData.value._id,
+    //   });
+    // } else {
+    //   typing.value = false;
+    //   socket!.value.emit("typing", {
+    //     value: false,
+    //     recipient: privateUserProfileData.value._id,
+    //   });
+    // }
     socket!.value
       .off("private_video_call_init")
       .on(
@@ -522,7 +527,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 h-[500px] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 lg:h-[500px] md:h-[900px] h-[700px] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
@@ -542,7 +547,7 @@ onBeforeUnmount(() => {
               <div>
                 <div class="relative w-full">
                   <p
-                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem] max-w-[20rem]"
+                    class="bg-slate-500 px-4 py-4 rounded-md w-auto text-sm lg:max-w-[50rem]  max-w-[20rem]"
                     style="overflow-wrap: break-word"
                   >
                     {{ chat.message }}
@@ -654,7 +659,7 @@ onBeforeUnmount(() => {
 
         <textarea
           type="text"
-          @change="typingNotify"
+          @keyup="typingNotify"
           :disabled="privateUserProfileData.firstName ? false : true"
           name="message"
           v-model.lazy="privateChats"
