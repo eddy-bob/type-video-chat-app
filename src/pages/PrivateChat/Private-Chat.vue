@@ -71,7 +71,7 @@ const privateAttatchment = ref<string[]>([]);
 const privateChats = ref("");
 
 const loading = ref(false);
-const typing = ref(false);
+
 const friendTyping = ref(false);
 const scrollArea = ref<HTMLElement>();
 const privateChatData = ref<any[]>([]);
@@ -206,6 +206,7 @@ const addPrivateChat = () => {
       attatchment: privateAttatchment.value,
       relationshipId: relationshipId.value,
     });
+
     socket!.value.once("chatError", (data: any) => {
       console.log(data);
       notify({
@@ -224,6 +225,10 @@ const addPrivateChat = () => {
         time: data.time,
         message: data.message,
         attatchment: data.name.attatchment,
+      });
+      socket!.value.emit("typing", {
+        value: false,
+        recipient: privateUserProfileData.value._id,
       });
     });
     // socket.value.once("newMessage", (data: any) => {
@@ -269,16 +274,17 @@ watch(route, (current, previous) => {
 const typingNotify = () => {
   if (socket!.value) {
     const myEvent: any = event;
-    if (myEvent?.target!.value !== "") {
+    console.log(myEvent?.target!.value);
+    if (myEvent!.target.value && myEvent?.target!.value !== "") {
       console.log("typing");
-      typing.value = true;
+
       socket!.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
     } else {
       console.log(" stop typing");
-      typing.value = false;
+
       socket!.value.emit("typing", {
         value: false,
         recipient: privateUserProfileData.value._id,
