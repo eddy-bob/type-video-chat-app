@@ -69,7 +69,7 @@ const profile = ref<any>();
 // const socket = shallowRef<any>();
 const privateAttatchment = ref<string[]>([]);
 const privateChats = ref("");
-const typing=ref(false)
+const typing = ref(false);
 const loading = ref(false);
 
 const friendTyping = ref(false);
@@ -277,12 +277,11 @@ const typingNotify = () => {
     console.log(myEvent?.target!.value);
     if (myEvent!.target.value && myEvent?.target!.value !== "") {
       console.log("typing");
-typing.value=true
+      typing.value = true;
       socket!.value.emit("typing", {
         value: true,
         recipient: privateUserProfileData.value._id,
       });
-      
     } else {
       console.log(" stop typing");
 
@@ -290,6 +289,7 @@ typing.value=true
         value: false,
         recipient: privateUserProfileData.value._id,
       });
+      typing.value = false;
     }
   }
 };
