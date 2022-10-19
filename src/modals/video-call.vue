@@ -266,7 +266,7 @@ watchEffect(() => {
         callId: string;
       }) => {
         clearInterval(interval.value);
-document.getElementById("ring")!.remove()
+        document.getElementById("ring")!.remove();
         console.log("authorize event clicked");
         callData.value = { ...data };
 
