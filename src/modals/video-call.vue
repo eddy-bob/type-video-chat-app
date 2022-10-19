@@ -205,6 +205,7 @@ watchEffect(() => {
   props.socket
     .off("private_video_call_not_answered")
     .once("private_video_call_not_answered", (data: { message: string }) => {
+      document.getElementById("ring")!.remove();
       emit("endCall");
     });
   // props.socket.once(
@@ -265,7 +266,7 @@ watchEffect(() => {
         callId: string;
       }) => {
         clearInterval(interval.value);
-
+document.getElementById("ring")!.remove()
         console.log("authorize event clicked");
         callData.value = { ...data };
 
@@ -479,6 +480,7 @@ watchEffect(() => {
   props.socket
     .off("private_video_call_reject_success")
     .on("private_video_call_reject_success", (data: any) => {
+      document.getElementById("ring")!.remove();
       clearInterval(interval.value);
       emit("endCall");
     });

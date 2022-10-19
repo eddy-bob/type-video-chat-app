@@ -207,7 +207,7 @@ watchEffect(() => {
       console.log(data);
       notify({
         type: "error",
-        title: "Error",
+        title: "Error",F
         text: data.message || "Chat send failed",
       });
     });

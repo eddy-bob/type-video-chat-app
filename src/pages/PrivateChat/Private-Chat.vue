@@ -8,6 +8,7 @@ import {
   shallowRef,
   onUpdated,
   onBeforeUnmount,
+  onMounted,
 } from "vue";
 import { useRoute } from "vue-router";
 import videoCall from "../../modals/video-call.vue";
@@ -332,6 +333,12 @@ watchEffect(() => {
           console.log(recieverId!.value);
           status!.value = "incomingCall";
           showVideo!.value = true as boolean;
+
+          const sound = document.createElement("audio");
+          sound.id = "ring";
+          sound.src = "/sounds/ringing.mp3";
+          sound.autoplay = true;
+          document.documentElement.append(sound);
         }
       );
     // socket.value
