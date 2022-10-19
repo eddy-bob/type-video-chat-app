@@ -506,7 +506,7 @@ onBeforeUnmount(() => {
       </div>
       <div
         v-if="localStream"
-        class="flex justify-center space-x-5 pt-4 fixed bottom-10 lg:left-[40%] left-[30%]"
+        class="flex justify-center space-x-5 pt-4 fixed bottom-10 lg:left-[40%] sm:left-[30%] left-0"
       >
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
