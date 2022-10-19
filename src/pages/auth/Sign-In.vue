@@ -118,7 +118,7 @@ const submitForm = async (): Promise<void> => {
           <div class="space-y-2">
             <h1 class="text-center logo text-[#000000]">ECHAT</h1>
             <h1 class="font-extrabold">Welcome</h1>
-            <p class="">Login in back to you account.</p>
+            <p class="">Login in back to your account.</p>
           </div>
           <!--  -->
           <div class="space-y-3">
