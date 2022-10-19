@@ -265,8 +265,11 @@ watchEffect(() => {
         peerId: string;
         callId: string;
       }) => {
-        clearInterval(interval.value);
-        document.getElementById("ring")!.remove();
+        const ring = document.getElementById("ring");
+        if (ring) {
+          ring!.remove();
+          clearInterval(interval.value);
+        }
         console.log("authorize event clicked");
         callData.value = { ...data };
 
@@ -410,9 +413,14 @@ watchEffect(() => {
     .off("private_video_call_end_success")
     .on("private_video_call_end_success", (data: { message: string }) => {
       console.log(data.message, "video end ");
-
+      const ring = document.getElementById("ring");
+      if (ring) {
+        ring!.remove();
+        clearInterval(interval.value);
+      }
       const remote: any = document.getElementById("remoteVideo");
       const myVid: any = document.getElementById("localVid");
+
       if (remote) {
         console.log("remote dey ooo");
         remote!.srcObject = null;
@@ -422,11 +430,9 @@ watchEffect(() => {
         // container?.remove(remote);
         myVid.remove();
         remote.remove();
-        document.getElementById("ring")!.remove();
-        console.log("ring removed")
+
         emit("endCall");
       } else {
-        document.getElementById("ring")!.remove();
         emit("endCall");
       }
     });
@@ -436,7 +442,13 @@ watchEffect(() => {
       "private_video_call_end_inverse_success",
       (data: { message: string }) => {
         console.log(data.message, "video end ");
-        // stopStreaming();
+        //  stop ring
+
+        const ring = document.getElementById("ring");
+        if (ring) {
+          ring!.remove();
+          clearInterval(interval.value);
+        }
 
         const remote: any = document.getElementById("remoteVideo");
 
@@ -483,7 +495,11 @@ watchEffect(() => {
   props.socket
     .off("private_video_call_reject_success")
     .on("private_video_call_reject_success", (data: any) => {
-      
+      const ring = document.getElementById("ring");
+      if (ring) {
+        ring!.remove();
+        clearInterval(interval.value);
+      }
       clearInterval(interval.value);
       emit("endCall");
     });
@@ -509,7 +525,7 @@ onBeforeUnmount(() => {
       </div>
       <div
         v-if="localStream"
-        class="flex justify-center space-x-5 pt-4 fixed bottom-10 sm:left-[40%] left-[50%]"
+        class="flex justify-center space-x-5 pt-4 fixed bottom-10 sm:left-[40%] left-[20%]"
       >
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
