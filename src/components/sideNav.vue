@@ -23,10 +23,8 @@ const hide = (id: string) => {
 };
 </script>
 <template>
-  <div class="flex">
-    <div
-      class="px-3 pt-20 bg-slate-700 min-h-screen h-auto space-y-12 text-white"
-    >
+  <div class="flex min-h-screen h-full">
+    <div class="px-3 pt-20 bg-slate-700 space-y-12 text-white">
       <button class="lg:hidden font-extrabold" @click="showSide = false">
         <i class="fa-solid fa-rectangle-xmark"></i>
       </button>

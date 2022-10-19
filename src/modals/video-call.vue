@@ -422,8 +422,11 @@ watchEffect(() => {
         // container?.remove(remote);
         myVid.remove();
         remote.remove();
+        document.getElementById("ring")!.remove();
+        console.log("ring removed")
         emit("endCall");
       } else {
+        document.getElementById("ring")!.remove();
         emit("endCall");
       }
     });
@@ -480,7 +483,7 @@ watchEffect(() => {
   props.socket
     .off("private_video_call_reject_success")
     .on("private_video_call_reject_success", (data: any) => {
-      document.getElementById("ring")!.remove();
+      
       clearInterval(interval.value);
       emit("endCall");
     });
@@ -506,7 +509,7 @@ onBeforeUnmount(() => {
       </div>
       <div
         v-if="localStream"
-        class="flex justify-center space-x-5 pt-4 fixed bottom-10 sm:left-[40%] left-[30%]"
+        class="flex justify-center space-x-5 pt-4 fixed bottom-10 sm:left-[40%] left-[50%]"
       >
         <div
           class="bg-slate-700 rounded-lg py-2 px-4 font-extrabold text-xs text-white cursor-pointer"
