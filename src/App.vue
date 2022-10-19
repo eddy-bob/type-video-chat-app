@@ -51,7 +51,6 @@ watchEffect(() => {
   if (screenSize.value > 1000) {
     showSide.value = true;
   }
-  
 });
 </script>
 
@@ -102,7 +101,7 @@ watchEffect(() => {
     <router-view
       name="leftNav"
       :class="showSide == true ? 'block ' : 'hidden lg:block'"
-      class="lg:w-[30rem] w-screen lg:relative lg:h-full min-h-screen h-full absolute z-40"
+      class="lg:w-[30rem] w-screen lg:relative lg:h-auto min-h-screen h-auto absolute z-40"
     ></router-view>
     <router-view class="w-full"></router-view>
     <!-- <router-view name="rightNav"></router-view> -->
