@@ -473,13 +473,13 @@ onBeforeUnmount(() => {
     <div
       class="text-gray-300 bg-slate-700 fixed lg:relative z-30 lg:w-full w-screen top-0"
     >
-      <div v-if="route.query.userId" class="flex px-8 justify-between py-4">
+      <div class="flex px-8 justify-between py-4">
         <!--  -->
         <div class="flex space-x-4">
           <button @click="showSide = !showSide">
             <i class="fas fa-bars fa-xl lg:hidden"></i>
           </button>
-          <div class="relative">
+          <div class="relative" v-if="route.query.userId">
             <img
               :src="
                 privateUserProfileData && privateUserProfileData?.photo
@@ -498,7 +498,7 @@ onBeforeUnmount(() => {
               class="absolute w-2 h-2 rounded-full bg-red-700 bottom-0 right-1"
             ></p>
           </div>
-          <div>
+          <div v-if="route.query.userId">
             <p class="font-extrabold text-[16px] lg:mt-0 mt-3">
               {{
                 privateUserProfileData?.firstName
@@ -511,7 +511,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <!--  -->
-        <div class="flex space-x-4">
+        <div class="flex space-x-4" v-if="route.query.userId">
           <button>
             <i class="fas fa-search cursor-pointer"></i>
           </button>
@@ -659,7 +659,7 @@ onBeforeUnmount(() => {
     </div>
     <!--  -->
     <!-- input field -->
-    <div class="fixed bottom-0 w-full   text-gray-200 lg:px-10 px-5">
+    <div class="fixed bottom-0 w-full text-gray-200 lg:px-10 px-5">
       <div class="flex lg:space-x-3 space-x-6 bg-slate-800">
         <div class="flex space-x-5">
           <img src="/images/svg/option.svg" alt="" class="w-2" />
