@@ -149,6 +149,28 @@ const addGroupChat = () => {
       });
   }
 };
+const typingNotify = () => {
+  if (socket!.value) {
+    const myEvent: any = event;
+    console.log(myEvent?.target!.value);
+    if (myEvent!.target.value && myEvent?.target!.value !== "") {
+      console.log("typing");
+      typing.value = true;
+      socket!.value.emit("group-typing", {
+        value: true,
+        recipient: groupId.value,
+      });
+    } else {
+      console.log(" stop typing");
+
+      socket!.value.emit("group-typing", {
+        value: false,
+        recipient: groupId.value,
+      });
+      typing.value = false;
+    }
+  }
+};
 // listen for when there is a change in the group id
 
 watch(route, (current, previous) => {
@@ -161,12 +183,7 @@ watch(route, (current, previous) => {
 });
 groupChat(groupId.value);
 watchEffect(() => {
-  if (groupChats.value !== "") {
-    typing.value = true;
-    console.log(true);
-  } else {
-    typing.value = false;
-  }
+  typingNotify();
   if (socket.value) {
     console.log(socket.value);
     socket.value.on("newGroupMessage", (data: any) => {
@@ -275,7 +292,7 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-else
-      class="lg:px-10 px-5 py-10 space-y-5 mt-20 h-[600px] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 lg:h-[500px] md:h-[900px] h-[550px] overflow-y-scroll myOverflow"
       id="chatScroll"
       style="scroll-behavior: smooth"
       v-scroll-directive
@@ -370,6 +387,7 @@ onBeforeUnmount(() => {
         <textarea
           type="text"
           name="message"
+          @keyup="typingNotify"
           v-model.lazy="groupChats"
           class="focus:outline-none outline-none bg-slate-700 py-2 h-12 px-3 lg:w-[60%] w-screen myOverflow text-sm"
           placeholder="message here . . ."

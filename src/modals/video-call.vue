@@ -7,6 +7,7 @@ import {
   endCall as endVideoCall,
   answerCall,
   rejectCall,
+  missCall,
 } from "../composables/process_video_call";
 import videoCallNotify from "../modals/video-call-notify.vue";
 import { Peer } from "peerjs";
@@ -16,15 +17,16 @@ import { useVibrate } from "@vueuse/core";
 
 const localStream = ref<MediaStream>();
 const peerId = ref("");
+const interval = ref<any>();
 const remoteCall = ref<any[]>([]);
-
+const time = ref<number>(0);
 const peerConnection = ref();
 const incomingCall = ref(false);
 const showCaller = ref(false);
 const muted = ref(false);
-const { vibrate, stop, isSupported } = useVibrate({
-  pattern: [1000, 1000, 3000],
-});
+// const { vibrate, stop, isSupported } = useVibrate({
+//   pattern: [1000, 1000, 3000],
+// });
 const videoCallProcessed = ref(false);
 const callData = ref<{
   callerId: string;
@@ -111,6 +113,9 @@ onMounted(() => {
   peerConnection.value.on("open", (id: string) => {
     peerId.value = id;
 
+    if (props.status === "incomingCall") {
+      callTimer();
+    }
     if (props.callStarted == true && props.status === "outgoingCall") {
       let video: any = document.createElement("video");
 
@@ -161,8 +166,47 @@ onMounted(() => {
     }
   });
 });
+const callTimer = () => {
+  interval.value = setInterval(() => {
+    console.log("timeout ran");
+    if (typeof localStream.value === "undefined" && time.value < 14) {
+      time.value += 1;
+      console.log(time.value);
+    } else {
+      clearInterval(interval.value);
+      console.log(time.value);
+    }
+  }, 1000);
+};
 
 watchEffect(() => {
+  if (time.value === 14) {
+    // clearInterval(interval.value);
+    console.log("call timeout reached");
+    missCall(
+      props.socket,
+      props.callData.callerId,
+      props.callData.peerId,
+      props.callData.callId,
+      props.recieverId
+    );
+  }
+  props.socket
+    .off("private_video_call_missed_notify")
+    .once("private_video_call_missed_notify", (data: { message: string }) => {
+      console.log("missed call ");
+      emit("endCall");
+      notify({
+        type: "information",
+        title: "Unanswered call",
+        text: data.message,
+      });
+    });
+  props.socket
+    .off("private_video_call_not_answered")
+    .once("private_video_call_not_answered", (data: { message: string }) => {
+      emit("endCall");
+    });
   // props.socket.once(
   //   "video_private_call_init",
   //   (data: {
@@ -175,6 +219,12 @@ watchEffect(() => {
   //     incomingCall.value = true;
   //   }
   // );
+
+  // if (props.status === "incomingCall") {
+  //   console.log("yess it is incoming");
+  //   callTimer();
+  // }
+
   props.socket
     .off("private_video_call_inverse_init")
     .on(
@@ -202,7 +252,6 @@ watchEffect(() => {
       }) => {
         console.log("authorize inverse event clicked");
         callData.value = { ...data };
-        stop();
       }
     );
   props.socket
@@ -215,7 +264,8 @@ watchEffect(() => {
         peerId: string;
         callId: string;
       }) => {
-        stop();
+        clearInterval(interval.value);
+
         console.log("authorize event clicked");
         callData.value = { ...data };
 
@@ -301,7 +351,7 @@ watchEffect(() => {
       .then((stream) => {
         localStream.value = stream;
         call.answer(stream);
-        stop();
+
         call.off("stream").on("stream", (stream: any) => {
           console.log("streaming ooooooo");
 
@@ -359,7 +409,6 @@ watchEffect(() => {
     .off("private_video_call_end_success")
     .on("private_video_call_end_success", (data: { message: string }) => {
       console.log(data.message, "video end ");
-      stop();
 
       const remote: any = document.getElementById("remoteVideo");
       const myVid: any = document.getElementById("localVid");
@@ -384,7 +433,7 @@ watchEffect(() => {
       (data: { message: string }) => {
         console.log(data.message, "video end ");
         // stopStreaming();
-        stop();
+
         const remote: any = document.getElementById("remoteVideo");
 
         if (remote) {
@@ -426,13 +475,12 @@ watchEffect(() => {
         title: " Call Rejected",
         text: "User busy",
       });
-      stop();
     });
   props.socket
     .off("private_video_call_reject_success")
     .on("private_video_call_reject_success", (data: any) => {
+      clearInterval(interval.value);
       emit("endCall");
-      stop();
     });
 });
 

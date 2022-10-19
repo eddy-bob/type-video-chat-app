@@ -51,6 +51,22 @@ export const endCall = (
     recieverId,
   });
 };
+export const missCall = (
+  socket: any,
+  callerId: any,
+  peerId: string,
+  callId: any,
+  recieverId: string
+) => {
+  console.log("missed call fired");
+  socket.emit("private_video_call_missed", {
+    callerId,
+    callId,
+    peerId,
+    recieverId,
+  });
+};
+
 export const processCall = (
   peerId: string,
   stream: MediaStream,

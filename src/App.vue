@@ -46,10 +46,12 @@ const setImage = (value: boolean) => {
 const screenSize = computed(() => {
   return screenResize();
 });
+
 watchEffect(() => {
   if (screenSize.value > 1000) {
     showSide.value = true;
   }
+  
 });
 </script>
 

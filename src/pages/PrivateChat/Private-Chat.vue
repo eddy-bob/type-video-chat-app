@@ -51,9 +51,9 @@ const userStore = user();
 // const status = ref("");
 const privateChatStore = usePrivateChat();
 const authStore = useAuthStore();
-const { vibrate, stop, isSupported } = useVibrate({
-  pattern: [3000, 1000, 3000],
-});
+// const { vibrate, stop, isSupported } = useVibrate({
+//   pattern: [3000, 1000, 3000],
+// });
 // variables
 // const callData = ref<{
 //   callerId: string;
@@ -107,9 +107,9 @@ window.addEventListener("beforeunload", () => {
     });
 });
 
-const viberate = () => {
-  vibrate();
-};
+// const viberate = () => {
+//   vibrate();
+// };
 const scrollToBottom = () => {
   const targetHeight = scrollArea.value!.scrollHeight;
   scrollArea.value!.scrollTop = targetHeight;
@@ -325,7 +325,7 @@ watchEffect(() => {
           callData!.value = { ...data };
           console.log(callData!.value);
           console.log("incoming call");
-          viberate();
+          // viberate();
           console.log(callData!.value);
           recieverId!.value = profile.value._id;
 
@@ -533,7 +533,7 @@ onBeforeUnmount(() => {
     <div
       v-else
       style="scroll-behavior: smooth"
-      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 lg:h-[500px] md:h-[900px] h-[500px] overflow-y-scroll myOverflow"
+      class="md:px-10 px-5 lg:py-10 py-16 space-y-5 mt-7 lg:h-[500px] md:h-[900px] h-[550px] overflow-y-scroll myOverflow"
       id="chatScroll"
       v-scroll-directive
     >
