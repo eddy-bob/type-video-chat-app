@@ -7,6 +7,7 @@ import {
   onUpdated,
   inject,
   onBeforeUnmount,
+  nextTick,
 } from "vue";
 import { useRoute } from "vue-router";
 import { notify } from "@kyvg/vue3-notification";
