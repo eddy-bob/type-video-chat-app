@@ -683,12 +683,12 @@ onBeforeUnmount(() => {
         <button
           type="button"
           @click="addPrivateChat"
-          class="bg-slate-700 lg:p-2 p-4 rounded-full"
+          class="bg-slate-700 lg:p-2 p-4 h-auto rounded-full"
         >
           <img
             src="/images/svg/send.svg"
             alt="send"
-            class="lg:w-[30px] w-[25px]"
+            class="lg:w-[30px] w-[25px] h-auto"
           />
         </button>
       </div>
