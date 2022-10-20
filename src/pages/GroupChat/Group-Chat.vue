@@ -61,10 +61,13 @@ const scrollToBottom = () => {
   scrollArea.value!.scrollTop = targetHeight;
 };
 const scrollToBottomChat = () => {
-  scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
-
-  const targetHeight = scrollArea.value!.scrollHeight;
-  scrollArea.value!.scrollTop = targetHeight;
+  
+  nextTick(() => {
+    const el = document.getElementById("chatScroll") as HTMLElement;
+    const targetHeight = el.scrollHeight + 100;
+    el.scrollTop = targetHeight;
+    console.log("scroll ran");
+  });
 };
 const getProfile = () => {
   authStore
