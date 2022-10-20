@@ -4,6 +4,7 @@ import {
   watchEffect,
   watch,
   inject,
+  nextTick,
   provide,
   shallowRef,
   onUpdated,
@@ -40,7 +41,9 @@ SocketioService.setupSocketConnection()
 
 const vScrollDirective = {
   mounted: (el: HTMLElement) => {
-    el.scrollTop = el.scrollHeight;
+    nextTick(() => {
+      el.scrollTop = el.scrollHeight;
+    });
   },
 };
 
@@ -116,10 +119,14 @@ const scrollToBottom = () => {
   scrollArea.value!.scrollTop = targetHeight;
 };
 const scrollToBottomChat = () => {
-  scrollArea.value = document.getElementById("chatScroll") as HTMLElement;
+  console.log("scroll ran");
 
-  const targetHeight = scrollArea.value!.scrollHeight;
-  scrollArea.value!.scrollTop = targetHeight;
+  nextTick(() => {
+    const el = document.getElementById("chatScroll") as HTMLElement;
+    const targetHeight = el.scrollHeight + 100;
+    el.scrollTop = targetHeight;
+    console.log("scroll ran");
+  });
 };
 const getProfile = () => {
   authStore
@@ -218,7 +225,9 @@ const addPrivateChat = () => {
     });
     socket!.value.off("myMessage").on("myMessage", (data: any) => {
       console.log(data);
+
       console.log("na me send am");
+
       privateChatData.value.push({
         sender: data.name.sender,
         senderName: data.name.senderName,
@@ -227,6 +236,7 @@ const addPrivateChat = () => {
         message: data.message,
         attatchment: data.name.attatchment,
       });
+      scrollToBottomChat();
       socket!.value.emit("typing", {
         value: false,
         recipient: privateUserProfileData.value._id,
@@ -296,6 +306,10 @@ const typingNotify = () => {
 };
 privateChat(userId.value);
 watchEffect(() => {
+  const el = document.getElementById("chatScroll") as HTMLElement;
+  if (el) {
+    scrollToBottomChat();
+  }
   if (socket!.value) {
     typingNotify();
     // if (privateChats.value !== "") {
@@ -435,13 +449,13 @@ watchEffect(() => {
     // });
   }
 });
-onUpdated(() => {
-  if (userId.value !== "" && scrollArea.value && typing.value == false) {
-    console.log(scrollArea.value);
-    // scroll chat to bottom of the chats div on update
-    scrollToBottom();
-  }
-});
+// onUpdated(() => {
+//   if (userId.value !== "" && typing.value == false) {
+//     console.log(scrollArea.value,"Scroll area");
+//     // scroll chat to bottom of the chats div on update
+//      scrollToBottomChat()
+//   }
+// });
 //disconnect socket connection and update active status
 onBeforeUnmount(() => {
   SocketioService.disconnect()
@@ -507,6 +521,12 @@ onBeforeUnmount(() => {
                     privateUserProfileData?.lastName
                   : ""
               }}
+            </p>
+            <p
+              class="font-extrabold text-gray-300 text-[10px]"
+              v-if="friendTyping == true"
+            >
+              Typing. . .
             </p>
           </div>
         </div>
@@ -631,12 +651,12 @@ onBeforeUnmount(() => {
           ></i>
         </div>
         <!-- typing notification -->
-        <p
-          class="font-extrabold text-gray-300 flex justify-end mt-4 text-sm"
+        <!-- <p
+          class="font-extrabold text-gray-300 flex justify-end mt-4 text-[10px]"
           v-if="friendTyping == true"
         >
           Typing. . .
-        </p>
+        </p> -->
       </div>
       <div v-else class="w-full bg-slate-800 text-gray-300 text-center">
         <div v-if="!route.query.userId" class="font-extrabold pt-20">
